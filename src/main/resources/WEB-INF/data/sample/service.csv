@@ -16,12 +16,12 @@ service-11,"<script>alert(‘Hacked!’);</script>","https://s03.s3c.es/imag/_v0
 service-12,"'' or 'A' = 'A ","https://s03.s3c.es/imag/_v0/770x420/a/e/d/770-420-comida-avion-istock.jpg",089.25,"KKKK-25",EUR 50.00
 # pictureUrl - standard variations
 service-13,"Servicio de comida","http://lorem.com/ipsum",089.25,"LLLL-25",EUR 50.00
-service-14,"Servicio de comida","ftp://a",089.25,"MMMM-25",EUR 50.00
-service-15,"Servicio de comida","ftp://a.b",089.25,"NNNN-25",EUR 50.00
+service-14,"Servicio de comida","http://a",089.25,"MMMM-25",EUR 50.00
+service-15,"Servicio de comida","http://a.b",089.25,"NNNN-25",EUR 50.00
 service-16,"Servicio de comida","http://www.lorem-ipsum.org/dolor/sit/amet./consectetur/adipiscing/elit./sed/do/eiusmod/tempor/incididunt/ut/labore/et/dolore/magna/aliqua/Ut/enim/ad/minim/veniam/quis/nostrud/exercitation/ullamco/laboris/nisi/ut/aliquip/ex/ea/commodo/consequat/duis/aute/",089.25,"OOOO-25",EUR 50.00
 service-17,"Servicio de comida","http://www.lorem-ipsum.org/dolor/sit/amet./consectetur/adipiscing/elit./sed/do/eiusmod/tempor/incididunt/ut/labore/et/dolore/magna/aliqua/Ut/enim/ad/minim/veniam/quis/nostrud/exercitation/ullamco/laboris/nisi/ut/aliquip/ex/ea/commodo/consequat/duis/aute/X",089.25,"PPPP-25",EUR 50.00
 service-18,"Servicio de comida","https://www.lorem-ipsum.org",089.25,"QQQQ-25",EUR 50.00
-service-19,"Servicio de comida","ftp://www.lorem-ipsum.org",089.25,"RRRR-25",EUR 50.00
+service-19,"Servicio de comida","http://www.lorem-ipsum.org",089.25,"RRRR-25",EUR 50.00
 service-20,"Servicio de comida","http://www.lorem-ipsum.org/dolor/sit.html",089.25,"SSSS-25",EUR 50.00
 service-21,"Servicio de comida","http://www.lorem-ipsum.org/dolor/sit.html#dolor",089.25,"TTTT-25",EUR 50.00
 service-22,"Servicio de comida","http://example.org?a=1&b=2",089.25,"UUUU-25",EUR 50.00

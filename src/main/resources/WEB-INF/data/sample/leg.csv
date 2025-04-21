@@ -51,6 +51,6 @@ leg-25,"ABC2350",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,air
 # arrivalAirport - no singular values
 
 # legs pasadas para estudiantes 3 y 4 (no necesarias para el conjunto de datos de prueba del estudiante 1)
-leg-26,"ABC1111",2020/09/01 10:02,2020/09/01 10:03,ON_TIME,true,aircraft-01,airport-02,airport-01,flight-28
-leg-27,"ABC2222",2020/09/01 10:04,2020/09/01 10:05,ON_TIME,true,aircraft-01,airport-01,airport-02,flight-28
-leg-28,"ABC3333",2020/09/01 10:06,2020/09/01 10:07,ON_TIME,true,aircraft-01,airport-02,airport-01,flight-28
+leg-26,"ABC1111",2020/09/01 10:02,2020/09/01 10:03,ON_TIME,true,aircraft-01,airport-02,airport-01,flight-31
+leg-27,"ABC2222",2020/09/01 10:04,2020/09/01 10:05,ON_TIME,true,aircraft-01,airport-01,airport-02,flight-31
+leg-28,"ABC3333",2020/09/01 10:06,2020/09/01 10:07,ON_TIME,true,aircraft-01,airport-02,airport-01,flight-31
