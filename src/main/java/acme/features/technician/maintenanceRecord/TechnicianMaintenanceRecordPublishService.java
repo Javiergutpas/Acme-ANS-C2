@@ -64,7 +64,7 @@ public class TechnicianMaintenanceRecordPublishService extends AbstractGuiServic
 		id = super.getRequest().getData("id", int.class);
 
 		if (!this.getBuffer().getErrors().hasErrors("published") && maintenanceRecord.getPublished() != null)
-			super.state(this.repository.findPublishedTaskOfMaintenanceRecord(id) > 0, "*", "acme.validation.technician.maintenance-record.published.message");
+			super.state(this.repository.findNotPublishedTaskOfMaintenanceRecord(id) == 0, "*", "acme.validation.technician.maintenance-record.published.message");
 	}
 
 	@Override
