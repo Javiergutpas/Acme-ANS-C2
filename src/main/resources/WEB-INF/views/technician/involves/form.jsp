@@ -5,9 +5,7 @@
      <acme:input-select code="technician.involves.form.label.task" path="task" choices="${task}"/>
  	<jstl:choose>
  	
- 		<jstl:when test="${_command == 'create'}">
- 			<acme:button code="technician.task.list.button.create" action ="/technician/task/create"/>
- 			
+ 		<jstl:when test="${_command == 'create'}"> 			
  			<acme:submit code="technician.involves.form.button.create" action="/technician/involves/create?maintenanceRecordId=${maintenanceRecordId}"/>
  		</jstl:when>
  		
