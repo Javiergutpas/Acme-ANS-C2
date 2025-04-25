@@ -44,16 +44,12 @@ public class TechnicianInvolvesListService extends AbstractGuiService<Technician
 	@Override
 	public void unbind(final Task task) {
 		Dataset dataset;
-		Boolean showCreate;
-		int maintenanceRecordId = super.getRequest().getData("maintenanceRecordId", int.class);
-		MaintenanceRecord maintenanceRecord = this.repository.findMaintenanceRecordById(maintenanceRecordId);
 
 		dataset = super.unbindObject(task, "type", "priority", "published");
 
-		showCreate = !maintenanceRecord.getPublished() && super.getRequest().getPrincipal().hasRealm(maintenanceRecord.getTechnician());
 		super.addPayload(dataset, task, "type");
 
-		super.getResponse().addGlobal("showCreate", showCreate);
+		super.getResponse().addGlobal("showCreate", false);
 
 		super.getResponse().addData(dataset);
 	}
