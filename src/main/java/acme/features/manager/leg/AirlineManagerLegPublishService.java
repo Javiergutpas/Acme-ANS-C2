@@ -11,6 +11,7 @@ import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.aircraft.Aircraft;
+import acme.entities.aircraft.AircraftStatus;
 import acme.entities.airport.Airport;
 import acme.entities.leg.Leg;
 import acme.entities.leg.LegStatus;
@@ -63,6 +64,7 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		boolean notOverlapping;//No solopada con el resto de legs
 		boolean aircraftNotUsed; //Avión no usado en otro leg concurrentemente
 		boolean legIsFuture;
+		boolean aircraftIsActive;
 
 		if (leg.getDeparture() != null) { //Solo hace falta validar el departure, ya que arrival es posterior
 			legIsFuture = MomentHelper.isPresentOrFuture(leg.getDeparture());
@@ -86,6 +88,11 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		aircraftNotUsed = leg.getStatus() == LegStatus.CANCELLED || numberOfLegsDeployingAircraft == 0; //Si el leg se ha cancelado no importa que se asigne un aircraft usado
 
 		super.state(aircraftNotUsed, "deployedAircraft", "acme.validation.leg.used-aircraft");
+
+		if (leg.getDeployedAircraft() != null) {
+			aircraftIsActive = leg.getDeployedAircraft().getStatus() == AircraftStatus.ACTIVE;
+			super.state(aircraftIsActive, "deployedAircraft", "acme.validation.leg.inactive-aircraft");
+		}
 	}
 
 	@Override
