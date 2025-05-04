@@ -194,7 +194,7 @@ bg=pink
     <panel_attributes>&lt;&lt;Entity&gt;&gt;
 ActivityLog{ValidActivityLog}
 --
-+ registrationMoment: Date {Mandatory, ValidMoment, Temporal(TIMESTAMP)}
++ registrationMoment: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
 + incidentType: String {Mandatory, ValidString(min=1,max=50), Automapped}
 + description: String {Mandatory, ValidString(min=1,max=255), Automapped}
 + severityLevel: Integer {Mandatory, ValidNumber(min=0,max=10), Automapped}
