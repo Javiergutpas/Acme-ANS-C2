@@ -46,7 +46,7 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 	@Override
 	public void bind(final FlightAssignment flightAssignment) {
 
-		super.bindObject(flightAssignment, "duty", "lastUpdateMoment", "currentStatus", "remarks", "flightAssignmentCrewMember", "flightAssignmentLeg");
+		super.bindObject(flightAssignment, "duty", "currentStatus", "remarks", "flightAssignmentLeg", "flightAssignmentCrewMember");
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 		dutyChoice = SelectChoices.from(Duty.class, flightAssignment.getDuty());
 		currentStatusChoice = SelectChoices.from(CurrentStatus.class, flightAssignment.getCurrentStatus());
 
-		legs = this.repository.findAllLegs();
+		legs = this.repository.findAllFutureLegs();
 		legChoice = SelectChoices.from(legs, "id", flightAssignment.getFlightAssignmentLeg());
 
 		flightCrewMembers = this.repository.findAllFlightCrewMembers();

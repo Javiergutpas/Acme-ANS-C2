@@ -2,7 +2,6 @@
 package acme.features.flightcrewmember.flightassignment;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -59,50 +58,33 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 	@Override
 	public void validate(final FlightAssignment flightAssignment) {
 		int flightCrewMemberId;
-		int legId;
 
 		boolean completedLeg;
 		boolean availableMember;
 		boolean hasSimultaneousLegs;
-		boolean hasPilot;
-		boolean hasCopilot;
-		Date departure;
-		Date arrival;
-		Collection<Leg> simultaneousLegs;
-		Collection<FlightAssignment> pilotAssignments;
-		Collection<FlightAssignment> copilotAssignments;
+		boolean isDutyAssigned;
+
 		Leg leg;
 
 		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		leg = flightAssignment.getFlightAssignmentLeg();
-		legId = leg.getId();
 
-		completedLeg = MomentHelper.isBefore(flightAssignment.getFlightAssignmentLeg().getArrival(), MomentHelper.getCurrentMoment());
+		completedLeg = leg.getArrival().before(MomentHelper.getCurrentMoment());
 		availableMember = this.repository.findFlightCrewMemberById(flightCrewMemberId).getAvailabilityStatus().equals(AvailabilityStatus.AVAILABLE);
 
-		hasSimultaneousLegs = false;
-		departure = flightAssignment.getFlightAssignmentLeg().getDeparture();
-		arrival = flightAssignment.getFlightAssignmentLeg().getArrival();
-		simultaneousLegs = this.repository.findSimultaneousLegsByMemberId(departure, arrival, legId, flightCrewMemberId);
-		if (simultaneousLegs.isEmpty())
-			hasSimultaneousLegs = true;
+		if (flightAssignment.getDuty() != null && flightAssignment.getFlightAssignmentLeg() != null) {
+			isDutyAssigned = this.repository.hasDutyAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getDuty(), flightAssignment.getId());
+			super.state(!isDutyAssigned, "*", "acme.validation.flightassignment.duty.pilot.message");
+		}
 
-		pilotAssignments = this.repository.findFlightAssignmentByLegAndDuty(leg, Duty.PILOT);
-		copilotAssignments = this.repository.findFlightAssignmentByLegAndDuty(leg, Duty.COPILOT);
-
-		hasPilot = true;
-		hasCopilot = true;
-		if (flightAssignment.getDuty().equals(Duty.PILOT) && pilotAssignments.size() + 1 >= 2)
-			hasPilot = false;
-		if (flightAssignment.getDuty().equals(Duty.COPILOT) && copilotAssignments.size() + 1 >= 2)
-			hasCopilot = false;
+		if (flightAssignment.getFlightAssignmentCrewMember() != null) {
+			hasSimultaneousLegs = this.repository.hasLegAssociated(flightAssignment.getFlightAssignmentCrewMember().getId(), MomentHelper.getCurrentMoment());
+			super.state(!hasSimultaneousLegs, "*", "acme.validation.flightassignment.leg.overlap.message");
+		}
 
 		if (!this.getBuffer().getErrors().hasErrors("publish")) {
-			super.state(!completedLeg, "flightAssignmentLeg", "acme.validation.flightassignment.leg.completed.message", flightAssignment);
-			super.state(availableMember, "flightAssignmentCrewMember", "acme.validation.flightassignment.flightcrewmember.available.message", flightAssignment);
-			super.state(hasSimultaneousLegs, "flightAssignmentLeg", "acme.validation.flightassignment.leg.overlap.message", flightAssignment);
-			super.state(hasPilot, "duty", "acme.validation.flightassignment.duty.pilot.message", flightAssignment);
-			super.state(hasCopilot, "duty", "acme.validation.flightassignment.duty.copilot.message", flightAssignment);
+			super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
+			super.state(availableMember, "*", "acme.validation.flightassignment.flightcrewmember.available.message");
 		}
 	}
 
