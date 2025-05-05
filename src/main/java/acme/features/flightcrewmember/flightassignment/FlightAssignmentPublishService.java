@@ -36,7 +36,7 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 		masterId = super.getRequest().getData("id", int.class);
 		flightAssignment = this.repository.findFlightAssignmentById(masterId);
 
-		status = !flightAssignment.isPublish() && MomentHelper.isFuture(flightAssignment.getFlightAssignmentLeg().getDeparture());
+		status = !flightAssignment.isPublish();
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -110,10 +110,10 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 		currentStatusChoice = SelectChoices.from(CurrentStatus.class, flightAssignment.getCurrentStatus());
 
 		legs = this.repository.findAllLegs();
-		legChoice = SelectChoices.from(legs, "id", flightAssignment.getFlightAssignmentLeg());
+		legChoice = SelectChoices.from(legs, "flightNumber", flightAssignment.getFlightAssignmentLeg());
 
 		flightCrewMembers = this.repository.findAllFlightCrewMembers();
-		flightCrewMemberChoice = SelectChoices.from(flightCrewMembers, "id", flightAssignment.getFlightAssignmentCrewMember());
+		flightCrewMemberChoice = SelectChoices.from(flightCrewMembers, "employeeCode", flightAssignment.getFlightAssignmentCrewMember());
 
 		dataset = super.unbindObject(flightAssignment, "duty", "lastUpdateMoment", "currentStatus", "remarks", "publish", "flightAssignmentLeg", "flightAssignmentCrewMember");
 		dataset.put("dutyChoice", dutyChoice);
