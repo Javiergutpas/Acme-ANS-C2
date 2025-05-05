@@ -2,13 +2,11 @@
 package acme.features.assistanceagent.claim;
 
 import java.util.Collection;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
-import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.claims.Claim;
@@ -33,14 +31,14 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 
 		Claim claim;
 		int claimId;
-		AssistanceAgent assistanceAgent;
+		//AssistanceAgent assistanceAgent;
 		int agentId;
 
 		boolean status;
 
 		claimId = super.getRequest().getData("id", int.class);
 		claim = this.repository.findClaimById(claimId);
-		assistanceAgent = claim == null ? null : claim.getAssistanceAgent();
+		//assistanceAgent = claim == null ? null : claim.getAssistanceAgent();
 		agentId = claim == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
 
 		status = claim != null && !claim.isPublish() && claim.getAssistanceAgent().getId() == agentId;
@@ -99,9 +97,9 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 		SelectChoices legsChoices;
 		Dataset dataset;
 
-		Date actualMoment;
+		//Date actualMoment;
 
-		actualMoment = MomentHelper.getCurrentMoment();
+		//actualMoment = MomentHelper.getCurrentMoment();
 
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
 		//legs = this.repository.findAllPublishedLegsBefore(actualMoment);
