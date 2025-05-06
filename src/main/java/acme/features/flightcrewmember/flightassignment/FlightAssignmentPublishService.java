@@ -36,7 +36,7 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 		masterId = super.getRequest().getData("id", int.class);
 		flightAssignment = this.repository.findFlightAssignmentById(masterId);
 
-		status = !flightAssignment.isPublish() && MomentHelper.isFuture(flightAssignment.getFlightAssignmentLeg().getDeparture());
+		status = !flightAssignment.isPublish();
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -61,31 +61,34 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 
 		boolean completedLeg;
 		boolean availableMember;
-		boolean hasSimultaneousLegs;
-		boolean isDutyAssigned;
+		boolean legsOverlap;
 
 		Leg leg;
+
+		Collection<FlightAssignment> OverlappedLegs;
 
 		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		leg = flightAssignment.getFlightAssignmentLeg();
 
 		completedLeg = leg.getArrival().before(MomentHelper.getCurrentMoment());
+		super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
+
 		availableMember = this.repository.findFlightCrewMemberById(flightCrewMemberId).getAvailabilityStatus().equals(AvailabilityStatus.AVAILABLE);
+		super.state(availableMember, "*", "acme.validation.flightassignment.flightcrewmember.available.message");
 
-		if (flightAssignment.getDuty() != null && flightAssignment.getFlightAssignmentLeg() != null) {
-			isDutyAssigned = this.repository.hasDutyAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getDuty(), flightAssignment.getId());
-			super.state(!isDutyAssigned, "*", "acme.validation.flightassignment.duty.pilot.message");
+		if (flightAssignment.getDuty() == Duty.PILOT && flightAssignment.getFlightAssignmentLeg() != null) {
+			boolean pilotAlreadyAssigned = this.repository.hasPublishedPilotAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getId());
+			super.state(!pilotAlreadyAssigned, "*", "acme.validation.flightassignment.duty.pilot.message");
 		}
 
-		if (flightAssignment.getFlightAssignmentCrewMember() != null) {
-			hasSimultaneousLegs = this.repository.hasLegAssociated(flightAssignment.getFlightAssignmentCrewMember().getId(), MomentHelper.getCurrentMoment());
-			super.state(!hasSimultaneousLegs, "*", "acme.validation.flightassignment.leg.overlap.message");
+		if (flightAssignment.getDuty() == Duty.COPILOT && flightAssignment.getFlightAssignmentLeg() != null) {
+			boolean copilotAlreadyAssigned = this.repository.hasPublishedCopilotAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getId());
+			super.state(!copilotAlreadyAssigned, "*", "acme.validation.flightassignment.duty.copilot.message");
 		}
 
-		if (!this.getBuffer().getErrors().hasErrors("publish")) {
-			super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
-			super.state(availableMember, "*", "acme.validation.flightassignment.flightcrewmember.available.message");
-		}
+		OverlappedLegs = this.repository.findFlightAssignmentsByFlightCrewMemberInRange(flightCrewMemberId, leg.getDeparture(), leg.getArrival());
+		legsOverlap = OverlappedLegs.isEmpty();
+		super.state(legsOverlap, "*", "acme.validation.flightassignment.leg.overlap.message");
 	}
 
 	@Override
@@ -110,10 +113,10 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 		currentStatusChoice = SelectChoices.from(CurrentStatus.class, flightAssignment.getCurrentStatus());
 
 		legs = this.repository.findAllLegs();
-		legChoice = SelectChoices.from(legs, "id", flightAssignment.getFlightAssignmentLeg());
+		legChoice = SelectChoices.from(legs, "flightNumber", flightAssignment.getFlightAssignmentLeg());
 
 		flightCrewMembers = this.repository.findAllFlightCrewMembers();
-		flightCrewMemberChoice = SelectChoices.from(flightCrewMembers, "id", flightAssignment.getFlightAssignmentCrewMember());
+		flightCrewMemberChoice = SelectChoices.from(flightCrewMembers, "employeeCode", flightAssignment.getFlightAssignmentCrewMember());
 
 		dataset = super.unbindObject(flightAssignment, "duty", "lastUpdateMoment", "currentStatus", "remarks", "publish", "flightAssignmentLeg", "flightAssignmentCrewMember");
 		dataset.put("dutyChoice", dutyChoice);
