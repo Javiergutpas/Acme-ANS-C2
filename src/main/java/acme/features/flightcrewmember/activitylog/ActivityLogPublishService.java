@@ -63,7 +63,6 @@ public class ActivityLogPublishService extends AbstractGuiService<FlightCrewMemb
 
 		if (!flightAssignment.isPublish())
 			super.state(false, "*", "acme.validation.activitylog.flightassignment.publish.message");
-		// && activityLog.getActivityLogAssignment().isPublish()
 	}
 
 	@Override
@@ -84,7 +83,7 @@ public class ActivityLogPublishService extends AbstractGuiService<FlightCrewMemb
 
 		dataset = super.unbindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "publish", "activityLogAssignment");
 		dataset.put("flightAssignmentChoice", flightAssignmentChoice);
-		dataset.put("flightAssignmentId", super.getRequest().getData("flightAssignmentId", int.class));
+		dataset.put("flightAssignmentId", activityLog.getActivityLogAssignment().getId());
 
 		super.getResponse().addData(dataset);
 	}

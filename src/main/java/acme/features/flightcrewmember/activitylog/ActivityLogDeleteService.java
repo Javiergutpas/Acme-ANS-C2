@@ -75,9 +75,9 @@ public class ActivityLogDeleteService extends AbstractGuiService<FlightCrewMembe
 		flightAssignments = this.repository.findAllFlightAssignments();
 		flightAssignmentChoice = SelectChoices.from(flightAssignments, "id", activityLog.getActivityLogAssignment());
 
-		dataset = super.unbindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "activityLogAssignment");
+		dataset = super.unbindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "publish", "activityLogAssignment");
 		dataset.put("flightAssignmentChoice", flightAssignmentChoice);
-		dataset.put("flightAssignmentId", super.getRequest().getData("flightAssignmentId", int.class));
+		dataset.put("flightAssignmentId", activityLog.getActivityLogAssignment().getId());
 
 		super.getResponse().addData(dataset);
 	}
