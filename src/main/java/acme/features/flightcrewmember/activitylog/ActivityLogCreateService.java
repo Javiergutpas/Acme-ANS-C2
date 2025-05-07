@@ -25,13 +25,14 @@ public class ActivityLogCreateService extends AbstractGuiService<FlightCrewMembe
 	@Override
 	public void authorise() {
 		FlightAssignment flightAssignment;
-		int masterId;
+		int flightAssignmentId;
 		int flightCrewMemberId;
 		boolean status;
 
-		masterId = super.getRequest().getData("masterId", int.class);
-		flightAssignment = this.repository.findFlightAssignmentById(masterId);
+		flightAssignmentId = super.getRequest().getData("flightAssignmentId", int.class);
+		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
 		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
+
 		status = flightAssignment != null && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
 
 		super.getResponse().setAuthorised(status);
@@ -40,11 +41,11 @@ public class ActivityLogCreateService extends AbstractGuiService<FlightCrewMembe
 	@Override
 	public void load() {
 		ActivityLog activityLog;
-		int masterId;
+		int flightAssignmentId;
 		FlightAssignment flightAssignment;
 
-		masterId = super.getRequest().getData("masterId", int.class);
-		flightAssignment = this.repository.findFlightAssignmentById(masterId);
+		flightAssignmentId = super.getRequest().getData("flightAssignmentId", int.class);
+		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
 
 		activityLog = new ActivityLog();
 		activityLog.setActivityLogAssignment(flightAssignment);
@@ -80,7 +81,7 @@ public class ActivityLogCreateService extends AbstractGuiService<FlightCrewMembe
 
 		dataset = super.unbindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "activityLogAssignment");
 		dataset.put("flightAssignmentChoice", flightAssignmentChoice);
-		dataset.put("masterId", super.getRequest().getData("masterId", int.class));
+		dataset.put("flightAssignmentId", super.getRequest().getData("flightAssignmentId", int.class));
 
 		super.getResponse().addData(dataset);
 	}

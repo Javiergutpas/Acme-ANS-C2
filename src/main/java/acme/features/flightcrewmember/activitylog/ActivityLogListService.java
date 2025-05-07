@@ -25,14 +25,14 @@ public class ActivityLogListService extends AbstractGuiService<FlightCrewMember,
 
 	@Override
 	public void authorise() {
-		int masterId;
+		int flightAssignmentId;
 		int flightCrewMemberId;
 		FlightAssignment flightAssignment;
 		boolean status;
 
-		masterId = super.getRequest().getData("masterId", int.class);
+		flightAssignmentId = super.getRequest().getData("flightAssignmentId", int.class);
 		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
-		flightAssignment = this.repository.findFlightAssignmentById(masterId);
+		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
 
 		status = flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
 
@@ -42,11 +42,11 @@ public class ActivityLogListService extends AbstractGuiService<FlightCrewMember,
 	@Override
 	public void load() {
 		Collection<ActivityLog> activityLogs;
-		int masterId;
+		int flightAssignmentId;
 
-		masterId = super.getRequest().getData("masterId", int.class);
+		flightAssignmentId = super.getRequest().getData("flightAssignmentId", int.class);
 
-		activityLogs = this.repository.findAllActivityLogsByFlightAssignmentId(masterId);
+		activityLogs = this.repository.findAllActivityLogsByFlightAssignmentId(flightAssignmentId);
 
 		super.getBuffer().addData(activityLogs);
 	}
@@ -64,8 +64,8 @@ public class ActivityLogListService extends AbstractGuiService<FlightCrewMember,
 
 	@Override
 	public void unbind(final Collection<ActivityLog> activityLog) {
-		int masterId;
-		masterId = super.getRequest().getData("masterId", int.class);
-		super.getResponse().addGlobal("masterId", masterId);
+		int flightAssignmentId;
+		flightAssignmentId = super.getRequest().getData("flightAssignmentId", int.class);
+		super.getResponse().addGlobal("flightAssignmentId", flightAssignmentId);
 	}
 }
