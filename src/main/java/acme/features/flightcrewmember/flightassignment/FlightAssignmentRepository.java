@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import acme.client.repositories.AbstractRepository;
+import acme.entities.flightassignment.Duty;
 import acme.entities.flightassignment.FlightAssignment;
 import acme.entities.leg.Leg;
 import acme.realms.flightcrewmember.FlightCrewMember;
@@ -42,11 +43,8 @@ public interface FlightAssignmentRepository extends AbstractRepository {
 	@Query("SELECT fcm FROM FlightCrewMember fcm WHERE fcm.id = :flightCrewMemberId")
 	FlightCrewMember findFlightCrewMemberById(int flightCrewMemberId);
 
-	@Query("SELECT COUNT(fa) > 0 FROM FlightAssignment fa WHERE fa.flightAssignmentLeg.id = :legId AND fa.duty = 'PILOT' AND fa.publish = true AND fa.id != :id")
-	Boolean hasPublishedPilotAssigned(int legId, int id);
-
-	@Query("SELECT COUNT(fa) > 0 FROM FlightAssignment fa WHERE fa.flightAssignmentLeg.id = :legId AND fa.duty = 'COPILOT' AND fa.publish = true AND fa.id != :id")
-	Boolean hasPublishedCopilotAssigned(int legId, int id);
+	@Query("select count(fa) from FlightAssignment fa where fa.flightAssignmentLeg.id = :legId and fa.duty = :duty and fa.id != :id and fa.publish = true")
+	int hasDutyAssigned(int legId, Duty duty, int id);
 
 	@Query("select fa  from FlightAssignment fa where fa.flightAssignmentCrewMember.id = :id and fa.flightAssignmentLeg.departure< :arrival and fa.flightAssignmentLeg.arrival> :departure and fa.publish = true")
 	Collection<FlightAssignment> findFlightAssignmentsByFlightCrewMemberInRange(int id, Date departure, Date arrival);
