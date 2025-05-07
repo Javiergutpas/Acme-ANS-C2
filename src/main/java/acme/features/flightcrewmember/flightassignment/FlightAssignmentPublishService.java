@@ -76,15 +76,14 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 		availableMember = this.repository.findFlightCrewMemberById(flightCrewMemberId).getAvailabilityStatus().equals(AvailabilityStatus.AVAILABLE);
 		super.state(availableMember, "*", "acme.validation.flightassignment.flightcrewmember.available.message");
 
-		if (flightAssignment.getDuty() == Duty.PILOT && flightAssignment.getFlightAssignmentLeg() != null) {
-			boolean pilotAlreadyAssigned = this.repository.hasPublishedPilotAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getId());
-			super.state(!pilotAlreadyAssigned, "*", "acme.validation.flightassignment.duty.pilot.message");
-		}
-
-		if (flightAssignment.getDuty() == Duty.COPILOT && flightAssignment.getFlightAssignmentLeg() != null) {
-			boolean copilotAlreadyAssigned = this.repository.hasPublishedCopilotAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getId());
-			super.state(!copilotAlreadyAssigned, "*", "acme.validation.flightassignment.duty.copilot.message");
-		}
+		if (flightAssignment.getDuty() != null && flightAssignment.getFlightAssignmentLeg() != null)
+			if (flightAssignment.getDuty() == Duty.PILOT) {
+				int count = this.repository.hasDutyAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getDuty(), flightAssignment.getId());
+				super.state(count == 0, "*", "acme.validation.flightassignment.duty.pilot.message");
+			} else if (flightAssignment.getDuty() == Duty.CO_PILOT) {
+				int count = this.repository.hasDutyAssigned(flightAssignment.getFlightAssignmentLeg().getId(), flightAssignment.getDuty(), flightAssignment.getId());
+				super.state(count == 0, "*", "acme.validation.flightassignment.duty.copilot.message");
+			}
 
 		OverlappedLegs = this.repository.findFlightAssignmentsByFlightCrewMemberInRange(flightCrewMemberId, leg.getDeparture(), leg.getArrival());
 		legsOverlap = OverlappedLegs.isEmpty();
