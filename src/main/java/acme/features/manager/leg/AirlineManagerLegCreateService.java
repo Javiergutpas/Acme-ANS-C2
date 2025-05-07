@@ -53,23 +53,26 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 		leg = new Leg();
 		leg.setFlight(flight);
 		leg.setPublish(false);
+		leg.setStatus(LegStatus.ON_TIME);
 
 		super.getBuffer().addData(leg);
 	}
 
 	@Override
 	public void bind(final Leg leg) {
-		super.bindObject(leg, "flightNumber", "departure", "arrival", "status", "departureAirport", "arrivalAirport", "deployedAircraft");
+		super.bindObject(leg, "flightNumber", "departure", "arrival", "departureAirport", "arrivalAirport", "deployedAircraft");
 	}
 
 	@Override
 	public void validate(final Leg leg) {
 		boolean legIsFuture;
 
-		if (leg.getDeparture() != null) { //Solo hace falta validar el departure, ya que arrival es posterior
+		if (leg.getDeparture() != null) {
 			legIsFuture = MomentHelper.isPresentOrFuture(leg.getDeparture());
 			super.state(legIsFuture, "departure", "acme.validation.leg.past-departure.message");
-
+		} else if (leg.getArrival() != null) {
+			legIsFuture = MomentHelper.isPresentOrFuture(leg.getArrival());
+			super.state(legIsFuture, "arrival", "acme.validation.leg.past-arrival.message");
 		}
 	}
 
@@ -80,7 +83,6 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 
 	@Override
 	public void unbind(final Leg leg) {
-		SelectChoices choicesStatuses;
 		SelectChoices choicesAircrafts;
 		SelectChoices choicesDepartureAirport;
 		SelectChoices choicesArrivalAirport;
@@ -90,7 +92,6 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 
 		Dataset dataset;
 
-		choicesStatuses = SelectChoices.from(LegStatus.class, leg.getStatus());
 		aircrafts = this.repository.findAllAircrafts();
 		choicesAircrafts = SelectChoices.from(aircrafts, "registrationNumber", leg.getDeployedAircraft());
 
@@ -101,7 +102,6 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 		flightId = super.getRequest().getData("flightId", int.class);
 
 		dataset = super.unbindObject(leg, "flightNumber", "departure", "arrival");
-		dataset.put("statuses", choicesStatuses);
 		dataset.put("departureAirports", choicesDepartureAirport);
 		dataset.put("arrivalAirports", choicesArrivalAirport);
 		dataset.put("aircrafts", choicesAircrafts);

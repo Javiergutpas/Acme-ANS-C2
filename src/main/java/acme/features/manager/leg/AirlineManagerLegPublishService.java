@@ -66,18 +66,16 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		boolean legIsFuture;
 		boolean aircraftIsActive;
 
-		if (leg.getDeparture() != null) { //Solo hace falta validar el departure, ya que arrival es posterior
+		if (leg.getDeparture() != null) {
 			legIsFuture = MomentHelper.isPresentOrFuture(leg.getDeparture());
 			super.state(legIsFuture, "departure", "acme.validation.leg.past-departure.message");
-
+		} else if (leg.getArrival() != null) {
+			legIsFuture = MomentHelper.isPresentOrFuture(leg.getArrival());
+			super.state(legIsFuture, "arrival", "acme.validation.leg.past-arrival.message");
 		}
 
-		Collection<Leg> flightLegs;
 		flightId = leg.getFlight().getId();
-		flightLegs = this.repository.findAllLegsByFlightId(flightId);
-		//No es lo más optimo, con una query como la del aircraft lo sería más
-		notOverlapping = flightLegs.stream().filter(l -> !l.equals(leg) && l.isPublish()) //Solo importa que no se solape con los ya publicados
-			.noneMatch(l -> MomentHelper.isInRange(leg.getDeparture(), l.getDeparture(), l.getArrival()) || MomentHelper.isInRange(leg.getArrival(), l.getDeparture(), l.getArrival()));
+		notOverlapping = this.repository.findNumberOfOverlappedLegs(leg.getDeparture(), leg.getArrival(), flightId) == 0;
 
 		super.state(notOverlapping, "departure", "acme.validation.leg.overlapped");
 		super.state(notOverlapping, "arrival", "acme.validation.leg.overlapped");
