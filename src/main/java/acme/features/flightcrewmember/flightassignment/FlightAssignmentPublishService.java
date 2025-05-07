@@ -30,11 +30,11 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 	public void authorise() {
 
 		boolean status;
-		int masterId;
+		int flightAssignmentId;
 		FlightAssignment flightAssignment;
 
-		masterId = super.getRequest().getData("id", int.class);
-		flightAssignment = this.repository.findFlightAssignmentById(masterId);
+		flightAssignmentId = super.getRequest().getData("id", int.class);
+		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
 
 		status = !flightAssignment.isPublish();
 

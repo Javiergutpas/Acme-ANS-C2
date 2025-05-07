@@ -25,14 +25,16 @@ public class ActivityLogPublishService extends AbstractGuiService<FlightCrewMemb
 
 	@Override
 	public void authorise() {
-		boolean status;
-		int acitivityLogId;
 		ActivityLog activityLog;
+		int activityLogId;
+		int flightCrewMemberId;
+		boolean status;
 
-		acitivityLogId = super.getRequest().getData("id", int.class);
-		activityLog = this.repository.findActivityLogById(acitivityLogId);
+		activityLogId = super.getRequest().getData("id", int.class);
+		activityLog = this.repository.findActivityLogById(activityLogId);
+		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
 
-		status = activityLog != null && !activityLog.isPublish() && activityLog.getActivityLogAssignment() != null && activityLog.getActivityLogAssignment().isPublish();
+		status = activityLog != null && !activityLog.isPublish() && activityLog.getActivityLogAssignment().getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -55,7 +57,13 @@ public class ActivityLogPublishService extends AbstractGuiService<FlightCrewMemb
 
 	@Override
 	public void validate(final ActivityLog activityLog) {
-		;
+		FlightAssignment flightAssignment;
+
+		flightAssignment = activityLog.getActivityLogAssignment();
+
+		if (!flightAssignment.isPublish())
+			super.state(false, "*", "acme.validation.activitylog.flightassignment.publish.message");
+		// && activityLog.getActivityLogAssignment().isPublish()
 	}
 
 	@Override
@@ -74,9 +82,9 @@ public class ActivityLogPublishService extends AbstractGuiService<FlightCrewMemb
 		flightAssignments = this.repository.findAllFlightAssignments();
 		flightAssignmentChoice = SelectChoices.from(flightAssignments, "id", activityLog.getActivityLogAssignment());
 
-		dataset = super.unbindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "activityLogAssignment");
+		dataset = super.unbindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "publish", "activityLogAssignment");
 		dataset.put("flightAssignmentChoice", flightAssignmentChoice);
-		dataset.put("masterId", super.getRequest().getData("masterId", int.class));
+		dataset.put("flightAssignmentId", super.getRequest().getData("flightAssignmentId", int.class));
 
 		super.getResponse().addData(dataset);
 	}
