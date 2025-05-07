@@ -1,7 +1,6 @@
 key,flightNumber,departure,arrival,status,publish,key:deployedAircraft,key:departureAirport,key:arrivalAirport,key:flight
-## base
+# base entity
 leg-01,"ABC1234",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-01
-
 # flightNumber - standard variations (unique)
 leg-02,"ABC0000",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-02
 leg-03,"ABC9866",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-03
@@ -10,46 +9,38 @@ leg-05,"ABC3495",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,air
 leg-06,"ABC4411",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-06
 leg-07,"ABC9999",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-07
 # flightNumber - no singular values
-
 # departure - standard variations
 leg-08,"ABC1235",2025/01/01 00:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-08
 leg-09,"ABC1236",2025/01/01 00:01,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-09
 leg-10,"ABC1237",2200/12/31 23:57,2200/12/31 23:58,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-10
 leg-11,"ABC1238",2200/12/31 23:58,2200/12/31 23:59,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-11
-# singular values departure (leap year)
+# departure - singular values (leap year)
 leg-12,"ABC3497",2028/02/29 0:00,2028/02/29 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-12
-
 # arrival - standard variations
 leg-13,"ABC1239",2025/01/01 00:00,2025/01/01 00:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-13
 leg-14,"ABC2340",2025/01/01 00:00,2025/01/01 00:02,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-14
 leg-15,"ABC2341",2200/12/31 23:57,2200/12/31 23:58,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-15
 leg-16,"ABC2342",2200/12/31 23:58,2200/12/31 23:59,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-16
-# singular values arrival (leap year)
+# arrival - singular values (leap year)
 leg-17,"ABC3491",2028/02/29 00:00,2028/02/29 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-17
-
 # status - standard variations
 leg-18,"ABC2343",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-18
 leg-19,"ABC2344",2025/09/01 10:00,2025/09/01 10:01,DELAYED,false,aircraft-01,airport-01,airport-02,flight-19
 leg-20,"ABC2345",2025/09/01 10:00,2025/09/01 10:01,CANCELLED,false,aircraft-01,airport-01,airport-02,flight-20
 leg-21,"ABC2346",2025/09/01 10:00,2025/09/01 10:01,LANDED,false,aircraft-01,airport-01,airport-02,flight-21
 # status - no singular values
-
 # publish - standard variations
 leg-22,"ABC2347",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,true,aircraft-01,airport-01,airport-02,flight-28
 # publish - no singular values
-
 # aircraft - standard variations
 leg-23,"ABC2348",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-02,airport-01,airport-02,flight-22
 # aircraft - no singular values
-
 # departureAirport - standard variations
 leg-24,"ABC2349",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-03,airport-02,flight-23
 # departureAirport - no singular values
-
 # arrivalAirport - standard variations
 leg-25,"ABC2350",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-04,flight-24
 # arrivalAirport - no singular values
-
 # legs pasadas para estudiantes 3 y 4 (no necesarias para el conjunto de datos de prueba del estudiante 1)
 leg-26,"ABC1111",2020/09/01 10:02,2020/09/01 10:03,ON_TIME,true,aircraft-01,airport-02,airport-01,flight-31
 leg-27,"ABC2222",2020/09/01 10:04,2020/09/01 10:05,ON_TIME,true,aircraft-01,airport-01,airport-02,flight-31

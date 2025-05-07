@@ -1,7 +1,6 @@
 key,tag,requiresSelfTransfer,cost,description,publish,key:manager,key:airline
-# base
+# base entity
 flight-01,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
-
 # tag - standard variations
 flight-02,"L",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
 flight-03,"Lo",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
@@ -14,11 +13,9 @@ flight-09,"<marquee>Hacked</marquee>",false,EUR 500000.00,"Lorem ipsum dolor sit
 flight-10,"<script>alert(‘Hacked!’);</script>",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
 flight-11,"' or 'A' = 'A ",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
 # tag - no singular values
-
 # requiresSelfTransSelfTransfer - standard variations
 flight-12,"Lorem ipsum dolor sit ame",true,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
 # requiresSelfTransSelfTransfer - no singular values
-
 # cost - standard variations
 flight-13,"Lorem ipsum dolor sit ame",false,EUR 0.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
 flight-14,"Lorem ipsum dolor sit ame",false,EUR 0.01,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
@@ -26,7 +23,6 @@ flight-15,"Lorem ipsum dolor sit ame",false,EUR 999999.99,"Lorem ipsum dolor sit
 flight-16,"Lorem ipsum dolor sit ame",false,EUR 1000000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
 flight-17,"Lorem ipsum dolor sit ame",false,USD 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-01
 # cost - no singular values
-
 # description - standard variations
 flight-18,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"",false,manager-01,airline-01
 flight-19,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"L",false,manager-01,airline-01
@@ -39,18 +35,14 @@ flight-25,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"<marquee>Hacked</marq
 flight-26,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"<script>alert(‘Hacked!’);</script>",false,manager-01,airline-01
 flight-27,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"' or 'A' = 'A ",false,manager-01,airline-01
 # description - no singular values
-
 # publish - standard variations
 flight-28,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",true,manager-01,airline-01
 # publish - no singular values
-
 # manager - standard variations
 flight-29,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-02,airline-01
 # manager - no singular values
-
 # airline - standard variations
 flight-30,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",false,manager-01,airline-02
 # airline - no singular values
-
-# fligth para las legs pasadas de los estudiantes 3 y 4
+# flight para las legs pasadas de los estudiantes 3 y 4
 flight-31,"Lorem ipsum dolor sit ame",false,EUR 500000.00,"Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*",true,manager-01,airline-01
