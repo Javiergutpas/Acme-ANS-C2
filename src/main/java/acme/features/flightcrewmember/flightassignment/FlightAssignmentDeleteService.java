@@ -9,6 +9,7 @@ import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
+import acme.entities.activitylog.ActivityLog;
 import acme.entities.flightassignment.CurrentStatus;
 import acme.entities.flightassignment.Duty;
 import acme.entities.flightassignment.FlightAssignment;
@@ -63,6 +64,11 @@ public class FlightAssignmentDeleteService extends AbstractGuiService<FlightCrew
 
 	@Override
 	public void perform(final FlightAssignment flightAssignment) {
+		Collection<ActivityLog> assignmentLogs;
+
+		assignmentLogs = this.repository.findAllLogsByAssignmentId(flightAssignment.getId());
+
+		this.repository.deleteAll(assignmentLogs);
 		this.repository.delete(flightAssignment);
 	}
 
