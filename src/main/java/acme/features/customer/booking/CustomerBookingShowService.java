@@ -13,6 +13,7 @@ import acme.client.services.GuiService;
 import acme.entities.booking.Booking;
 import acme.entities.booking.TypeTravelClass;
 import acme.entities.flight.Flight;
+import acme.entities.passenger.Passenger;
 import acme.realms.customer.Customer;
 
 @GuiService
@@ -55,10 +56,13 @@ public class CustomerBookingShowService extends AbstractGuiService<Customer, Boo
 		Collection<Flight> publishFutureFlights = publishFlights.stream().filter(f -> MomentHelper.isBefore(booking.getPurchaseMoment(), f.getScheduledDeparture())).toList();
 		SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "id", booking.getFlight());
 
+		Collection<Passenger> passengersOnBooking = this.repository.findAllPassengersByBookingId(booking.getId());
+
 		dataset = super.unbindObject(booking, "locatorCode", "purchaseMoment", "travelClass", "price", "lastNibble", "publish", "id");
 		dataset.put("travelClasses", typeTravelClasses);
 		dataset.put("flights", flightChoices);
 
+		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());
 		super.getResponse().addData(dataset);
 	}
 

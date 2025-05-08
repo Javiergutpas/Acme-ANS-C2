@@ -13,7 +13,7 @@ import acme.entities.passenger.Passenger;
 import acme.realms.customer.Customer;
 
 @GuiService
-public class CustomerPassengerListService extends AbstractGuiService<Customer, Passenger> {
+public class CustomerBookingRecordListService extends AbstractGuiService<Customer, Passenger> {
 
 	//Internal state --------------------------------------------
 
@@ -58,7 +58,7 @@ public class CustomerPassengerListService extends AbstractGuiService<Customer, P
 		Dataset dataset;
 		dataset = super.unbindObject(passenger, "fullName", "passportNumber", "dateOfBirth", "publish");
 
-		super.getResponse().addGlobal("showCreate", true);
+		super.getResponse().addGlobal("showCreate", false);
 		super.getResponse().addData(dataset);
 	}
 
