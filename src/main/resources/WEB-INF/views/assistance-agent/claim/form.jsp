@@ -16,7 +16,6 @@
 	<acme:input-select code ="assistance-agent.claim.form.label.leg" path ="leg" choices = "${legs}"/>
 	
 	<acme:input-textbox code ="assistance-agent.claim.form.label.indicator" path ="indicator" readonly="true"/>
-	<acme:input-checkbox code ="assistance-agent.claim.form.label.publish" path ="publish" readonly="true"/>
 	
 	<jstl:choose>
 		<jstl:when test="${acme:anyOf(_command, 'show|update|delete|publish') && publish == false}">
