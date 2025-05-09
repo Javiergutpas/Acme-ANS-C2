@@ -11,7 +11,6 @@
 	<acme:input-double code="assistance-agent.trackingLog.form.label.resolutionPercentage" path="resolutionPercentage"/>	
 	<acme:input-select code="assistance-agent.trackingLog.form.label.status" path="status" choices="${status}"/>
 	<acme:input-textbox code="assistance-agent.trackingLog.form.label.resolution" path="resolution"/>
-	<acme:input-checkbox code ="assistance-agent.trackingLog.form.publish" path ="publish" readonly="true"/>
 		
 	<jstl:choose>
 		<jstl:when test="${acme:anyOf(_command, 'show|update|delete|publish') && publish == false}">
