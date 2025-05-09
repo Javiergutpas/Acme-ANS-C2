@@ -16,11 +16,11 @@ claim-11,2022/07/02 00:00,a@b.esx,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,le
 claim-12,2022/07/02 00:00,lorem-ipsum@dolor.sit.amet.consectetur.adipiscing.elit.sed.do.eiusmod.tempor.incididunt.ut.labore.et.dolore.magna.aliqua.Ut.enim.ad.minim.veniam.quis.nostrud.exercitation.ullamco.laboris.nisi.ut.aliquip.ex.ea.commodo.consequat.duis.aute.irure.doloris.edu,Viaje ruidoso,LUGGAGE_ISSUES,true,agent-01,leg-27
 claim-13,2022/07/02 00:00,lorem-ipsum@dolor.sit.amet.consectetur.adipiscing.elit.sed.do.eiusmod.tempor.incididunt.ut.labore.et.dolore.magna.aliqua.Ut.enim.ad.minim.veniam.quis.nostrud.exercitation.ullamco.laboris.nisi.ut.aliquip.ex.ea.commodo.consequat.duis.aute.irure.dolor.es.org,Viaje ruidoso,LUGGAGE_ISSUES,true,agent-01,leg-27
 # description - standard variations
-claim-14,2022/07/02 00:00,joel@acme.com,Lorem ipsum dolor sit amet. consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*,LUGGAGE_ISSUES,true,agent-01,leg-27
+claim-14,2022/07/02 00:00,joel@acme.com,Lorem ipsum dolor sit amet. consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut*,LUGGAGE_ISSUES,false,agent-01,leg-27
 claim-15,2022/07/02 00:00,joel@acme.com,L,LUGGAGE_ISSUES,false,agent-01,leg-27
 claim-16,2022/07/02 00:00,joel@acme.com,Lo,LUGGAGE_ISSUES,false,agent-01,leg-27
-claim-17,2022/07/02 00:00,joel@acme.com,Lorem ipsum dolor sit amet. consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor,LUGGAGE_ISSUES,true,agent-01,leg-27
-claim-18,2022/07/02 00:00,joel@acme.com,Lorem ipsum dolor sit amet. consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor*,LUGGAGE_ISSUES,true,agent-01,leg-28
+claim-17,2022/07/02 00:00,joel@acme.com,Lorem ipsum dolor sit amet. consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor,LUGGAGE_ISSUES,false,agent-01,leg-27
+claim-18,2022/07/02 00:00,joel@acme.com,Lorem ipsum dolor sit amet. consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor*,LUGGAGE_ISSUES,false,agent-01,leg-28
 # description - no singular values
 claim-19,2022/07/02 00:00,joel@acme.com,โลเร็ม อิปซัม,LUGGAGE_ISSUES,false,agent-01,leg-28
 claim-20,2022/07/02 00:00,joel@acme.com,โلوريم إيبسوم,LUGGAGE_ISSUES,false,agent-01,leg-28
