@@ -1,0 +1,16 @@
+customer.customer-dashboard.form.title = Panel de control del cliente
+
+customer.dashboard.list.label.lastFiveDestinations = Últimos cinco destinos
+customer.dashboard.list.label.spentBookingsMoney = Dinero gastado durante el último año
+customer.dashboard.list.label.economyBookings = Reservas en clase económica
+customer.dashboard.list.label.businessBookings = Reservas en clase business
+customer.dashboard.list.label.bookingsTotalCost = Coste total de reservas
+customer.dashboard.list.label.bookingsAverageCost = Coste promedio de reservas en los últimos 5 años
+customer.dashboard.list.label.bookingsMinimumCost = Coste mínimo de reserva en los últimos 5 años
+customer.dashboard.list.label.bookingsMaximumCost = Coste máximo de Reserva en los últimos 5 años
+customer.dashboard.list.label.bookingsDeviationCost = Desviación del coste de reserva en los últimos 5 años
+customer.dashboard.list.label.bookingsTotalPassengers = Pasajeros totales
+customer.dashboard.list.label.bookingsAveragePassengers = Promedio de pasajeros por reserva
+customer.dashboard.list.label.bookingsMinimumPassengers = Mínimo de pasajeros por reserva
+customer.dashboard.list.label.bookingsMaximumPassengers = Máximo de pasajeros por reserva
+customer.dashboard.list.label.bookingsDeviationPassengers = Desviación del número de pasajeros

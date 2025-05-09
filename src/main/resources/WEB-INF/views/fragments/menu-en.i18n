@@ -71,8 +71,9 @@ master.menu.technician.maintenanceRecords.maintenanceRecords-list = Maintenance 
 
 # master.menu.customer ##########################################################
 master.menu.customer = Customer
-master.menu.customer.bookings-list = Bookings List
-master.menu.customer.passengers-list = Passengers List
+master.menu.customer.bookings-list = Bookings list
+master.menu.customer.passengers-list = Passengers list
+master.menu.customer.show-dashboard = Show dashboard
 
 # master.menu.menu.assistance-agent ##########################################################
 master.menu.assistance-agent = Assistance agent
