@@ -2,9 +2,9 @@ key,registrationMoment,passengerEmail,description,type,publish,key:assistanceAge
 # base entity
 claim-01,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
 # registrationMoment - standard variations
-claim-02,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
-claim-03,2022/01/01 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
-claim-04,2022/01/01 00:01,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
+claim-02,2022/11/01 17:01,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
+claim-03,2020/09/01 10:03,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
+claim-04,2020/09/01 10:04,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
 claim-05,2024/12/31 23:59,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
 claim-06,2025/01/01 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
 # passengerEmail - standard variations
