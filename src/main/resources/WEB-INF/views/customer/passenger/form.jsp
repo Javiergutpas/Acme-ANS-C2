@@ -16,7 +16,7 @@
      	</jstl:when>
      
      	<jstl:when test="${acme:anyOf(_command,'create') }">
-			<acme:submit code="customer.passenger.list.button.create" action="/customer/passenger/create"/>
+			<acme:submit code="customer.passenger.form.button.create" action="/customer/passenger/create"/>
 		</jstl:when>
     </jstl:choose>
  </acme:form>

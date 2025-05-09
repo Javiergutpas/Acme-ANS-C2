@@ -1,0 +1,16 @@
+customer.customer-dashboard.form.title = Customer Dashboard
+
+customer.dashboard.list.label.lastFiveDestinations = Last five destinations
+customer.dashboard.list.label.spentBookingsMoney = Money spent in bookings during the last year
+customer.dashboard.list.label.economyBookings = Economy class bookings
+customer.dashboard.list.label.businessBookings = Business class bookings
+customer.dashboard.list.label.bookingsTotalCost = Total bookings cost in the last five years
+customer.dashboard.list.label.bookingsAverageCost = Average bookings cost in the last five years
+customer.dashboard.list.label.bookingsMinimumCost = Minimum bookings cost in the last five years
+customer.dashboard.list.label.bookingsMaximumCost = Maximum bookings cost in the last five years
+customer.dashboard.list.label.bookingsDeviationCost = Bookings cost deviation in the last five years
+customer.dashboard.list.label.bookingsTotalPassengers = Total passengers
+customer.dashboard.list.label.bookingsAveragePassengers = Average passengers per booking
+customer.dashboard.list.label.bookingsMinimumPassengers = Minimum passengers per booking
+customer.dashboard.list.label.bookingsMaximumPassengers = Maximum passengers per booking
+customer.dashboard.list.label.bookingsDeviationPassengers = Passenger count deviation

@@ -17,7 +17,14 @@
 				<acme:submit code="customer.booking.form.button.delete" action="/customer/booking/delete"/>
 				<jstl:if test="${_command != 'create'}">
  				<acme:button code="customer.booking.form.add.passenger" action="/customer/booking-record/create?bookingId=${id}"/>
- 				<acme:button code="customer.booking.form.delete.passenger" action="/customer/booking-record/delete?bookingId=${id}"/>
+ 				
+ 				
+ 				<jstl:if test="${showDelete}">
+ 					<acme:button code="customer.booking.form.delete.passenger" action="/customer/booking-record/delete?bookingId=${id}"/>
+ 				</jstl:if>
+ 				
+ 				
+ 				<acme:button code="customer.booking.form.show.passengers" action="/customer/passenger/bookingRecord-list?bookingId=${id}"/>
  			</jstl:if>
 		</jstl:when>
 		
@@ -26,9 +33,5 @@
 		</jstl:when>
 			
     </jstl:choose>
-    <jstl:if test="${_command != 'create'}">
- 		<acme:button code="customer.booking.form.show.passengers" action="/customer/passenger/list?bookingId=${id}"/>
- 	</jstl:if>
-   
     
 </acme:form>
