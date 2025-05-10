@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
+import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.airline.Airline;
@@ -59,16 +60,17 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 	public void validate(final Flight flight) {
 		boolean atLeastOneLeg;
 		boolean allLegsPublished;
+		boolean flightInFuture; //evita que se publique el vuelo con datos erróneos(fechas pasadas) al igual que se hace en leg
 		Collection<Leg> flightLegs;
-		// Puede que sea necesario validar que el vuelo es futuro al publicar, por si pasara el tiempo
-		// y las fechas se convirtieran en pasadas
 
 		flightLegs = this.repository.findAllLegsByFlightId(flight.getId());
 		atLeastOneLeg = !flightLegs.isEmpty();
 		allLegsPublished = flightLegs.stream().allMatch(l -> l.isPublish());
+		flightInFuture = flight.getScheduledDeparture() == null ? false : MomentHelper.isPresentOrFuture(flight.getScheduledDeparture());
 
 		super.state(atLeastOneLeg, "*", "acme.validation.flight.publish-no-legs");
 		super.state(allLegsPublished, "*", "acme.validation.flight.publish-legs-not-published");
+		super.state(flightInFuture, "*", "acme.validation.flight.publish-past-flight");
 	}
 
 	@Override

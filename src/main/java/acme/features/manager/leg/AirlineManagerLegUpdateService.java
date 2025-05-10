@@ -60,10 +60,12 @@ public class AirlineManagerLegUpdateService extends AbstractGuiService<AirlineMa
 	public void validate(final Leg leg) {
 		boolean legIsFuture;
 
-		if (leg.getDeparture() != null) { //Solo hace falta validar el departure, ya que arrival es posterior
+		if (leg.getDeparture() != null) {
 			legIsFuture = MomentHelper.isPresentOrFuture(leg.getDeparture());
 			super.state(legIsFuture, "departure", "acme.validation.leg.past-departure.message");
-
+		} else if (leg.getArrival() != null) {
+			legIsFuture = MomentHelper.isPresentOrFuture(leg.getArrival());
+			super.state(legIsFuture, "arrival", "acme.validation.leg.past-arrival.message");
 		}
 	}
 

@@ -17,7 +17,6 @@ import acme.client.components.validation.Optional;
 import acme.client.components.validation.ValidMoney;
 import acme.client.components.validation.ValidString;
 import acme.client.helpers.SpringHelper;
-import acme.constraints.ValidFlight;
 import acme.entities.airline.Airline;
 import acme.entities.leg.Leg;
 import acme.realms.manager.AirlineManager;
@@ -27,7 +26,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@ValidFlight
 public class Flight extends AbstractEntity {
 
 	// Serialisation version --------------------------------------------
@@ -71,7 +69,7 @@ public class Flight extends AbstractEntity {
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlight(this.getId());
+		legs = repository.getLegsByFlightOrderedByDeparture(this.getId());
 
 		departure = legs.isEmpty() ? null : legs.get(0).getDeparture();
 
@@ -85,7 +83,7 @@ public class Flight extends AbstractEntity {
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlight(this.getId());
+		legs = repository.getLegsByFlightOrderedByArrival(this.getId());
 
 		arrival = legs.isEmpty() ? null : legs.get(legs.size() - 1).getArrival();
 
@@ -99,7 +97,7 @@ public class Flight extends AbstractEntity {
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlight(this.getId());
+		legs = repository.getLegsByFlightOrderedByDeparture(this.getId());
 
 		city = legs.isEmpty() ? null : legs.get(0).getDepartureAirport().getCity();
 
@@ -113,7 +111,7 @@ public class Flight extends AbstractEntity {
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlight(this.getId());
+		legs = repository.getLegsByFlightOrderedByArrival(this.getId());
 
 		city = legs.isEmpty() ? null : legs.get(legs.size() - 1).getArrivalAirport().getCity();
 
@@ -126,9 +124,21 @@ public class Flight extends AbstractEntity {
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getNumberOfLegs(this.getId()); // if there are no legs, returns 0
+		legs = repository.getNumberOfLegs(this.getId());
 
-		return legs > 0 ? legs - 1 : 0; //if there are no legs for a flight, there are 0 layovers
+		return legs > 0 ? legs - 1 : 0; //Si el vuelo no tiene tramos, hay 0 escalas
+	}
+
+	//Esta propiedad derivada es para los seleccionables de vuelos del estudiante 2 (customers)
+	@Transient
+	public String getFlightLabel() {
+		String label;
+
+		if (this.getDestinationCity() != null && this.getOriginCity() != null) {
+			label = "" + this.getOriginCity() + " - " + this.getDestinationCity();
+			return label;
+		} else //Cuando un vuelo está publicado las ciudades nunca serán null, pero puede pasar si no lo estuviera
+			return null;
 	}
 
 	// Relationships -----------------------------------------------------
