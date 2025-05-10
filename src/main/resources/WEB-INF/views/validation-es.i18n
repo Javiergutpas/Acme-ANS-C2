@@ -16,7 +16,7 @@ acme.validation.leg.overlapped = El tramo está solapado con algún otro tramo p
 acme.validation.leg.used-aircraft = El avión ya está asignado a otro tramo no cancelado en el mismo intervalo de tiempo
 acme.validation.leg.inactive-aircraft = No se puede asignar un avión que no está activo
 acme.validation.leg.flight.number.duplicated.message = Número de vuelo duplicado
-acme.validation.leg.flight.number.message = El número de vuelo debe empezar por el IATA
+acme.validation.leg.flight.number.message = El número de vuelo debe empezar por el IATA de la aerolínea del avión
 acme.validation.leg.airport.sameAirport = Los aeropuertos de salida y llegada deben ser distintos
 
 acme.validation.activitylog.message = Registro de actividades inválido

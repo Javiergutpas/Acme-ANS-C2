@@ -60,7 +60,7 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 	public void validate(final Flight flight) {
 		boolean atLeastOneLeg;
 		boolean allLegsPublished;
-		boolean flightInFuture;
+		boolean flightInFuture; //evita que se publique el vuelo con datos erróneos(fechas pasadas) al igual que se hace en leg
 		Collection<Leg> flightLegs;
 
 		flightLegs = this.repository.findAllLegsByFlightId(flight.getId());

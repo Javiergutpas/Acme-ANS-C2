@@ -16,7 +16,7 @@ acme.validation.leg.overlapped = Leg is overlapping with another published leg
 acme.validation.leg.used-aircraft = Aircraft is already assigned to another not cancelled leg in the same time interval
 acme.validation.leg.inactive-aircraft = Aircraft must be active
 acme.validation.leg.flight.number.duplicated.message = Flight number duplicated
-acme.validation.leg.flight.number.message = Flight Number must start with IATA
+acme.validation.leg.flight.number.message = Flight number must start with the IATA code of the aircraft's airline
 acme.validation.leg.airport.sameAirport = Arrival and departure airports must be different
 
 acme.validation.activitylog.message = Invalid activity log
