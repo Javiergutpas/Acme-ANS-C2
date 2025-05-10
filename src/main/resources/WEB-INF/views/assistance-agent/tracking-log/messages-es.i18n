@@ -26,3 +26,9 @@ assistance-agent.trackingLog.form.button.publish = Publicar
 assistance-agent.trackingLog.form.button.create = Crear
 
 acme.validation.trackingLog.unpublished.message = No puedes publicar el registro sin publicar antes su reclamacion
+
+#Errores validate
+
+assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage = Porcentaje menor o igual al último registro de seguimiento.
+assistanceAgent.tracking-log.form.error.date-not-valid = Fecha no valida
+assistanceAgent.tracking-log.form.error.indicator-pending = Estado no valido para este porcentage de resolucion
