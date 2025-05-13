@@ -1,0 +1,10 @@
+authenticated.technician.form.title = Formulario de Técnico
+authenticated.technician.form.label.licenseNumber = Número de Licencia:
+authenticated.technician.form.label.phoneNumber = Número de Teléfono:
+authenticated.technician.form.label.specialisation = Especialización:
+authenticated.technician.form.label.anualHealthTest = Prueba de Salud Aprobada:
+authenticated.technician.form.label.experienceYears = Años de Experiencia:
+authenticated.technician.form.label.certifications = Certificaciones:
+
+authenticated.technician.form.button.create = Registrar Técnico
+authenticated.technician.form.button.update = Actualizar Técnico
