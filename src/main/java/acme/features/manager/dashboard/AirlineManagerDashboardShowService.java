@@ -30,7 +30,7 @@ public class AirlineManagerDashboardShowService extends AbstractGuiService<Airli
 
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true); //Restringir que un manager solo pueda ver su dashboard
+		super.getResponse().setAuthorised(true);
 	}
 
 	@Override
@@ -43,8 +43,8 @@ public class AirlineManagerDashboardShowService extends AbstractGuiService<Airli
 		Integer yearsToRetire;
 		double ratioOfOnTimeLegs;
 		double ratioOfDelayedLegs;
-		Airport mostPopularAirport;
-		Airport leastPopularAirport;
+		String mostPopularAirport;
+		String leastPopularAirport;
 		Integer numberOfOnTimeLegs;
 		Integer numberOfDelayedLegs;
 		Integer numberOfLandedLegs;
@@ -70,8 +70,8 @@ public class AirlineManagerDashboardShowService extends AbstractGuiService<Airli
 
 		airports = (List<Airport>) this.repository.findAirportsOrderedByPopularity(managerId);
 
-		mostPopularAirport = !airports.isEmpty() ? null : airports.get(0);
-		leastPopularAirport = !airports.isEmpty() ? null : airports.get(airports.size() - 1);
+		mostPopularAirport = airports.isEmpty() ? null : airports.get(0).getIataCode();
+		leastPopularAirport = airports.isEmpty() ? null : airports.get(airports.size() - 1).getIataCode();
 
 		Map<LegStatus, Integer> numberOfLegsByStatus = this.repository.findNumberOfLegsByStatus(managerId).stream().collect(Collectors.toMap(row -> (LegStatus) row[0], row -> ((Long) row[1]).intValue()));
 

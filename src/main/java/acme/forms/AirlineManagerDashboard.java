@@ -3,7 +3,6 @@ package acme.forms;
 
 import acme.client.components.basis.AbstractForm;
 import acme.client.components.datatypes.Money;
-import acme.entities.airport.Airport;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +20,8 @@ public class AirlineManagerDashboard extends AbstractForm {
 	Integer						yearsToRetire; //Retirement at 65
 	Double						ratioOfOnTimeLegs;
 	Double						ratioOfDelayedLegs;
-	Airport						mostPopularAirport;
-	Airport						leastPopularAirport;
+	String						mostPopularAirport; //Se mostrará el IATA
+	String						leastPopularAirport;
 	Integer						numberOfOnTimeLegs;
 	Integer						numberOfDelayedLegs;
 	Integer						numberOfLandedLegs;

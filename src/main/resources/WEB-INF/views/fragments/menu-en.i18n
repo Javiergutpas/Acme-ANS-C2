@@ -57,6 +57,7 @@ master.menu.user-account.consumer-profile = Consumer profile
 # master.menu.manager ########################################################
 master.menu.airline-manager = Airline Manager
 master.menu.airline-manager.flights-list = Flights List
+master.menu.manager.dashboard-show = Dashboard
 
 # master.menu.flightcrewmember ########################################################
 master.menu.flightcrewmember = Flight Crew Member
@@ -73,7 +74,7 @@ master.menu.technician.maintenanceRecords.maintenanceRecords-list = Maintenance 
 master.menu.customer = Customer
 master.menu.customer.bookings-list = Bookings list
 master.menu.customer.passengers-list = Passengers list
-master.menu.customer.show-dashboard = Show dashboard
+master.menu.customer.show-dashboard = Dashboard
 
 # master.menu.menu.assistance-agent ##########################################################
 master.menu.assistance-agent = Assistance agent
