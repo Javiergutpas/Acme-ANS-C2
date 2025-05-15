@@ -41,6 +41,8 @@
 		
 		<acme:menu-option code="master.menu.airline-manager" access="hasRealm('AirlineManager')">
 			<acme:menu-suboption code="master.menu.airline-manager.flights-list" action="/airline-manager/flight/list"/>
+			<acme:menu-separator/>
+			<acme:menu-suboption code="master.menu.manager.dashboard-show" action="/airline-manager/airline-manager-dashboard/show"/>
 		</acme:menu-option>
 		
 		<acme:menu-option code="master.menu.flightcrewmember" access="hasRealm('FlightCrewMember')">

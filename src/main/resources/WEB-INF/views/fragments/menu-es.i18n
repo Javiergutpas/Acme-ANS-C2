@@ -60,6 +60,7 @@ master.menu.user-account.technician-profile = Perfil de técnico
 # master.menu.manager ########################################################
 master.menu.airline-manager = Mánager de Aerolínea
 master.menu.airline-manager.flights-list = Lista de Vuelos
+master.menu.manager.dashboard-show = Panel de Control
 
 # master.menu.flightcrewmember ########################################################
 master.menu.flightcrewmember = Miembro de la tripulación del vuelo
