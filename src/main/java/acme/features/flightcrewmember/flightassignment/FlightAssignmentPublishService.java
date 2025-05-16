@@ -70,8 +70,10 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		leg = flightAssignment.getFlightAssignmentLeg();
 
-		completedLeg = leg.getArrival().before(MomentHelper.getCurrentMoment());
-		super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
+		if (leg != null && leg.getArrival() != null) {
+			completedLeg = leg.getArrival().before(MomentHelper.getCurrentMoment());
+			super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
+		}
 
 		availableMember = this.repository.findFlightCrewMemberById(flightCrewMemberId).getAvailabilityStatus().equals(AvailabilityStatus.AVAILABLE);
 		super.state(availableMember, "*", "acme.validation.flightassignment.flightcrewmember.available.message");
@@ -85,9 +87,11 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 				super.state(count == 0, "*", "acme.validation.flightassignment.duty.copilot.message");
 			}
 
-		OverlappedLegs = this.repository.findFlightAssignmentsByFlightCrewMemberInRange(flightCrewMemberId, leg.getDeparture(), leg.getArrival());
-		legsOverlap = OverlappedLegs.isEmpty();
-		super.state(legsOverlap, "*", "acme.validation.flightassignment.leg.overlap.message");
+		if (leg != null && leg.getArrival() != null) {
+			OverlappedLegs = this.repository.findFlightAssignmentsByFlightCrewMemberInRange(flightCrewMemberId, leg.getDeparture(), leg.getArrival());
+			legsOverlap = OverlappedLegs.isEmpty();
+			super.state(legsOverlap, "*", "acme.validation.flightassignment.leg.overlap.message");
+		}
 	}
 
 	@Override
