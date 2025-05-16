@@ -49,7 +49,7 @@ public class AdministratorAircraftDisableService extends AbstractGuiService<Admi
 
 	@Override
 	public void bind(final Aircraft aircraft) {
-		super.bindObject(aircraft, "model", "registrationNumber", "capacity", "cargoWeight", "status", "details", "airline");
+		super.bindObject(aircraft, "model", "registrationNumber", "capacity", "cargoWeight", "details", "airline");
 	}
 
 	@Override
