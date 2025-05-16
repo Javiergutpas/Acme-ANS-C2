@@ -34,3 +34,4 @@ assistanceAgent.tracking-log.form.error.last-moment-update-not-valid = Date no v
 assistanceAgent.tracking-log.form.error.indicator-pending = Status not valid for this resolution percentage
 assistanceAgent.tracking-log.form.error.resolution-not-valid = Can´t complete resolution until 100 percentage
 assistanceAgent.tracking-log.form.error.resolution-required = Resolution required for this status
+assistanceAgent.tracking-log.form.error.message.completed = You cant create more tracking logs

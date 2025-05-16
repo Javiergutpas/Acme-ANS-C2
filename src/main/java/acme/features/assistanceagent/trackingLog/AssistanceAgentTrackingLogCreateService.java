@@ -98,7 +98,7 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 			maxResolutionPercentage = this.repository.findMaxResolutionPercentageByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
 			finalMaxResolutionPercentage = maxResolutionPercentage != null ? maxResolutionPercentage : 0.0;
 
-			super.state(trackingLog.getResolutionPercentage() > finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
+			super.state(trackingLog.getResolutionPercentage() >= finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
 		}
 
 		//Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
@@ -124,6 +124,16 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 
 			if (requiresResolutionReason)
 				super.state(hasResolutionReason, "resolution", "assistanceAgent.tracking-log.form.error.resolution-required");
+		}
+
+		// Condicion para un tracking log excepcional tras el ultimo al 100
+
+		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
+
+			Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
+
+			super.state(countLogsWith100 < 2, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.message.completed");
+
 		}
 
 	}
