@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
 import acme.client.helpers.MomentHelper;
+import acme.client.helpers.StringHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.claims.Claim;
@@ -115,17 +116,22 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 			super.state(maxLastUpdateMoment.before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-moment-update-not-valid");
 		}
 
-		;
+		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
+		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
+
+			boolean requiresResolutionReason = trackingLog.getStatus() == TrackingLogStatus.ACCEPTED || trackingLog.getStatus() == TrackingLogStatus.REJECTED;
+			boolean hasResolutionReason = !StringHelper.isBlank(trackingLog.getResolution());
+
+			if (requiresResolutionReason)
+				super.state(hasResolutionReason, "resolution", "assistanceAgent.tracking-log.form.error.resolution-required");
+		}
 
 	}
 
 	//Seguro hace falta el momento actual?
 	@Override
 	public void perform(final TrackingLog trackingLog) {
-		//Date lastUpdateMoment;
 
-		//	lastUpdateMoment = MomentHelper.getCurrentMoment();
-		//trackingLog.setLastUpdateMoment(lastUpdateMoment);
 		this.repository.save(trackingLog);
 	}
 
