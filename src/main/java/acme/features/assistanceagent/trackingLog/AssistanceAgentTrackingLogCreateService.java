@@ -1,6 +1,7 @@
 
 package acme.features.assistanceagent.trackingLog;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +75,7 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 		int claimId;
 		claimId = super.getRequest().getData("claimId", int.class);
 		claim = this.repository.findClaimById(claimId);
+		Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
 
 		//Condicion para que el estado del tracking log sea pending si el porcentage no es 100
 		if (!super.getBuffer().getErrors().hasErrors("indicator")) {
@@ -102,19 +104,20 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 		}
 
 		//Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
-		if (!super.getBuffer().getErrors().hasErrors("date"))
+		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
 
-			super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "date", "assistanceAgent.tracking-log.form.error.date-not-valid");
+			super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
 
 		//Condicion para que la fecha de los tracking logs sea creciente
-		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
+		if (!claimTrackingLogs.isEmpty())
+			if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
 
-			Date maxLastUpdateMoment;
+				Date maxLastUpdateMoment;
 
-			maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
+				maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
 
-			super.state(maxLastUpdateMoment.before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-moment-update-not-valid");
-		}
+				super.state(maxLastUpdateMoment.before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-moment-update-not-valid");
+			}
 
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {

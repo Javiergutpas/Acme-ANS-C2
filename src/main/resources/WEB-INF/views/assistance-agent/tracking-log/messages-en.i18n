@@ -35,3 +35,4 @@ assistanceAgent.tracking-log.form.error.indicator-pending = Status not valid for
 assistanceAgent.tracking-log.form.error.resolution-not-valid = Can´t complete resolution until 100 percentage
 assistanceAgent.tracking-log.form.error.resolution-required = Resolution required for this status
 assistanceAgent.tracking-log.form.error.message.completed = You cant create more tracking logs
+assistanceAgent.tracking-log.form.error.date-not-valid = Can´t be before claims date
