@@ -1,7 +1,7 @@
 key,flightNumber,departure,arrival,status,publish,key:deployedAircraft,key:departureAirport,key:arrivalAirport,key:flight
 # base entity
 leg-01,"ABC1234",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-01
-# flightNumber - standard variations (unique)
+# flightNumber - standard variations
 leg-02,"ABC0000",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-02
 leg-03,"ABC9866",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-03
 leg-04,"ABC5910",2025/09/01 10:00,2025/09/01 10:01,ON_TIME,false,aircraft-01,airport-01,airport-02,flight-04

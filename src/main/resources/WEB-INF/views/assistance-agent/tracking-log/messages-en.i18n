@@ -25,4 +25,12 @@ assistance-agent.trackingLog.form.button.delete = Delete
 assistance-agent.trackingLog.form.button.publish = Publish
 assistance-agent.trackingLog.form.button.create = Create
 
-acme.validation.trackingLog.unpublished.message = Cant publish tracking log until publish the claim first
+acme.validation.trackingLog.unpublished.message = Cant publish tracking log until publish the claim first.
+
+#Errores validate
+
+assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage = Lower or equal percentage than the last tracking log
+assistanceAgent.tracking-log.form.error.last-moment-update-not-valid = Date no valid
+assistanceAgent.tracking-log.form.error.indicator-pending = Status not valid for this resolution percentage
+assistanceAgent.tracking-log.form.error.resolution-not-valid = Can´t complete resolution until 100 percentage
+assistanceAgent.tracking-log.form.error.resolution-required = Resolution required for this status

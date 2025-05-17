@@ -18,10 +18,9 @@
 	<acme:input-select code ="airline-manager.leg.form.label.arrivalAirport" path ="arrivalAirport" choices="${arrivalAirports}"/>
 	<jstl:choose>
 		<jstl:when test="${acme:anyOf(_command,'show|delete|publish')}">
-			<acme:input-double code ="airline-manager.leg.form.label.durationInHours" path ="durationInHours" readonly="true"/>	
+			<acme:input-integer code ="airline-manager.leg.form.label.durationInHours" path ="durationInHours" readonly="true"/>	
 		</jstl:when>
 	</jstl:choose>
-	<!-- acme:input-integer no va bien -->
 	<jstl:choose>
 		<jstl:when test="${acme:anyOf(_command,'show|update|delete|publish') && publish == false}">
 			<acme:submit code="airline-manager.leg.form.button.update" action="/airline-manager/leg/update"/>

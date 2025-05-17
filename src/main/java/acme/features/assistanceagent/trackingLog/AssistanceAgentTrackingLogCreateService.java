@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
 import acme.client.helpers.MomentHelper;
+import acme.client.helpers.StringHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.claims.Claim;
@@ -68,16 +69,69 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 
 	@Override
 	public void validate(final TrackingLog trackingLog) {
-		;
+
+		Claim claim;
+		int claimId;
+		claimId = super.getRequest().getData("claimId", int.class);
+		claim = this.repository.findClaimById(claimId);
+
+		//Condicion para que el estado del tracking log sea pending si el porcentage no es 100
+		if (!super.getBuffer().getErrors().hasErrors("indicator")) {
+			boolean bool1;
+			boolean bool2;
+
+			if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
+				bool1 = trackingLog.getStatus() == TrackingLogStatus.PENDING && trackingLog.getResolutionPercentage() < 100;
+				bool2 = trackingLog.getStatus() != TrackingLogStatus.PENDING && trackingLog.getResolutionPercentage() == 100;
+				super.state(bool1 || bool2, "status", "assistanceAgent.tracking-log.form.error.indicator-pending");
+			}
+
+		}
+
+		//Condicion para que el porcentaje de los tracking logs sea creciente
+		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
+
+			Double maxResolutionPercentage;
+			double finalMaxResolutionPercentage;
+
+			// Manejo seguro del valor nulo devuelto por la consulta
+			maxResolutionPercentage = this.repository.findMaxResolutionPercentageByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
+			finalMaxResolutionPercentage = maxResolutionPercentage != null ? maxResolutionPercentage : 0.0;
+
+			super.state(trackingLog.getResolutionPercentage() > finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
+		}
+
+		//Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
+		if (!super.getBuffer().getErrors().hasErrors("date"))
+
+			super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "date", "assistanceAgent.tracking-log.form.error.date-not-valid");
+
+		//Condicion para que la fecha de los tracking logs sea creciente
+		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
+
+			Date maxLastUpdateMoment;
+
+			maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
+
+			super.state(maxLastUpdateMoment.before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-moment-update-not-valid");
+		}
+
+		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
+		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
+
+			boolean requiresResolutionReason = trackingLog.getStatus() == TrackingLogStatus.ACCEPTED || trackingLog.getStatus() == TrackingLogStatus.REJECTED;
+			boolean hasResolutionReason = !StringHelper.isBlank(trackingLog.getResolution());
+
+			if (requiresResolutionReason)
+				super.state(hasResolutionReason, "resolution", "assistanceAgent.tracking-log.form.error.resolution-required");
+		}
+
 	}
 
-	//Segurohace falta el momento actual?
+	//Seguro hace falta el momento actual?
 	@Override
 	public void perform(final TrackingLog trackingLog) {
-		Date lastUpdateMoment;
 
-		lastUpdateMoment = MomentHelper.getCurrentMoment();
-		trackingLog.setLastUpdateMoment(lastUpdateMoment);
 		this.repository.save(trackingLog);
 	}
 

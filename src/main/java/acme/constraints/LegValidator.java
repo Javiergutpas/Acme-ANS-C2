@@ -54,7 +54,7 @@ public class LegValidator extends AbstractValidator<ValidLeg, Leg> {
 				if (leg.getDeployedAircraft() != null) {
 					boolean containsIATA;
 					String iataFromAirline = leg.getDeployedAircraft().getAirline().getIataCode();
-					containsIATA = StringHelper.startsWith(leg.getFlightNumber(), iataFromAirline, false); //must be in upper case
+					containsIATA = StringHelper.startsWith(leg.getFlightNumber(), iataFromAirline, false); //El flightNumber introducido debe estar en mayúsculas
 					super.state(context, containsIATA, "flightNumber", "acme.validation.leg.flight.number.message");
 				}
 

@@ -16,7 +16,10 @@ public interface FlightRepository extends AbstractRepository {
 	Integer getNumberOfLegs(int flightId);
 
 	@Query("select l from Leg l where l.flight.id = :flightId order by l.departure asc")
-	List<Leg> getLegsByFlight(int flightId);
+	List<Leg> getLegsByFlightOrderedByDeparture(int flightId);
+
+	@Query("select l from Leg l where l.flight.id = :flightId order by l.arrival asc")
+	List<Leg> getLegsByFlightOrderedByArrival(int flightId);
 
 	@Query("select count(l) from Leg l where l.flight.id = :flightId and l.publish = true")
 	Integer getPublishedLegsByFlight(int flightId);
