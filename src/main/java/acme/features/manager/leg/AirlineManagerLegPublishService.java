@@ -84,7 +84,12 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 
 	@Override
 	public void bind(final Leg leg) {
-		super.bindObject(leg, "flightNumber", "departure", "arrival", "status", "departureAirport", "arrivalAirport", "deployedAircraft", "durationInHours");
+		LegStatus status;
+
+		status = super.getRequest().getData("status", LegStatus.class);
+
+		super.bindObject(leg, "flightNumber", "departure", "arrival", "departureAirport", "arrivalAirport", "deployedAircraft", "durationInHours");
+		leg.setStatus(status);
 	}
 
 	@Override
