@@ -54,13 +54,16 @@ public class CustomerBookingShowService extends AbstractGuiService<Customer, Boo
 		SelectChoices typeTravelClasses = SelectChoices.from(TypeTravelClass.class, booking.getTravelClass());
 		Collection<Flight> publishFlights = this.repository.findAllPublishFlights();
 		Collection<Flight> publishFutureFlights = publishFlights.stream().filter(f -> MomentHelper.isBefore(booking.getPurchaseMoment(), f.getScheduledDeparture())).toList();
-		SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "id", booking.getFlight());
 
 		Collection<Passenger> passengersOnBooking = this.repository.findAllPassengersByBookingId(booking.getId());
 
 		dataset = super.unbindObject(booking, "locatorCode", "purchaseMoment", "travelClass", "price", "lastNibble", "publish", "id");
 		dataset.put("travelClasses", typeTravelClasses);
-		dataset.put("flights", flightChoices);
+
+		if (!publishFutureFlights.isEmpty()) {
+			SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "flightLabel", booking.getFlight());
+			dataset.put("flights", flightChoices);
+		}
 
 		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());
 		super.getResponse().addData(dataset);

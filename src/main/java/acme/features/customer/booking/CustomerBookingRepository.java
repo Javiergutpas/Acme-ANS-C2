@@ -30,7 +30,7 @@ public interface CustomerBookingRepository extends AbstractRepository {
 	@Query("select b from Booking b where b.locatorCode= :locatorCode")
 	Booking findBookingByLocatorCode(String locatorCode);
 
-	@Query("SELECT br.passenger FROM BookingRecord br WHERE br.booking.id = :bookingId")
+	@Query("select br.passenger from BookingRecord br where br.booking.id = :bookingId")
 	Collection<Passenger> findAllPassengersByBookingId(int bookingId);
 
 	@Query("select br from BookingRecord br where br.booking.id = :bookingId")
