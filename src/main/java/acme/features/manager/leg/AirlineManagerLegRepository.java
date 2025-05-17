@@ -33,8 +33,14 @@ public interface AirlineManagerLegRepository extends AbstractRepository {
 	@Query("select a from Aircraft a")
 	Collection<Aircraft> findAllAircrafts();
 
+	@Query("select a from Aircraft a where a.id = :aircraftId")
+	Aircraft findAircraftById(int aircraftId);
+
 	@Query("select ap from Airport ap")
 	Collection<Airport> findAllAirports();
+
+	@Query("select ap from Airport ap where ap.id = :airportId")
+	Airport findAirportById(int airportId);
 
 	@Query("select count(l) from Leg l where l.publish = true and l.flight.id = :flightId and ((l.departure >= :departure and l.departure <= :arrival) or (l.arrival >= :departure and l.arrival <= :arrival))")
 	Integer findNumberOfOverlappedLegs(Date departure, Date arrival, int flightId);

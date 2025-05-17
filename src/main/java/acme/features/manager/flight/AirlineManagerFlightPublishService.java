@@ -44,14 +44,13 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 			if (method.equals("GET"))
 				status = true;
 			else {
-				String airlineId;
+				int airlineId;
 				Airline airline;
 
-				airlineId = super.getRequest().getData("airline", String.class);
-				//Si se introduce por hackeo un string no convertible a integer dará un binding exception(number-format)
-				airline = this.repository.findAirlineById(Integer.valueOf(airlineId));
+				airlineId = super.getRequest().getData("airline", int.class);
+				airline = this.repository.findAirlineById(airlineId);
 
-				status = airlineId == "0" || airline != null;
+				status = airlineId == 0 || airline != null;
 			}
 
 		}

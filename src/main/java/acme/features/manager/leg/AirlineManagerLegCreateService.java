@@ -38,6 +38,35 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId;
 
+		if (status) { //POST Hacking
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				int aircraftId;
+				int departureAirportId;
+				int arrivalAirportId;
+
+				Aircraft aircraft;
+				Airport departureAirport;
+				Airport arrivalAirport;
+
+				aircraftId = super.getRequest().getData("deployedAircraft", int.class);
+				departureAirportId = super.getRequest().getData("departureAirport", int.class);
+				arrivalAirportId = super.getRequest().getData("arrivalAirport", int.class);
+
+				aircraft = this.repository.findAircraftById(aircraftId);
+				departureAirport = this.repository.findAirportById(departureAirportId);
+				arrivalAirport = this.repository.findAirportById(arrivalAirportId);
+
+				status = (aircraftId == 0 || aircraft != null) && (departureAirportId == 0 || departureAirport != null) && (arrivalAirportId == 0 || arrivalAirport != null);
+			}
+
+		}
+
 		super.getResponse().setAuthorised(status);
 	}
 
