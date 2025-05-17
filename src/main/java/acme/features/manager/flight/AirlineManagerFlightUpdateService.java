@@ -33,26 +33,7 @@ public class AirlineManagerFlightUpdateService extends AbstractGuiService<Airlin
 		flightId = super.getRequest().getData("id", int.class);
 		flight = this.repository.findFlightById(flightId);
 		managerId = flight == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId && !flight.isPublish();
-
-		if (status) { //POST Hacking de atributos de navegación
-			String method;
-
-			method = super.getRequest().getMethod();
-
-			if (method.equals("GET"))
-				status = true;
-			else {
-				int airlineId;
-				Airline airline;
-
-				airlineId = super.getRequest().getData("airline", int.class);
-				airline = this.repository.findAirlineById(airlineId);
-
-				status = airlineId == 0 || airline != null;
-			}
-
-		}
+		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId;
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -70,7 +51,14 @@ public class AirlineManagerFlightUpdateService extends AbstractGuiService<Airlin
 
 	@Override
 	public void bind(final Flight flight) {
-		super.bindObject(flight, "tag", "cost", "description", "airline");
+		int airlineId;
+		Airline airline;
+
+		airlineId = super.getRequest().getData("airline", int.class);
+		airline = this.repository.findAirlineById(airlineId);
+
+		super.bindObject(flight, "tag", "cost", "description");
+		flight.setAirline(airline);
 	}
 
 	@Override

@@ -38,35 +38,6 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId;
 
-		if (status) { //POST Hacking
-			String method;
-
-			method = super.getRequest().getMethod();
-
-			if (method.equals("GET"))
-				status = true;
-			else {
-				int aircraftId;
-				int departureAirportId;
-				int arrivalAirportId;
-
-				Aircraft aircraft;
-				Airport departureAirport;
-				Airport arrivalAirport;
-
-				aircraftId = super.getRequest().getData("deployedAircraft", int.class);
-				departureAirportId = super.getRequest().getData("departureAirport", int.class);
-				arrivalAirportId = super.getRequest().getData("arrivalAirport", int.class);
-
-				aircraft = this.repository.findAircraftById(aircraftId);
-				departureAirport = this.repository.findAirportById(departureAirportId);
-				arrivalAirport = this.repository.findAirportById(arrivalAirportId);
-
-				status = (aircraftId == 0 || aircraft != null) && (departureAirportId == 0 || departureAirport != null) && (arrivalAirportId == 0 || arrivalAirport != null);
-			}
-
-		}
-
 		super.getResponse().setAuthorised(status);
 	}
 
@@ -88,11 +59,31 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 
 	@Override
 	public void bind(final Leg leg) {
+		int aircraftId;
+		int departureAirportId;
+		int arrivalAirportId;
+
+		Aircraft deployedAircraft;
+		Airport departureAirport;
+		Airport arrivalAirport;
 		LegStatus status;
 
+		//Si se intenta POST Hacking para cambiar los ids a algo que no sea integer o el status
+		//a un valor invalido, saltan bind exceptions (permitidas)
+
+		aircraftId = super.getRequest().getData("deployedAircraft", int.class);
+		departureAirportId = super.getRequest().getData("departureAirport", int.class);
+		arrivalAirportId = super.getRequest().getData("arrivalAirport", int.class);
+
+		deployedAircraft = this.repository.findAircraftById(aircraftId);
+		departureAirport = this.repository.findAirportById(departureAirportId);
+		arrivalAirport = this.repository.findAirportById(arrivalAirportId);
 		status = super.getRequest().getData("status", LegStatus.class);
 
-		super.bindObject(leg, "flightNumber", "departure", "arrival", "status", "departureAirport", "arrivalAirport", "deployedAircraft");
+		super.bindObject(leg, "flightNumber", "departure", "arrival");
+		leg.setDeployedAircraft(deployedAircraft);
+		leg.setDepartureAirport(departureAirport);
+		leg.setArrivalAirport(arrivalAirport);
 		leg.setStatus(status);
 	}
 
