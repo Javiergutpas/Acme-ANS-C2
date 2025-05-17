@@ -2,11 +2,13 @@
 package acme.features.assistanceagent.claim;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
+import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.claims.Claim;
@@ -67,15 +69,15 @@ public class AssistanceAgentClaimShowService extends AbstractGuiService<Assistan
 		SelectChoices typesChoices;
 		SelectChoices legsChoices;
 
-		//Date actualMoment;
+		Date actualMoment;
 
-		//actualMoment = MomentHelper.getCurrentMoment();
+		actualMoment = MomentHelper.getCurrentMoment();
 
 		indicator = claim.getIndicator();
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
-		//legs = this.repository.findAllPublishedLegsBefore(actualMoment);
+		legs = this.repository.findAllPublishedLegsBefore(actualMoment);
 		//legs = this.repository.findAllPublishedLegs();
-		legs = this.repository.findAllLeg();
+		//legs = this.repository.findAllLeg();
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
 		dataset = super.unbindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "publish");

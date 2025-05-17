@@ -68,12 +68,6 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void perform(final Claim claim) {
-		Date registrationMoment;
-
-		registrationMoment = MomentHelper.getCurrentMoment();
-		claim.setRegistrationMoment(registrationMoment);
-
-		claim.setPublish(false);
 
 		this.repository.save(claim);
 	}
@@ -88,13 +82,12 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 		Collection<Leg> legs;
 
-		//Date actualMoment;
-		//
+		Date now = MomentHelper.getCurrentMoment();
 
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
-		//legs = this.repository.findAllPublishedLegsBefore(actualMoment);
+		legs = this.repository.findAllPublishedLegsBefore(now);
 		//legs = this.repository.findAllLeg();
-		legs = this.repository.findAllPublishedLegs();
+		//legs = this.repository.findAllPublishedLegs();
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
 		dataset = super.unbindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");
