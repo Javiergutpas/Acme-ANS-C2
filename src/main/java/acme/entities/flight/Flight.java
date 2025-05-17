@@ -134,11 +134,14 @@ public class Flight extends AbstractEntity {
 	public String getFlightLabel() {
 		String label;
 
+		label = "";
+
 		if (this.getDestinationCity() != null && this.getOriginCity() != null) {
 			label = "" + this.getOriginCity() + " - " + this.getDestinationCity();
 			return label;
-		} else //Cuando un vuelo está publicado las ciudades nunca serán null, pero puede pasar si no lo estuviera
-			return null;
+		}
+
+		return label;
 	}
 
 	// Relationships -----------------------------------------------------
