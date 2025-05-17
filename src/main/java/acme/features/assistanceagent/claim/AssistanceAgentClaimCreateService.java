@@ -29,7 +29,12 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true);
+
+		//no estoy seguro aqui aun, puede ser el comentado
+		//super.getResponse().setAuthorised(true);
+
+		boolean status = super.getRequest().getPrincipal().hasRealmOfType(AssistanceAgent.class);
+		super.getResponse().setAuthorised(status);
 
 	}
 
@@ -44,10 +49,7 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 		claim = new Claim();
 		claim.setRegistrationMoment(registrationMoment);
 
-		//		claim.setPassengerEmail("");
-		//		claim.setDescription("");
 		claim.setAssistanceAgent(agent);
-		//		claim.setType(ClaimType.FLIGHT_ISSUES);
 
 		claim.setPublish(false);
 
@@ -63,17 +65,13 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void validate(final Claim claim) {
-		;
+
+		if (!super.getBuffer().getErrors().hasErrors("registrationMoment"))
+			super.state(claim.getLeg().getArrival().before(claim.getRegistrationMoment()), "registrationMoment", "assistanceAgent.claim.form.error.registration-before-leg");
 	}
 
 	@Override
 	public void perform(final Claim claim) {
-		Date registrationMoment;
-
-		registrationMoment = MomentHelper.getCurrentMoment();
-		claim.setRegistrationMoment(registrationMoment);
-
-		claim.setPublish(false);
 
 		this.repository.save(claim);
 	}
@@ -88,13 +86,12 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 		Collection<Leg> legs;
 
-		//Date actualMoment;
-		//
+		Date now = MomentHelper.getCurrentMoment();
 
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
-		//legs = this.repository.findAllPublishedLegsBefore(actualMoment);
+		legs = this.repository.findAllPublishedLegsBefore(now);
 		//legs = this.repository.findAllLeg();
-		legs = this.repository.findAllPublishedLegs();
+		//legs = this.repository.findAllPublishedLegs();
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
 		dataset = super.unbindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");
