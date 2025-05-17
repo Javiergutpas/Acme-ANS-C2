@@ -35,6 +35,26 @@ public class AirlineManagerFlightUpdateService extends AbstractGuiService<Airlin
 		managerId = flight == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
 		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId && !flight.isPublish();
 
+		if (status) { //POST Hacking de atributos de navegación
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String airlineId;
+				Airline airline;
+
+				airlineId = super.getRequest().getData("airline", String.class);
+				//Si se introduce por hackeo un string no convertible a integer dará un binding exception(number-format)
+				airline = this.repository.findAirlineById(Integer.valueOf(airlineId));
+
+				status = airlineId == "0" || airline != null;
+			}
+
+		}
+
 		super.getResponse().setAuthorised(status);
 	}
 
@@ -79,6 +99,7 @@ public class AirlineManagerFlightUpdateService extends AbstractGuiService<Airlin
 		dataset.put("originCity", flight.getOriginCity());
 		dataset.put("destinationCity", flight.getDestinationCity());
 		dataset.put("numberOfLayovers", flight.getNumberOfLayovers());
+		dataset.put("airline", choicesAirline.getSelected().getKey());
 		dataset.put("airlines", choicesAirline);
 
 		super.getResponse().addData(dataset);

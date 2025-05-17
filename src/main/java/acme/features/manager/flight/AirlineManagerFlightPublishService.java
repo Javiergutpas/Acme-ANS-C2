@@ -12,7 +12,6 @@ import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.airline.Airline;
 import acme.entities.flight.Flight;
-import acme.entities.leg.Leg;
 import acme.realms.manager.AirlineManager;
 
 @GuiService
@@ -36,6 +35,26 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 		flight = this.repository.findFlightById(flightId);
 		managerId = flight == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
 		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId && !flight.isPublish();
+
+		if (status) { //POST Hacking de atributos de navegación
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String airlineId;
+				Airline airline;
+
+				airlineId = super.getRequest().getData("airline", String.class);
+				//Si se introduce por hackeo un string no convertible a integer dará un binding exception(number-format)
+				airline = this.repository.findAirlineById(Integer.valueOf(airlineId));
+
+				status = airlineId == "0" || airline != null;
+			}
+
+		}
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -61,12 +80,15 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 		boolean atLeastOneLeg;
 		boolean allLegsPublished;
 		boolean flightInFuture; //evita que se publique el vuelo con datos erróneos(fechas pasadas) al igual que se hace en leg
-		Collection<Leg> flightLegs;
+		int numberOfLegs;
+		int numberOfPublishedLegs;
 
-		flightLegs = this.repository.findAllLegsByFlightId(flight.getId());
-		atLeastOneLeg = !flightLegs.isEmpty();
-		allLegsPublished = flightLegs.stream().allMatch(l -> l.isPublish());
-		flightInFuture = flight.getScheduledDeparture() == null ? false : MomentHelper.isPresentOrFuture(flight.getScheduledDeparture());
+		numberOfLegs = this.repository.findNumberOfLegsByFlightId(flight.getId());
+		numberOfPublishedLegs = this.repository.findNumberOfPublishedLegsByFlightId(flight.getId());
+
+		atLeastOneLeg = numberOfLegs > 0;
+		allLegsPublished = numberOfLegs == numberOfPublishedLegs;
+		flightInFuture = flight.getScheduledDeparture() == null ? true : MomentHelper.isPresentOrFuture(flight.getScheduledDeparture());
 
 		super.state(atLeastOneLeg, "*", "acme.validation.flight.publish-no-legs");
 		super.state(allLegsPublished, "*", "acme.validation.flight.publish-legs-not-published");

@@ -24,7 +24,25 @@ public class AirlineManagerFlightCreateService extends AbstractGuiService<Airlin
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true);
+		String method;
+		boolean status;
+
+		method = super.getRequest().getMethod();
+
+		//POST Hacking de atributos de navegación
+		if (method.equals("GET"))
+			status = true;
+		else {
+			String airlineId;
+			Airline airline;
+
+			airlineId = super.getRequest().getData("airline", String.class);
+			//Si se introduce por hackeo un string no convertible a integer dará un binding exception(number-format)
+			airline = this.repository.findAirlineById(Integer.valueOf(airlineId));
+
+			status = airlineId == "0" || airline != null;
+		}
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
