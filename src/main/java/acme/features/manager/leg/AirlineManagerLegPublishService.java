@@ -119,6 +119,7 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		choicesArrivalAirport = SelectChoices.from(airports, "iataCode", leg.getArrivalAirport());
 
 		dataset = super.unbindObject(leg, "flightNumber", "departure", "arrival", "publish");
+		dataset.put("flightId", leg.getFlight().getId());
 		dataset.put("durationInHours", leg.getDurationInHours());
 		dataset.put("statuses", choicesStatuses);
 		dataset.put("departureAirports", choicesDepartureAirport);
