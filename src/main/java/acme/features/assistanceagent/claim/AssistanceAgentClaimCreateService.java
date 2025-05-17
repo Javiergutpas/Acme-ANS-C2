@@ -29,6 +29,10 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void authorise() {
+
+		//no estoy seguro aqui aun, puede ser el comentado
+		//super.getResponse().setAuthorised(true);
+
 		boolean status = super.getRequest().getPrincipal().hasRealmOfType(AssistanceAgent.class);
 		super.getResponse().setAuthorised(status);
 
