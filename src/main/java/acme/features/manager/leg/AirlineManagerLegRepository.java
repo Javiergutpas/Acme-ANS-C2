@@ -12,7 +12,6 @@ import acme.entities.aircraft.Aircraft;
 import acme.entities.airport.Airport;
 import acme.entities.flight.Flight;
 import acme.entities.leg.Leg;
-import acme.entities.leg.LegStatus;
 import acme.realms.manager.AirlineManager;
 
 @Repository
@@ -45,6 +44,6 @@ public interface AirlineManagerLegRepository extends AbstractRepository {
 	@Query("select count(l) from Leg l where l.publish = true and l.flight.id = :flightId and ((l.departure >= :departure and l.departure <= :arrival) or (l.arrival >= :departure and l.arrival <= :arrival))")
 	Integer findNumberOfOverlappedLegs(Date departure, Date arrival, int flightId);
 
-	@Query("select count(l.deployedAircraft) from Leg l where l.deployedAircraft.id = :aircraftId and l.publish = true and l.status != :status and ((l.departure >= :departure and l.departure <= :arrival) or (l.arrival >= :departure and l.arrival <= :arrival))")
-	Integer findNumberOfLegsDeployingSameAircraft(Date departure, Date arrival, LegStatus status, Integer aircraftId);
+	@Query("select count(l.deployedAircraft) from Leg l where l.deployedAircraft.id = :aircraftId and l.publish = true and ((l.departure >= :departure and l.departure <= :arrival) or (l.arrival >= :departure and l.arrival <= :arrival))")
+	Integer findNumberOfLegsDeployingSameAircraft(Date departure, Date arrival, Integer aircraftId);
 }

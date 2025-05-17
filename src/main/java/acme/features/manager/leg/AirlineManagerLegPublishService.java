@@ -116,8 +116,8 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 
 		Integer aircraftId;
 		aircraftId = leg.getDeployedAircraft() != null ? leg.getDeployedAircraft().getId() : null;
-		Integer numberOfLegsDeployingAircraft = this.repository.findNumberOfLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), LegStatus.CANCELLED, aircraftId);
-		aircraftNotUsed = leg.getStatus() == LegStatus.CANCELLED || numberOfLegsDeployingAircraft == 0; //Si el leg se ha cancelado no importa que se asigne un aircraft usado
+		Integer numberOfLegsDeployingAircraft = this.repository.findNumberOfLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), aircraftId);
+		aircraftNotUsed = numberOfLegsDeployingAircraft == 0;
 
 		super.state(aircraftNotUsed, "deployedAircraft", "acme.validation.leg.used-aircraft");
 
