@@ -29,7 +29,8 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true);
+		boolean status = super.getRequest().getPrincipal().hasRealmOfType(AssistanceAgent.class);
+		super.getResponse().setAuthorised(status);
 
 	}
 
@@ -44,10 +45,7 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 		claim = new Claim();
 		claim.setRegistrationMoment(registrationMoment);
 
-		//		claim.setPassengerEmail("");
-		//		claim.setDescription("");
 		claim.setAssistanceAgent(agent);
-		//		claim.setType(ClaimType.FLIGHT_ISSUES);
 
 		claim.setPublish(false);
 
@@ -63,7 +61,9 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void validate(final Claim claim) {
-		;
+
+		if (!super.getBuffer().getErrors().hasErrors("registrationMoment"))
+			super.state(claim.getLeg().getArrival().before(claim.getRegistrationMoment()), "registrationMoment", "assistanceAgent.claim.form.error.registration-before-leg");
 	}
 
 	@Override
