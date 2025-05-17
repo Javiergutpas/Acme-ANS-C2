@@ -30,6 +30,9 @@ public interface TechnicianMaintenanceRecordRepository extends AbstractRepositor
 	@Query("SELECT i.task FROM Involves i WHERE i.maintenanceRecord.id = :id")
 	Collection<Task> findAllRelatedTaskWithMaintenanceRecord(int id);
 
+	@Query("SELECT COUNT(i.task) FROM Involves i WHERE i.maintenanceRecord.id = :id")
+	Integer countAllRelatedTaskWithMaintenanceRecord(int id);
+
 	@Query("SELECT COUNT(i.task) FROM Involves i WHERE i.maintenanceRecord.id = :id AND i.task.published = FALSE")
 	Integer findNotPublishedTaskOfMaintenanceRecord(int id);
 
