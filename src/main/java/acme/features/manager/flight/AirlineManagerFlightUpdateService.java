@@ -99,7 +99,6 @@ public class AirlineManagerFlightUpdateService extends AbstractGuiService<Airlin
 		dataset.put("originCity", flight.getOriginCity());
 		dataset.put("destinationCity", flight.getDestinationCity());
 		dataset.put("numberOfLayovers", flight.getNumberOfLayovers());
-		dataset.put("airline", choicesAirline.getSelected().getKey());
 		dataset.put("airlines", choicesAirline);
 
 		super.getResponse().addData(dataset);
