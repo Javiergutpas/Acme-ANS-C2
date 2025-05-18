@@ -4,9 +4,7 @@ package acme.entities.maintenanceRecord;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.Index;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
@@ -27,14 +25,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(indexes = {
-	@Index(columnList = "published"),//
-	@Index(columnList = "status,technician_id"),//
-	@Index(columnList = "technician_id,moment"),//
-	@Index(columnList = "technician_id,estimatedCost_amount"),//
-	@Index(columnList = "technician_id,estimatedCost_currency"),//
-	@Index(columnList = "technician_id,nextInspectionDate")
-})
+//@Table(indexes = {
+//	@Index(columnList = "published"),
+//	@Index(columnList = "status,technician_id"),//
+//	@Index(columnList = "technician_id,moment"),//
+//	@Index(columnList = "technician_id,estimatedCost_amount"),//
+//	@Index(columnList = "technician_id,estimatedCost_currency"),//
+//	@Index(columnList = "technician_id,nextInspectionDate")
+//})
 public class MaintenanceRecord extends AbstractEntity {
 	// Serialisation version --------------------------------------------------
 
