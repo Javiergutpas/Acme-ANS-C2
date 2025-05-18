@@ -66,8 +66,12 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 	@Override
 	public void validate(final Claim claim) {
 
-		if (!super.getBuffer().getErrors().hasErrors("registrationMoment"))
-			super.state(claim.getLeg().getArrival().before(claim.getRegistrationMoment()), "registrationMoment", "assistanceAgent.claim.form.error.registration-before-leg");
+		if (claim.getLeg() != null)
+			if (!super.getBuffer().getErrors().hasErrors("registrationMoment"))
+				super.state(claim.getLeg().getArrival().before(claim.getRegistrationMoment()), "registrationMoment", "assistanceAgent.claim.form.error.registration-before-leg");
+
+		if (!super.getBuffer().getErrors().hasErrors("leg"))
+			super.state(claim.getLeg() != null && claim.getLeg().isPublish(), "leg", "assistanceAgent.claim.form.error.leg-null");
 	}
 
 	@Override
