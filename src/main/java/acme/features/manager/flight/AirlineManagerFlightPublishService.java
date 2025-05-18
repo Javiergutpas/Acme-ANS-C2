@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
-import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.airline.Airline;
@@ -66,20 +65,20 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 	public void validate(final Flight flight) {
 		boolean atLeastOneLeg;
 		boolean allLegsPublished;
-		boolean flightInFuture; //evita que se publique el vuelo con datos erróneos(fechas pasadas) al igual que se hace en leg
 		int numberOfLegs;
 		int numberOfPublishedLegs;
+
+		//Tenemos la seguridad de que los horarios de las legs no están solapados al haberlo validado en la publicación de cada leg
+		//Si se hicera la validación aquí, no se podrían modificar las legs solapadas ya publicadas
 
 		numberOfLegs = this.repository.findNumberOfLegsByFlightId(flight.getId());
 		numberOfPublishedLegs = this.repository.findNumberOfPublishedLegsByFlightId(flight.getId());
 
 		atLeastOneLeg = numberOfLegs > 0;
 		allLegsPublished = numberOfLegs == numberOfPublishedLegs;
-		flightInFuture = flight.getScheduledDeparture() == null ? true : MomentHelper.isPresentOrFuture(flight.getScheduledDeparture());
 
 		super.state(atLeastOneLeg, "*", "acme.validation.flight.publish-no-legs");
 		super.state(allLegsPublished, "*", "acme.validation.flight.publish-legs-not-published");
-		super.state(flightInFuture, "*", "acme.validation.flight.publish-past-flight");
 	}
 
 	@Override
