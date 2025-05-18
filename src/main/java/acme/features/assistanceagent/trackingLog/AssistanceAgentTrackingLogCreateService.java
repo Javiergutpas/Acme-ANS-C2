@@ -130,13 +130,20 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 		}
 
 		// Condicion para un tracking log excepcional tras el ultimo al 100
-
 		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
 
 			Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
 
 			super.state(countLogsWith100 < 2, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.message.completed");
 
+		}
+
+		//Condicion para que la fecha del nuevo tracking log no sea anterior a la del uoltimo tracking log 
+		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
+			Date maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
+
+			if (maxLastUpdateMoment != null)
+				super.state(!trackingLog.getLastUpdateMoment().before(maxLastUpdateMoment), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-log-moment-update-not-valid");
 		}
 
 	}
