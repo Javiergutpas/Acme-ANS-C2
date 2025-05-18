@@ -25,14 +25,15 @@ assistance-agent.trackingLog.form.button.delete = Delete
 assistance-agent.trackingLog.form.button.publish = Publish
 assistance-agent.trackingLog.form.button.create = Create
 
-acme.validation.trackingLog.unpublished.message = Cant publish tracking log until publish the claim first.
+acme.validation.trackingLog.unpublished.message = Can't publish tracking log until the claim is published first
 
 #Errores validate
 
-assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage = Lower or equal percentage than the last tracking log
-assistanceAgent.tracking-log.form.error.last-moment-update-not-valid = Date no valid
-assistanceAgent.tracking-log.form.error.indicator-pending = Status not valid for this resolution percentage
-assistanceAgent.tracking-log.form.error.resolution-not-valid = Can´t complete resolution until 100 percentage
-assistanceAgent.tracking-log.form.error.resolution-required = Resolution required for this status
-assistanceAgent.tracking-log.form.error.message.completed = You cant create more tracking logs
-assistanceAgent.tracking-log.form.error.date-not-valid = Can´t be before claims date
+assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage = Resolution percentage must be greater than or equal to the previous tracking log
+assistanceAgent.tracking-log.form.error.last-moment-update-not-valid = Date can't be before the last tracking log
+assistanceAgent.tracking-log.form.error.indicator-pending = Invalid status for this resolution percentage
+assistanceAgent.tracking-log.form.error.resolution-not-valid = Resolution can't be completed until the percentage is 100%
+assistanceAgent.tracking-log.form.error.resolution-required = Resolution is required for this status
+assistanceAgent.tracking-log.form.error.message.completed = You can't create more tracking logs
+assistanceAgent.tracking-log.form.error.date-not-valid = Date can't be before the claim's registration moment
+assistanceAgent.tracking-log.form.error.last-log-moment-update-not-valid = Date can't be before the last tracking log
