@@ -44,8 +44,10 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 	@Override
 	public void load() {
 		FlightAssignment flightAssignment;
+		int id;
 
-		flightAssignment = new FlightAssignment();
+		id = super.getRequest().getData("id", int.class);
+		flightAssignment = this.repository.findFlightAssignmentById(id);
 
 		super.getBuffer().addData(flightAssignment);
 	}
