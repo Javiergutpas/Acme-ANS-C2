@@ -27,7 +27,38 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
+
+		Duty duty;
+		Collection<Leg> legsAvailables;
+		Leg leg;
+		int legId;
+		boolean status;
+
+		status = super.getRequest().getPrincipal().hasRealmOfType(FlightCrewMember.class);
+
 		super.getResponse().setAuthorised(true);
+
+		if (status && super.getRequest().getMethod().equals("POST")) {
+
+			duty = super.getRequest().getData("duty", Duty.class);
+
+			legId = super.getRequest().getData("flightAssignmentLeg", int.class);
+			leg = super.getRequest().getData("flightAssignmentLeg", Leg.class);
+
+			legsAvailables = this.repository.findAllFutureLegs();
+
+			if (duty != null && duty != Duty.PILOT && duty != Duty.CO_PILOT && duty != Duty.CABIN_ATTENDANT && duty != Duty.LEAD_ATTENDANT)
+				status = false;
+
+			if (legId != 0 && !legsAvailables.contains(leg))
+				status = false;
+
+			if (leg != null && !leg.isPublish())
+				status = false;
+
+			super.getResponse().setAuthorised(status);
+		}
+
 	}
 
 	@Override

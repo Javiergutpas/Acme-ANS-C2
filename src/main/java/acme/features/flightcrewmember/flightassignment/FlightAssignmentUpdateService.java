@@ -28,9 +28,13 @@ public class FlightAssignmentUpdateService extends AbstractGuiService<FlightCrew
 	@Override
 	public void authorise() {
 		FlightAssignment flightAssignment;
+		Duty duty;
+		Collection<Leg> legsAvailables;
+		Leg leg;
 		boolean status;
 		int flightAssignmentId;
 		int flightCrewMemberId;
+		int legId;
 
 		flightAssignmentId = super.getRequest().getData("id", int.class);
 		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
@@ -38,6 +42,27 @@ public class FlightAssignmentUpdateService extends AbstractGuiService<FlightCrew
 		status = flightAssignment != null && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId && !flightAssignment.isPublish();
 
 		super.getResponse().setAuthorised(status);
+
+		if (status && super.getRequest().getMethod().equals("POST")) {
+
+			duty = super.getRequest().getData("duty", Duty.class);
+
+			legId = super.getRequest().getData("flightAssignmentLeg", int.class);
+			leg = super.getRequest().getData("flightAssignmentLeg", Leg.class);
+
+			legsAvailables = this.repository.findAllFutureLegs();
+
+			if (duty != null && duty != Duty.PILOT && duty != Duty.CO_PILOT && duty != Duty.CABIN_ATTENDANT && duty != Duty.LEAD_ATTENDANT)
+				status = false;
+
+			if (legId != 0 && !legsAvailables.contains(leg))
+				status = false;
+
+			if (leg != null && !leg.isPublish())
+				status = false;
+
+			super.getResponse().setAuthorised(status);
+		}
 
 	}
 
