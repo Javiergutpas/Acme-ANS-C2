@@ -17,26 +17,22 @@ public class AssistanceAgentClaimController extends AbstractGuiController<Assist
 
 	//Este list es para los claims completados (Accepted or rejected)
 	@Autowired
-	private AssistanceAgentClaimListService			listService;
-
-	//Este list es para los claims NO completados (Undergoing)
-	@Autowired
-	private AssistanceAgentClaimListPendingService	listPendingService;
+	private AssistanceAgentClaimListService		listService;
 
 	@Autowired
-	private AssistanceAgentClaimShowService			showService;
+	private AssistanceAgentClaimShowService		showService;
 
 	@Autowired
-	private AssistanceAgentClaimCreateService		createService;
+	private AssistanceAgentClaimCreateService	createService;
 
 	@Autowired
-	private AssistanceAgentClaimUpdateService		updateService;
+	private AssistanceAgentClaimUpdateService	updateService;
 
 	@Autowired
-	private AssistanceAgentClaimDeleteService		deleteService;
+	private AssistanceAgentClaimDeleteService	deleteService;
 
 	@Autowired
-	private AssistanceAgentClaimPublishService		publishService;
+	private AssistanceAgentClaimPublishService	publishService;
 
 	//Constructors ----------------------------------------------------------------
 
@@ -49,7 +45,6 @@ public class AssistanceAgentClaimController extends AbstractGuiController<Assist
 		super.addBasicCommand("update", this.updateService);
 		super.addBasicCommand("delete", this.deleteService);
 
-		super.addCustomCommand("pending", "list", this.listPendingService);
 		super.addCustomCommand("publish", "update", this.publishService);
 	}
 
