@@ -94,7 +94,7 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 
 		}
 
-		if (!super.getBuffer().getErrors().hasErrors("*")) {
+		if (!super.getBuffer().getErrors().hasErrors("*") && trackingLog.getResolutionPercentage() != null) {
 
 			Double maxPublishedPercentage = this.repository.findMaxPublishedResolutionPercentageByClaimId(claimId);
 
