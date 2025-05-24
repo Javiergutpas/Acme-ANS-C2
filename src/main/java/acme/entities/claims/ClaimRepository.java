@@ -15,7 +15,7 @@ public interface ClaimRepository extends AbstractRepository {
 	//	@Query("SELECT t FROM TrackingLog t WHERE t.claim.id = :claimId ORDER BY t.lastUpdateMoment DESC")
 	//	Collection<TrackingLog> findLastTrackingLogByClaimId(@Param("claimId") int claimId);
 
-	@Query("SELECT t FROM TrackingLog t WHERE t.claim.id = :claimId ORDER BY t.resolutionPercentage DESC, t.lastUpdateMoment DESC")
+	@Query("SELECT t FROM TrackingLog t WHERE t.claim.id = :claimId AND t.publish = true ORDER BY t.resolutionPercentage DESC, t.lastUpdateMoment DESC")
 	Collection<TrackingLog> findLastTrackingLogByClaimId(int claimId);
 
 }
