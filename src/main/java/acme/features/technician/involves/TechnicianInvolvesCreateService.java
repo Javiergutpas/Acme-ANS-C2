@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
+import acme.client.components.principals.Principal;
 import acme.client.components.views.SelectChoices;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
@@ -26,10 +27,33 @@ public class TechnicianInvolvesCreateService extends AbstractGuiService<Technici
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		int technicianId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		String method = super.getRequest().getMethod();
+		boolean authorised = false;
+		Principal principal = super.getRequest().getPrincipal();
+		int userAccountId = principal.getAccountId();
+
 		int maintenanceRecordId = super.getRequest().getData("maintenanceRecordId", int.class);
 		MaintenanceRecord maintenanceRecord = this.repository.findMaintenanceRecordById(maintenanceRecordId);
-		super.getResponse().setAuthorised(technicianId == maintenanceRecord.getTechnician().getId() && maintenanceRecord.getPublished() == false);
+		Technician technician = this.repository.findTechnicianByUserAccoundId(userAccountId);
+
+		if (method.equals("GET"))
+			authorised = technician.getId() == maintenanceRecord.getTechnician().getId() && maintenanceRecord.getPublished() == false;
+
+		else {
+			int id;
+			int version;
+			int taskId;
+			Task task;
+
+			id = super.getRequest().getData("id", int.class);
+			version = super.getRequest().getData("version", int.class);
+
+			taskId = super.getRequest().getData("task", int.class);
+			task = this.repository.findTaskById(taskId);
+			boolean taskExists = this.repository.findAllTaskByTechnicianId(technician.getId()).contains(task);
+			authorised = (taskId == 0 || taskExists) && id == 0 && version == 0 && technician != null;
+		}
+		super.getResponse().setAuthorised(authorised);
 	}
 
 	@Override
