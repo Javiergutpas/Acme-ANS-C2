@@ -1,8 +1,6 @@
 
 package acme.features.assistanceagent.trackingLog;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
@@ -70,7 +68,7 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 
 		Claim claim = trackingLog.getClaim();
 		int claimId = claim.getId();
-		Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
+		//Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
 
 		//Condicion para que el estado del tracking log sea pending si el porcentage no es 100
 		if (!super.getBuffer().getErrors().hasErrors("indicator")) {
@@ -98,12 +96,6 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 			super.state(trackingLog.getResolutionPercentage() >= finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
 		}
 
-		/*
-		 * //Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
-		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
-		 * 
-		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
-		 */
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
 
@@ -122,6 +114,13 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 			super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
 
 		}
+
+		/*
+		 * //Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
+		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
+		 * 
+		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
+		 */
 
 	}
 
