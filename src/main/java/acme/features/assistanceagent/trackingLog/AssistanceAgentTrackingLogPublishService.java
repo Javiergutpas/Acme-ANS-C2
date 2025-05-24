@@ -52,7 +52,7 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 
 	@Override
 	public void bind(final TrackingLog trackingLog) {
-		super.bindObject(trackingLog, "lastUpdateMoment", "step", "resolutionPercentage", "status", "resolution");
+		super.bindObject(trackingLog, "step", "resolutionPercentage", "status", "resolution");
 	}
 
 	@Override
@@ -75,19 +75,6 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 
 		}
 
-		//Condicion para que el porcentaje de los tracking logs sea creciente
-		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
-
-			Double maxResolutionPercentage;
-			double finalMaxResolutionPercentage;
-
-			// Manejo seguro del valor nulo devuelto por la consulta
-			maxResolutionPercentage = this.repository.findMaxResolutionPercentageByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
-			finalMaxResolutionPercentage = maxResolutionPercentage != null ? maxResolutionPercentage : 0.0;
-
-			super.state(trackingLog.getResolutionPercentage() >= finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
-		}
-
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
 
@@ -107,12 +94,22 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 
 		}
 
-		/*
-		 * //Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
-		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
-		 * 
-		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
-		 */
+		if (!super.getBuffer().getErrors().hasErrors("*")) {
+
+			Double maxPublishedPercentage = this.repository.findMaxPublishedResolutionPercentageByClaimId(claimId);
+
+			// Si no hay publicados aún, se permite cualquier porcentaje
+			double max = maxPublishedPercentage != null ? maxPublishedPercentage : -1.0;
+
+			super.state(trackingLog.getResolutionPercentage() >= max, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-published");
+		}
+
+		boolean status;
+
+		status = claim != null && claim.isPublish(); //solo se publican si el claim esta publicado? 
+
+		super.state(status, "*", "acme.validation.trackingLog.unpublished.message");
+
 	}
 	@Override
 	public void perform(final TrackingLog trackingLog) {

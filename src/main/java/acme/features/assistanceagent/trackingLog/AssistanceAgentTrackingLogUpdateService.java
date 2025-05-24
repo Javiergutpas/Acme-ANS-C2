@@ -54,7 +54,7 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 
 	@Override
 	public void bind(final TrackingLog trackingLog) {
-		super.bindObject(trackingLog, "lastUpdateMoment", "step", "resolutionPercentage", "status", "resolution");
+		super.bindObject(trackingLog, "step", "resolutionPercentage", "status", "resolution");
 	}
 
 	@Override
@@ -82,20 +82,6 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 			}
 
 		}
-
-		//Condicion para que el porcentaje de los tracking logs sea creciente
-		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
-
-			Double maxResolutionPercentage;
-			double finalMaxResolutionPercentage;
-
-			// Manejo seguro del valor nulo devuelto por la consulta
-			maxResolutionPercentage = this.repository.findMaxResolutionPercentageByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
-			finalMaxResolutionPercentage = maxResolutionPercentage != null ? maxResolutionPercentage : 0.0;
-
-			super.state(trackingLog.getResolutionPercentage() >= finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
-		}
-
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
 
@@ -105,22 +91,6 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 			if (requiresResolutionReason)
 				super.state(hasResolutionReason, "resolution", "assistanceAgent.tracking-log.form.error.resolution-required");
 		}
-
-		// Condicion para un tracking log excepcional tras el ultimo al 100
-		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
-
-			Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
-
-			super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
-
-		}
-
-		/*
-		 * //Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
-		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
-		 * 
-		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
-		 */
 
 	}
 
