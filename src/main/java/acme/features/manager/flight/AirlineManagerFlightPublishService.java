@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
 import acme.client.components.views.SelectChoices;
-import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.airline.Airline;
 import acme.entities.flight.Flight;
-import acme.entities.leg.Leg;
 import acme.realms.manager.AirlineManager;
 
 @GuiService
@@ -34,9 +32,26 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 
 		flightId = super.getRequest().getData("id", int.class);
 		flight = this.repository.findFlightById(flightId);
-		managerId = flight == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId && !flight.isPublish();
+		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId;
 
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				int airlineId;
+				Airline airline;
+
+				airlineId = super.getRequest().getData("airline", int.class);
+				airline = this.repository.findAirlineById(airlineId);
+
+				status = airlineId == 0 || airline != null;
+			}
+		}
 		super.getResponse().setAuthorised(status);
 	}
 
@@ -60,17 +75,17 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 	public void validate(final Flight flight) {
 		boolean atLeastOneLeg;
 		boolean allLegsPublished;
-		boolean flightInFuture; //evita que se publique el vuelo con datos erróneos(fechas pasadas) al igual que se hace en leg
-		Collection<Leg> flightLegs;
+		int numberOfLegs;
+		int numberOfPublishedLegs;
 
-		flightLegs = this.repository.findAllLegsByFlightId(flight.getId());
-		atLeastOneLeg = !flightLegs.isEmpty();
-		allLegsPublished = flightLegs.stream().allMatch(l -> l.isPublish());
-		flightInFuture = flight.getScheduledDeparture() == null ? false : MomentHelper.isPresentOrFuture(flight.getScheduledDeparture());
+		numberOfLegs = this.repository.findNumberOfLegsByFlightId(flight.getId());
+		numberOfPublishedLegs = this.repository.findNumberOfPublishedLegsByFlightId(flight.getId());
+
+		atLeastOneLeg = numberOfLegs > 0;
+		allLegsPublished = numberOfLegs == numberOfPublishedLegs;
 
 		super.state(atLeastOneLeg, "*", "acme.validation.flight.publish-no-legs");
 		super.state(allLegsPublished, "*", "acme.validation.flight.publish-legs-not-published");
-		super.state(flightInFuture, "*", "acme.validation.flight.publish-past-flight");
 	}
 
 	@Override
