@@ -1,6 +1,7 @@
 
 package acme.features.assistanceagent.claim;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -30,10 +31,32 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 	@Override
 	public void authorise() {
 
-		//no estoy seguro aqui aun, puede ser el comentado
-		//super.getResponse().setAuthorised(true);
+		boolean status;
 
-		boolean status = super.getRequest().getPrincipal().hasRealmOfType(AssistanceAgent.class);
+		String method;
+		Leg leg;
+		int legId;
+
+		method = super.getRequest().getMethod();
+
+		if (method.equals("GET"))
+			status = true;
+		else {
+			String claimType;
+			boolean correctClaimType;
+			legId = super.getRequest().getData("leg", int.class);
+			leg = this.repository.findPublishedLegById(legId);
+			claimType = super.getRequest().getData("type", String.class);
+
+			int version;
+			int id;
+
+			version = super.getRequest().getData("version", int.class);
+			id = super.getRequest().getData("id", int.class);
+
+			correctClaimType = "0".equals(claimType) || Arrays.stream(ClaimType.values()).map(ClaimType::name).anyMatch(name -> name.equals(claimType));
+			status = (legId == 0 || leg != null) && correctClaimType && id == 0 && version == 0;
+		}
 		super.getResponse().setAuthorised(status);
 
 	}
@@ -59,7 +82,7 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void bind(final Claim claim) {
-		super.bindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");
+		super.bindObject(claim, "passengerEmail", "description", "type", "leg");
 
 	}
 

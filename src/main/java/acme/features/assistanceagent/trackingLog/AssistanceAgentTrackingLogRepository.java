@@ -26,9 +26,19 @@ public interface AssistanceAgentTrackingLogRepository extends AbstractRepository
 	@Query("select max(t.resolutionPercentage) from TrackingLog t where t.claim.id = :claimId and t.id != :id")
 	Double findMaxResolutionPercentageByClaimId(int id, int claimId);
 
-	@Query("SELECT COUNT(t) FROM TrackingLog t WHERE t.claim.id = :claimId AND t.resolutionPercentage = 100.00")
+	@Query("SELECT COUNT(t) FROM TrackingLog t WHERE t.claim.id = :claimId AND t.resolutionPercentage = 100.00 AND t.publish = true")
 	Long countTrackingLogsForExceptionalCase(int claimId);
 
 	@Query("select max(t.lastUpdateMoment) from TrackingLog t where t.claim.id = :claimId and t.id != :id")
 	Date findMaxLastUpdateMomentByClaimId(int id, int claimId);
+
+	@Query("SELECT COUNT(t) FROM TrackingLog t WHERE t.claim.id = :claimId AND t.publish = false")
+	Long countUnpublishedLogsByClaimId(int claimId);
+
+	@Query("SELECT COUNT(t) FROM TrackingLog t WHERE t.claim.id = :claimId")
+	Long countAllByClaimId(int claimId);
+
+	@Query("SELECT MAX(t.resolutionPercentage) FROM TrackingLog t WHERE t.claim.id = :claimId AND t.publish = true")
+	Double findMaxPublishedResolutionPercentageByClaimId(int claimId);
+
 }
