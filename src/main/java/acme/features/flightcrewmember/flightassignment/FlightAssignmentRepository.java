@@ -52,4 +52,7 @@ public interface FlightAssignmentRepository extends AbstractRepository {
 
 	@Query("select al from ActivityLog al where al.activityLogAssignment.id = :activityLogAssignmentId")
 	Collection<ActivityLog> findAllLogsByAssignmentId(int activityLogAssignmentId);
+
+	@Query("select l from Leg l where l.id = :legId")
+	Leg findLegById(int legId);
 }

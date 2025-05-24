@@ -1,6 +1,7 @@
 
 package acme.features.flightcrewmember.flightassignment;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,43 +28,47 @@ public class FlightAssignmentUpdateService extends AbstractGuiService<FlightCrew
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
+
 		FlightAssignment flightAssignment;
-		Duty duty;
-		Collection<Leg> legsAvailables;
-		Leg leg;
-		boolean status;
 		int flightAssignmentId;
 		int flightCrewMemberId;
-		int legId;
+		boolean status;
 
 		flightAssignmentId = super.getRequest().getData("id", int.class);
 		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
-		flightCrewMemberId = flightAssignment == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = flightAssignment != null && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId && !flightAssignment.isPublish();
+		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		status = flightAssignment != null && !flightAssignment.isPublish() && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
 
-		super.getResponse().setAuthorised(status);
+		if (status) {
+			String method;
 
-		if (status && super.getRequest().getMethod().equals("POST")) {
+			method = super.getRequest().getMethod();
 
-			duty = super.getRequest().getData("duty", Duty.class);
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String duty;
+				String currentStatus;
+				boolean correctDuty;
+				boolean correctStatus;
+				int legId;
 
-			legId = super.getRequest().getData("flightAssignmentLeg", int.class);
-			leg = super.getRequest().getData("flightAssignmentLeg", Leg.class);
+				Leg leg;
 
-			legsAvailables = this.repository.findAllFutureLegs();
+				legId = super.getRequest().getData("flightAssignmentLeg", int.class);
+				leg = this.repository.findLegById(legId);
 
-			if (duty != null && duty != Duty.PILOT && duty != Duty.CO_PILOT && duty != Duty.CABIN_ATTENDANT && duty != Duty.LEAD_ATTENDANT)
-				status = false;
+				duty = super.getRequest().getData("duty", String.class);
+				currentStatus = super.getRequest().getData("currentStatus", String.class);
 
-			if (legId != 0 && !legsAvailables.contains(leg))
-				status = false;
+				correctDuty = "0".equals(duty) || Arrays.stream(Duty.values()).map(Duty::name).anyMatch(name -> name.equals(duty));
+				correctStatus = "0".equals(currentStatus) || Arrays.stream(CurrentStatus.values()).map(CurrentStatus::name).anyMatch(name -> name.equals(currentStatus));
 
-			if (leg != null && !leg.isPublish())
-				status = false;
-
-			super.getResponse().setAuthorised(status);
+				status = (legId == 0 || leg != null) && correctDuty && correctStatus;
+			}
 		}
 
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override

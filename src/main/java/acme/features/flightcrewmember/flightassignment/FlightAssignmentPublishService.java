@@ -1,6 +1,7 @@
 
 package acme.features.flightcrewmember.flightassignment;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,42 +29,47 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
+
 		FlightAssignment flightAssignment;
-		Duty duty;
-		Collection<Leg> legsAvailables;
-		Leg leg;
-		boolean status;
 		int flightAssignmentId;
 		int flightCrewMemberId;
-		int legId;
+		boolean status;
 
 		flightAssignmentId = super.getRequest().getData("id", int.class);
 		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
-		flightCrewMemberId = flightAssignment == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = flightAssignment != null && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId && !flightAssignment.isPublish();
+		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		status = flightAssignment != null && !flightAssignment.isPublish() && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
+
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String duty;
+				String currentStatus;
+				boolean correctDuty;
+				boolean correctStatus;
+				int legId;
+
+				Leg leg;
+
+				legId = super.getRequest().getData("flightAssignmentLeg", int.class);
+				leg = this.repository.findLegById(legId);
+
+				duty = super.getRequest().getData("duty", String.class);
+				currentStatus = super.getRequest().getData("currentStatus", String.class);
+
+				correctDuty = "0".equals(duty) || Arrays.stream(Duty.values()).map(Duty::name).anyMatch(name -> name.equals(duty));
+				correctStatus = "0".equals(currentStatus) || Arrays.stream(CurrentStatus.values()).map(CurrentStatus::name).anyMatch(name -> name.equals(currentStatus));
+
+				status = (legId == 0 || leg != null) && correctDuty && correctStatus;
+			}
+		}
 
 		super.getResponse().setAuthorised(status);
-
-		if (status && super.getRequest().getMethod().equals("POST")) {
-
-			duty = super.getRequest().getData("duty", Duty.class);
-
-			legId = super.getRequest().getData("flightAssignmentLeg", int.class);
-			leg = super.getRequest().getData("flightAssignmentLeg", Leg.class);
-
-			legsAvailables = this.repository.findAllFutureLegs();
-
-			if (duty != null && duty != Duty.PILOT && duty != Duty.CO_PILOT && duty != Duty.CABIN_ATTENDANT && duty != Duty.LEAD_ATTENDANT)
-				status = false;
-
-			if (legId != 0 && !legsAvailables.contains(leg))
-				status = false;
-
-			if (leg != null && !leg.isPublish())
-				status = false;
-
-			super.getResponse().setAuthorised(status);
-		}
 	}
 
 	@Override
