@@ -60,17 +60,8 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 	@Override
 	public void validate(final TrackingLog trackingLog) {
 
-		boolean status;
-
-		Claim claimStatus = trackingLog.getClaim();
-		status = claimStatus != null && claimStatus.isPublish(); //solo se publican si el claim esta publicado? 
-
-		super.state(status, "*", "acme.validation.trackingLog.unpublished.message");
-		//	
-		Claim claim;
-		int claimId;
-		claimId = super.getRequest().getData("claimId", int.class);
-		claim = this.repository.findClaimById(claimId);
+		Claim claim = trackingLog.getClaim();
+		int claimId = claim.getId();
 		Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
 
 		//Condicion para que el estado del tracking log sea pending si el porcentage no es 100
@@ -99,11 +90,12 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 			super.state(trackingLog.getResolutionPercentage() >= finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
 		}
 
-		//Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
-		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
-
-			super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
-
+		/*
+		 * //Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
+		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
+		 * 
+		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
+		 */
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
 
@@ -119,7 +111,7 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 
 			Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
 
-			super.state(countLogsWith100 < 2, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.message.completed");
+			super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
 
 		}
 	}
