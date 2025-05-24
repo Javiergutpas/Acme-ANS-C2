@@ -104,20 +104,28 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 		}
 
 		//Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
-		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
+		/*
+		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
+		 * 
+		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
+		 */
 
-			super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
+		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
+			super.state(!claim.getRegistrationMoment().after(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
 
 		//Condicion para que la fecha de los tracking logs sea creciente
-		if (!claimTrackingLogs.isEmpty())
-			if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
-
-				Date maxLastUpdateMoment;
-
-				maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
-
-				super.state(maxLastUpdateMoment.before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-moment-update-not-valid");
-			}
+		//No es necesaria?
+		/*
+		 * if (!claimTrackingLogs.isEmpty())
+		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
+		 * 
+		 * Date maxLastUpdateMoment;
+		 * 
+		 * maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
+		 * 
+		 * super.state(maxLastUpdateMoment.before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-moment-update-not-valid");
+		 * }
+		 */
 
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
@@ -134,18 +142,19 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 
 			Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
 
-			super.state(countLogsWith100 < 2, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.message.completed");
+			super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
 
 		}
 
 		//Condicion para que la fecha del nuevo tracking log no sea anterior a la del uoltimo tracking log 
-		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
-			Date maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
-
-			if (maxLastUpdateMoment != null)
-				super.state(!trackingLog.getLastUpdateMoment().before(maxLastUpdateMoment), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-log-moment-update-not-valid");
-		}
-
+		/*
+		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment")) {
+		 * Date maxLastUpdateMoment = this.repository.findMaxLastUpdateMomentByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
+		 * 
+		 * if (maxLastUpdateMoment != null)
+		 * super.state(!trackingLog.getLastUpdateMoment().before(maxLastUpdateMoment), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.last-log-moment-update-not-valid");
+		 * }
+		 */
 	}
 
 	//Seguro hace falta el momento actual?

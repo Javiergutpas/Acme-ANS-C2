@@ -9,6 +9,7 @@ assistance-agent.tracking-log.form.title = Tracking log
 assistance-agent.trackingLog.list.label.lastUpdateMoment = Last update moment
 assistance-agent.trackingLog.list.label.resolutionPercentage = Resolution percentage
 assistance-agent.trackingLog.list.label.status = status
+assistance-agent.trackingLog.list.label.step = Step
 
 assistance-agent.trackingLog.list.button.create = Create
 
