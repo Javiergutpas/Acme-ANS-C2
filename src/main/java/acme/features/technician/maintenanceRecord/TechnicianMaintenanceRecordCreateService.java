@@ -1,6 +1,7 @@
 
 package acme.features.technician.maintenanceRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -29,14 +30,38 @@ public class TechnicianMaintenanceRecordCreateService extends AbstractGuiService
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
+
+		String maintenanceRecordStatus;
+
+		boolean correctStatus;
+		String method;
 		boolean authorised = false;
 		Principal principal = super.getRequest().getPrincipal();
 		int userAccountId = principal.getAccountId();
 
+		method = super.getRequest().getMethod();
 		Technician technician = this.repository.findTechnicianByUserAccoundId(userAccountId);
 
-		if (technician != null)
+		if (method.equals("GET"))
 			authorised = true;
+
+		else {
+			int id;
+			int version;
+			int aircraftId;
+			Aircraft aircraft;
+
+			id = super.getRequest().getData("id", int.class);
+			version = super.getRequest().getData("version", int.class);
+
+			maintenanceRecordStatus = super.getRequest().getData("status", String.class);
+			correctStatus = "0".equals(maintenanceRecordStatus) || Arrays.stream(MaintenanceRecordStatus.values()).map(MaintenanceRecordStatus::name).anyMatch(name -> name.equals(maintenanceRecordStatus));
+
+			aircraftId = super.getRequest().getData("aircraft", int.class);
+			aircraft = this.repository.findAircraftById(aircraftId);
+			boolean aircraftExists = this.repository.findAllAircrafts().contains(aircraft);
+			authorised = (aircraftId == 0 || aircraftExists) && id == 0 && version == 0 && technician != null && correctStatus;
+		}
 
 		super.getResponse().setAuthorised(authorised);
 	}
