@@ -35,6 +35,23 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId;
 
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				int airlineId;
+				Airline airline;
+
+				airlineId = super.getRequest().getData("airline", int.class);
+				airline = this.repository.findAirlineById(airlineId);
+
+				status = airlineId == 0 || airline != null;
+			}
+		}
 		super.getResponse().setAuthorised(status);
 	}
 
@@ -51,14 +68,7 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 
 	@Override
 	public void bind(final Flight flight) {
-		int airlineId;
-		Airline airline;
-
-		airlineId = super.getRequest().getData("airline", int.class);
-		airline = this.repository.findAirlineById(airlineId);
-
-		super.bindObject(flight, "tag", "cost", "description");
-		flight.setAirline(airline);
+		super.bindObject(flight, "tag", "cost", "description", "airline");
 	}
 
 	@Override
@@ -67,9 +77,6 @@ public class AirlineManagerFlightPublishService extends AbstractGuiService<Airli
 		boolean allLegsPublished;
 		int numberOfLegs;
 		int numberOfPublishedLegs;
-
-		//Tenemos la seguridad de que los horarios de las legs no están solapados al haberlo validado en la publicación de cada leg
-		//Si se hicera la validación aquí, no se podrían modificar las legs solapadas ya publicadas
 
 		numberOfLegs = this.repository.findNumberOfLegsByFlightId(flight.getId());
 		numberOfPublishedLegs = this.repository.findNumberOfPublishedLegsByFlightId(flight.getId());

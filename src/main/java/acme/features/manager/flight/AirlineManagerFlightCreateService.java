@@ -24,7 +24,27 @@ public class AirlineManagerFlightCreateService extends AbstractGuiService<Airlin
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true);
+		String method;
+		boolean status;
+
+		method = super.getRequest().getMethod();
+
+		if (method.equals("GET"))
+			status = true;
+		else {
+			int id;
+			int version;
+			int airlineId;
+			Airline airline;
+
+			id = super.getRequest().getData("id", int.class);
+			version = super.getRequest().getData("version", int.class);
+			airlineId = super.getRequest().getData("airline", int.class);
+			airline = this.repository.findAirlineById(airlineId);
+
+			status = (airlineId == 0 || airline != null) && id == 0 && version == 0;
+		}
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
@@ -41,16 +61,7 @@ public class AirlineManagerFlightCreateService extends AbstractGuiService<Airlin
 
 	@Override
 	public void bind(final Flight flight) {
-		int airlineId;
-		Airline airline;
-
-		//Si se intenta POST Hacking para cambiar el status a un valor invalido, salta bind exception (permitida)
-
-		airlineId = super.getRequest().getData("airline", int.class);
-		airline = this.repository.findAirlineById(airlineId);
-
-		super.bindObject(flight, "tag", "cost", "description");
-		flight.setAirline(airline);
+		super.bindObject(flight, "tag", "cost", "description", "airline");
 	}
 
 	@Override
