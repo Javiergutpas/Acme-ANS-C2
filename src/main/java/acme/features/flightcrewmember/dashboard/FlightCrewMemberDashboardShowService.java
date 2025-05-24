@@ -96,10 +96,7 @@ public class FlightCrewMemberDashboardShowService extends AbstractGuiService<Fli
 
 		Date startDate = MomentHelper.getCurrentMoment();
 		Date endDate = MomentHelper.getCurrentMoment();
-		startDate.setMonth(startDate.getMonth() - 1);
-		startDate.setDate(1);
-		endDate.setMonth(startDate.getMonth() - 1);
-		endDate.setDate(30);
+
 		List<Long> counts = this.repository.getDailyFlightAssignments(startDate, endDate, flightCrewMemberId);
 		averageFlightAssignmentInLastMonth = counts.stream().mapToLong(Long::longValue).average().orElse(0.0);
 		minimumFlightAssignmentInLastMonth = counts.stream().min(Long::compare).orElse(0L).intValue();

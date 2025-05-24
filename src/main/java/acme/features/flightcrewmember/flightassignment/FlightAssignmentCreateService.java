@@ -1,6 +1,7 @@
 
 package acme.features.flightcrewmember.flightassignment;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,37 +29,39 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 	@Override
 	public void authorise() {
 
-		Duty duty;
-		Collection<Leg> legsAvailables;
-		Leg leg;
-		int legId;
+		String method;
 		boolean status;
 
-		status = super.getRequest().getPrincipal().hasRealmOfType(FlightCrewMember.class);
+		method = super.getRequest().getMethod();
 
-		super.getResponse().setAuthorised(true);
+		if (method.equals("GET"))
+			status = true;
+		else {
+			String duty;
+			String currentStatus;
+			boolean correctDuty;
+			boolean correctStatus;
+			int legId;
+			int version;
+			int id;
 
-		if (status && super.getRequest().getMethod().equals("POST")) {
-
-			duty = super.getRequest().getData("duty", Duty.class);
+			Leg leg;
 
 			legId = super.getRequest().getData("flightAssignmentLeg", int.class);
-			leg = super.getRequest().getData("flightAssignmentLeg", Leg.class);
+			leg = this.repository.findLegById(legId);
 
-			legsAvailables = this.repository.findAllFutureLegs();
+			version = super.getRequest().getData("version", int.class);
+			id = super.getRequest().getData("id", int.class);
 
-			if (duty != null && duty != Duty.PILOT && duty != Duty.CO_PILOT && duty != Duty.CABIN_ATTENDANT && duty != Duty.LEAD_ATTENDANT)
-				status = false;
+			duty = super.getRequest().getData("duty", String.class);
+			currentStatus = super.getRequest().getData("currentStatus", String.class);
 
-			if (legId != 0 && !legsAvailables.contains(leg))
-				status = false;
+			correctDuty = "0".equals(duty) || Arrays.stream(Duty.values()).map(Duty::name).anyMatch(name -> name.equals(duty));
+			correctStatus = "0".equals(currentStatus) || Arrays.stream(CurrentStatus.values()).map(CurrentStatus::name).anyMatch(name -> name.equals(currentStatus));
 
-			if (leg != null && !leg.isPublish())
-				status = false;
-
-			super.getResponse().setAuthorised(status);
+			status = (legId == 0 || leg != null) && id == 0 && version == 0 && correctDuty && correctStatus;
 		}
-
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
