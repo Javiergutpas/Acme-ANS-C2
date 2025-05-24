@@ -11,7 +11,6 @@ import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.aircraft.Aircraft;
-import acme.entities.aircraft.AircraftStatus;
 import acme.entities.airport.Airport;
 import acme.entities.leg.Leg;
 import acme.entities.leg.LegStatus;
@@ -92,7 +91,6 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		boolean notOverlapping;//No solopada con el resto de legs
 		boolean aircraftNotUsed; //Avión no usado en otro leg concurrentemente
 		boolean legIsFuture;
-		boolean aircraftIsActive;
 
 		if (leg.getDeparture() != null) {
 			legIsFuture = MomentHelper.isPresentOrFuture(leg.getDeparture());
@@ -108,16 +106,15 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		super.state(notOverlapping, "departure", "acme.validation.leg.overlapped");
 		super.state(notOverlapping, "arrival", "acme.validation.leg.overlapped");
 
-		Integer aircraftId;
-		aircraftId = leg.getDeployedAircraft() != null ? leg.getDeployedAircraft().getId() : null;
-		Integer numberOfLegsDeployingAircraft = this.repository.findNumberOfLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), aircraftId);
-		aircraftNotUsed = numberOfLegsDeployingAircraft == 0;
-
-		super.state(aircraftNotUsed, "deployedAircraft", "acme.validation.leg.used-aircraft");
-
 		if (leg.getDeployedAircraft() != null) {
-			aircraftIsActive = leg.getDeployedAircraft().getStatus() == AircraftStatus.ACTIVE;
-			super.state(aircraftIsActive, "deployedAircraft", "acme.validation.leg.inactive-aircraft");
+			Integer aircraftId;
+			Integer numberOfLegsDeployingAircraft;
+
+			aircraftId = leg.getDeployedAircraft() != null ? leg.getDeployedAircraft().getId() : null;
+			numberOfLegsDeployingAircraft = this.repository.findNumberOfLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), aircraftId);
+			aircraftNotUsed = numberOfLegsDeployingAircraft == 0;
+
+			super.state(aircraftNotUsed, "deployedAircraft", "acme.validation.leg.used-aircraft");
 		}
 	}
 
