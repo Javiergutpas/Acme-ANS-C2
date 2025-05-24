@@ -48,7 +48,7 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 			Leg leg;
 
 			legId = super.getRequest().getData("flightAssignmentLeg", int.class);
-			leg = this.repository.findLegById(legId);
+			leg = this.repository.findPublishedLegById(legId);
 
 			version = super.getRequest().getData("version", int.class);
 			id = super.getRequest().getData("id", int.class);

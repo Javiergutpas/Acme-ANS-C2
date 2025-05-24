@@ -56,7 +56,7 @@ public class FlightAssignmentUpdateService extends AbstractGuiService<FlightCrew
 				Leg leg;
 
 				legId = super.getRequest().getData("flightAssignmentLeg", int.class);
-				leg = this.repository.findLegById(legId);
+				leg = this.repository.findPublishedLegById(legId);
 
 				duty = super.getRequest().getData("duty", String.class);
 				currentStatus = super.getRequest().getData("currentStatus", String.class);
