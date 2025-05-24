@@ -48,6 +48,8 @@
 		<acme:menu-option code="master.menu.flightcrewmember" access="hasRealm('FlightCrewMember')">
 			<acme:menu-suboption code="master.menu.flightcrewmember.flightassignments.flightAssignments-list-completed" action="/flight-crew-member/flight-assignment/list-completed"/>
 			<acme:menu-suboption code="master.menu.flightcrewmember.flightassignments.flightAssignments-list-planned" action="/flight-crew-member/flight-assignment/list-planned"/>
+			<acme:menu-separator/>
+			<acme:menu-suboption code="master.menu.flightcrewmember.dashboard" action="/flight-crew-member/flight-crew-member-dashboard/show"/>
 		</acme:menu-option>
     
 		<acme:menu-option code="master.menu.technician" access="hasRealm('Technician')">
