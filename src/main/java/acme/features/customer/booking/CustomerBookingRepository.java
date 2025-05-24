@@ -43,4 +43,7 @@ public interface CustomerBookingRepository extends AbstractRepository {
 	@Query("select min(l.departure) from Leg l where l.flight.id = :flightId")
 	Date findFlightScheduledDeparture(int flightId);
 
+	@Query("select f from Flight f where f.id = :flightId")
+	Flight findFlightById(int flightId);
+
 }
