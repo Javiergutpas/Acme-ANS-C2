@@ -63,8 +63,7 @@ public class CustomerBookingCreateService extends AbstractGuiService<Customer, B
 	public void unbind(final Booking booking) {
 		Dataset dataset;
 		SelectChoices travelClasses = SelectChoices.from(TypeTravelClass.class, booking.getTravelClass());
-		Collection<Flight> publishFlights = this.repository.findAllPublishFlights();
-		Collection<Flight> publishFutureFlights = publishFlights.stream().filter(f -> MomentHelper.isBefore(booking.getPurchaseMoment(), f.getScheduledDeparture())).toList();
+		Collection<Flight> publishFutureFlights = this.repository.findAllPublishFutureFlights(MomentHelper.getCurrentMoment());
 		SelectChoices flightChoices = null;
 
 		try {

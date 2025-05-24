@@ -67,8 +67,7 @@ public class CustomerBookingUpdateService extends AbstractGuiService<Customer, B
 		Dataset dataset;
 		SelectChoices typeTravelClasses;
 		typeTravelClasses = SelectChoices.from(TypeTravelClass.class, booking.getTravelClass());
-		Collection<Flight> publishFlights = this.repository.findAllPublishFlights();
-		Collection<Flight> publishFutureFlights = publishFlights.stream().filter(f -> MomentHelper.isBefore(booking.getPurchaseMoment(), f.getScheduledDeparture())).toList();
+		Collection<Flight> publishFutureFlights = this.repository.findAllPublishFutureFlights(MomentHelper.getCurrentMoment());
 
 		dataset = super.unbindObject(booking, "flight", "locatorCode", "purchaseMoment", "travelClass", "price", "lastNibble", "publish", "id");
 		dataset.put("travelClasses", typeTravelClasses);
