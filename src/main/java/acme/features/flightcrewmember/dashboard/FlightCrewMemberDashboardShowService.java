@@ -3,7 +3,9 @@ package acme.features.flightcrewmember.dashboard;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,6 +31,7 @@ public class FlightCrewMemberDashboardShowService extends AbstractGuiService<Fli
 
 	@Override
 	public void authorise() {
+
 		super.getResponse().setAuthorised(true);
 	}
 
@@ -38,64 +41,83 @@ public class FlightCrewMemberDashboardShowService extends AbstractGuiService<Fli
 		FlightCrewMemberDashboard dashboard = new FlightCrewMemberDashboard();
 
 		List<String> lastFiveDestinations;
+
 		Integer legsWithLowSeverityIncidents;
 		Integer legsWithMediumSeverityIncidents;
 		Integer legsWithHighSeverityIncidents;
+
+		List<FlightAssignment> flightAssignments;
 		List<FlightCrewMember> membersAssignedInLastLeg;
-		List<FlightAssignment> confirmedFlightAssignments;
-		List<FlightAssignment> pendingFlightAssignments;
-		List<FlightAssignment> cancelledFlightAssignments;
+		List<String> membersInLastLeg;
+
+		List<Object[]> flightAssignmentCurrentStatus;
+		Map<CurrentStatus, Integer> flightAssignmentsByStatus;
+
 		Double averageFlightAssignmentInLastMonth;
 		Integer minimumFlightAssignmentInLastMonth;
 		Integer maximumFlightAssignmentInLastMonth;
 		Double standardDeviationInLastMonth;
+
 		int flightCrewMemberId;
 
 		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
 
 		lastFiveDestinations = this.repository.findLastFiveDestinations(flightCrewMemberId);
-		if (lastFiveDestinations.isEmpty())
-			lastFiveDestinations = new ArrayList<>();
-		else if (lastFiveDestinations.size() >= 5)
-			lastFiveDestinations = lastFiveDestinations.subList(0, 5);
+		dashboard.setLastFiveDestinations(lastFiveDestinations);
 
-		legsWithLowSeverityIncidents = this.repository.findLegsWithLowSeverityIncident();
-		legsWithMediumSeverityIncidents = this.repository.findLegsWithMediumSeverityIncident();
-		legsWithHighSeverityIncidents = this.repository.findLegsWithHighSeverityIncident();
+		legsWithLowSeverityIncidents = this.repository.findLegsWithSeverityIncident(0, 3, flightCrewMemberId);
+		legsWithMediumSeverityIncidents = this.repository.findLegsWithSeverityIncident(4, 7, flightCrewMemberId);
+		legsWithHighSeverityIncidents = this.repository.findLegsWithSeverityIncident(8, 7, flightCrewMemberId);
+		dashboard.setLegsWithLowSeverityIncidents(legsWithLowSeverityIncidents);
+		dashboard.setLegsWithMediumSeverityIncidents(legsWithMediumSeverityIncidents);
+		dashboard.setLegsWithHighSeverityIncidents(legsWithHighSeverityIncidents);
 
-		membersAssignedInLastLeg = this.repository.findCrewMembersInMemberLastLeg(flightCrewMemberId);
+		flightAssignments = this.repository.findFlightAssignmentByLegArrival(flightCrewMemberId);
+		membersInLastLeg = new ArrayList<>();
 
-		confirmedFlightAssignments = this.repository.findFlightAssignmentsByCrewMember(flightCrewMemberId, CurrentStatus.CONFIRMED);
-		pendingFlightAssignments = this.repository.findFlightAssignmentsByCrewMember(flightCrewMemberId, CurrentStatus.CANCELLED);
-		cancelledFlightAssignments = this.repository.findFlightAssignmentsByCrewMember(flightCrewMemberId, CurrentStatus.PENDING);
+		if (!flightAssignments.isEmpty()) {
+			int legId = flightAssignments.get(0).getFlightAssignmentLeg().getId();
+			membersAssignedInLastLeg = this.repository.findCrewMembersInLastLeg(legId);
+			membersInLastLeg = membersAssignedInLastLeg.stream().map(x -> x.getIdentity().getFullName()).toList();
+		}
+
+		dashboard.setMembersAssignedInLastLeg(membersInLastLeg);
+
+		flightAssignmentCurrentStatus = this.repository.flightAssignmentsGroupedByCurrentStatus(flightCrewMemberId);
+		flightAssignmentsByStatus = new HashMap<>();
+
+		for (Object[] result : flightAssignmentCurrentStatus) {
+			CurrentStatus type = (CurrentStatus) result[0];
+			Integer count = ((Long) result[1]).intValue();
+			flightAssignmentsByStatus.put(type, count);
+		}
+
+		dashboard.setFlightAssignmentsByStatus(flightAssignmentsByStatus);
 
 		Date startDate = MomentHelper.getCurrentMoment();
 		Date endDate = MomentHelper.getCurrentMoment();
-
 		startDate.setMonth(startDate.getMonth() - 1);
 		startDate.setDate(1);
 		endDate.setMonth(startDate.getMonth() - 1);
 		endDate.setDate(30);
+		List<Long> counts = this.repository.getDailyFlightAssignments(startDate, endDate, flightCrewMemberId);
+		averageFlightAssignmentInLastMonth = counts.stream().mapToLong(Long::longValue).average().orElse(0.0);
+		minimumFlightAssignmentInLastMonth = counts.stream().min(Long::compare).orElse(0L).intValue();
+		maximumFlightAssignmentInLastMonth = counts.stream().max(Long::compare).orElse(0L).intValue();
+		standardDeviationInLastMonth = Math.sqrt(counts.stream().mapToDouble(c -> Math.pow(c - averageFlightAssignmentInLastMonth, 2)).average().orElse(0.0));
 
-		dashboard.setLastFiveDestinations(lastFiveDestinations);
-		dashboard.setLegsWithLowSeverityIncidents(legsWithLowSeverityIncidents);
-		dashboard.setLegsWithMediumSeverityIncidents(legsWithMediumSeverityIncidents);
-		dashboard.setLegsWithHighSeverityIncidents(legsWithHighSeverityIncidents);
-		dashboard.setMembersAssignedInLastLeg(membersAssignedInLastLeg);
-		dashboard.setConfirmedFlightAssignments(confirmedFlightAssignments);
-		dashboard.setPendingFlightAssignments(pendingFlightAssignments);
-		dashboard.setCancelledFlightAssignments(cancelledFlightAssignments);
-
-		super.getBuffer().addData(dashboard);
-
+		dashboard.setAverageFlightAssignmentInLastMonth(averageFlightAssignmentInLastMonth);
+		dashboard.setMinimumFlightAssignmentInLastMonth(minimumFlightAssignmentInLastMonth);
+		dashboard.setMaximumFlightAssignmentInLastMonth(maximumFlightAssignmentInLastMonth);
+		dashboard.setStandardDeviationInLastMonth(standardDeviationInLastMonth);
 	}
 
 	@Override
-	public void unbind(final FlightCrewMemberDashboard fcmDashboard) {
-
+	public void unbind(final FlightCrewMemberDashboard dashboard) {
 		Dataset dataset;
-		dataset = super.unbindObject(fcmDashboard, "lastFiveDestinations", "legsWithLowSeverityIncidents", "legsWithMediumSeverityIncidents", "legsWithHighSeverityIncidents", "membersAssignedInLastLeg", "confirmedFlightAssignments",
-			"pendingFlightAssignments", "cancelledFlightAssignments", "averageFlightAssignmentInLastMonth", "minimumFlightAssignmentInLastMonth", "maximumFlightAssignmentInLastMonth", "standardDeviationInLastMonth");
+
+		dataset = super.unbindObject(dashboard, "lastFiveDestinations", "legsWithLowSeverityIncidents", "legsWithMediumSeverityIncidents", "legsWithHighSeverityIncidents", "membersAssignedInLastLeg", "flightAssignmentsByStatus",
+			"averageFlightAssignmentInLastMonth", "minimumFlightAssignmentInLastMonth", "maximumFlightAssignmentInLastMonth", "standardDeviationInLastMonth");
 
 		super.getResponse().addData(dataset);
 
