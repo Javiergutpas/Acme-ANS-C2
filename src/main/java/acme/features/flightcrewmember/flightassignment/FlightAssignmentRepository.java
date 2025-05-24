@@ -44,13 +44,13 @@ public interface FlightAssignmentRepository extends AbstractRepository {
 	@Query("SELECT fcm FROM FlightCrewMember fcm WHERE fcm.id = :flightCrewMemberId")
 	FlightCrewMember findFlightCrewMemberById(int flightCrewMemberId);
 
-	@Query("SELECT count(fa) from FlightAssignment fa where fa.flightAssignmentLeg.id = :legId and fa.duty = :duty and fa.id != :id and fa.publish = true")
+	@Query("SELECT COUNT(fa) FROM FlightAssignment fa WHERE fa.flightAssignmentLeg.id = :legId AND fa.duty = :duty AND fa.id != :id AND fa.publish = true")
 	int hasDutyAssigned(int legId, Duty duty, int id);
 
-	@Query("SELECT fa  from FlightAssignment fa where fa.flightAssignmentCrewMember.id = :id and fa.flightAssignmentLeg.departure< :arrival and fa.flightAssignmentLeg.arrival> :departure and fa.publish = true")
+	@Query("SELECT fa  FROM FlightAssignment fa WHERE fa.flightAssignmentCrewMember.id = :id AND fa.flightAssignmentLeg.departure< :arrival AND fa.flightAssignmentLeg.arrival> :departure AND fa.publish = true")
 	Collection<FlightAssignment> findFlightAssignmentsByFlightCrewMemberInRange(int id, Date departure, Date arrival);
 
-	@Query("SELECT al from ActivityLog al where al.activityLogAssignment.id = :activityLogAssignmentId")
+	@Query("SELECT al FROM ActivityLog al WHERE al.activityLogAssignment.id = :activityLogAssignmentId")
 	Collection<ActivityLog> findAllLogsByAssignmentId(int activityLogAssignmentId);
 
 	@Query("SELECT l FROM Leg l WHERE l.id = :legId")

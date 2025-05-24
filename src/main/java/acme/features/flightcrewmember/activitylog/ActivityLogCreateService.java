@@ -33,6 +33,22 @@ public class ActivityLogCreateService extends AbstractGuiService<FlightCrewMembe
 
 		status = flightAssignment != null && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
 
+		if (status) {
+			String method;
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				int version;
+				int id;
+
+				version = super.getRequest().getData("version", int.class);
+				id = super.getRequest().getData("id", int.class);
+
+				status = id == 0 && version == 0;
+			}
+		}
 		super.getResponse().setAuthorised(status);
 	}
 
