@@ -1,6 +1,7 @@
 
 package acme.features.manager.leg;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 			if (method.equals("GET"))
 				status = true;
 			else {
+				String legStatus;
+				boolean correctStatus;
 				int aircraftId;
 				int departureAirportId;
 				int arrivalAirportId;
@@ -62,7 +65,10 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 				departureAirport = this.repository.findAirportById(departureAirportId);
 				arrivalAirport = this.repository.findAirportById(arrivalAirportId);
 
-				status = (aircraftId == 0 || aircraft != null) && (departureAirportId == 0 || departureAirport != null) && (arrivalAirportId == 0 || arrivalAirport != null);
+				legStatus = super.getRequest().getData("status", String.class);
+				correctStatus = "0".equals(legStatus) || Arrays.stream(LegStatus.values()).map(LegStatus::name).anyMatch(name -> name.equals(legStatus));
+
+				status = (aircraftId == 0 || aircraft != null) && (departureAirportId == 0 || departureAirport != null) && (arrivalAirportId == 0 || arrivalAirport != null) && correctStatus;
 			}
 		}
 
@@ -88,9 +94,13 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 	@Override
 	public void validate(final Leg leg) {
 		int flightId;
-		boolean notOverlapping;//No solopada con el resto de legs
-		boolean aircraftNotUsed; //Avión no usado en otro leg concurrentemente
+		boolean notOverlapping;//No solopada con el resto de legs publicadas del vuelo
+		boolean aircraftNotUsed; //Avión no usado en otra leg publicada concurrentemente
 		boolean legIsFuture;
+
+		// La validacion de que no haya overlap y que no se usa el aircraft al mismo tiempo se hacen
+		// con otras legs publicas ya que no puede haber inconsistencias entre ellas. Entre las no publicadas
+		// sí que se puede permitir
 
 		if (leg.getDeparture() != null) {
 			legIsFuture = MomentHelper.isPresentOrFuture(leg.getDeparture());
@@ -101,7 +111,7 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		}
 
 		flightId = leg.getFlight().getId();
-		notOverlapping = this.repository.findNumberOfOverlappedLegs(leg.getDeparture(), leg.getArrival(), flightId) == 0;
+		notOverlapping = this.repository.findNumberOfPublishedOverlappedLegs(leg.getDeparture(), leg.getArrival(), flightId) == 0;
 
 		super.state(notOverlapping, "departure", "acme.validation.leg.overlapped");
 		super.state(notOverlapping, "arrival", "acme.validation.leg.overlapped");
@@ -111,7 +121,7 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 			Integer numberOfLegsDeployingAircraft;
 
 			aircraftId = leg.getDeployedAircraft() != null ? leg.getDeployedAircraft().getId() : null;
-			numberOfLegsDeployingAircraft = this.repository.findNumberOfLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), aircraftId);
+			numberOfLegsDeployingAircraft = this.repository.findNumberOfPublishedLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), aircraftId);
 			aircraftNotUsed = numberOfLegsDeployingAircraft == 0;
 
 			super.state(aircraftNotUsed, "deployedAircraft", "acme.validation.leg.used-aircraft");
