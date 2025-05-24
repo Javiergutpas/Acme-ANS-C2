@@ -1,6 +1,7 @@
 
 package acme.features.assistanceagent.claim;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -29,15 +30,41 @@ public class AssistanceAgentClaimPublishService extends AbstractGuiService<Assis
 
 	@Override
 	public void authorise() {
+
 		Claim claim;
 		int claimId;
-		int agentId;
+		int assistanceAgentId;
 		boolean status;
 
 		claimId = super.getRequest().getData("id", int.class);
 		claim = this.repository.findClaimById(claimId);
-		agentId = claim == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = claim != null && !claim.isPublish() && claim.getAssistanceAgent().getId() == agentId;
+		assistanceAgentId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		status = claim != null && !claim.isPublish() && claim.getAssistanceAgent().getId() == assistanceAgentId;
+
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String claimType;
+				boolean correctType;
+				int legId;
+
+				Leg leg;
+
+				legId = super.getRequest().getData("leg", int.class);
+				leg = this.repository.findPublishedLegById(legId);
+
+				claimType = super.getRequest().getData("type", String.class);
+
+				correctType = "0".equals(claimType) || Arrays.stream(ClaimType.values()).map(ClaimType::name).anyMatch(name -> name.equals(claimType));
+
+				status = (legId == 0 || leg != null) && correctType;
+			}
+		}
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -55,7 +82,7 @@ public class AssistanceAgentClaimPublishService extends AbstractGuiService<Assis
 
 	@Override
 	public void bind(final Claim claim) {
-		super.bindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");
+		super.bindObject(claim, "passengerEmail", "description", "type", "leg");
 	}
 
 	//Esta validacion es que para publicar un claim todos sus atributos tienen que estar correctos
