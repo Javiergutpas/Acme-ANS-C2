@@ -1,6 +1,8 @@
 
 package acme.features.technician.task;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
@@ -23,20 +25,23 @@ public class TechnicianTaskPublishService extends AbstractGuiService<Technician,
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		boolean exist;
-		Task task;
-		Technician technician;
-		int id;
+		String method;
+		boolean correctType;
+		boolean authorised = false;
+		String taskType;
 
-		id = super.getRequest().getData("id", int.class);
-		task = this.repository.findTaskById(id);
+		method = super.getRequest().getMethod();
 
-		exist = task != null;
-		if (exist) {
-			technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
-			if (technician.equals(task.getTechnician()))
-				super.getResponse().setAuthorised(true);
+		if (method.equals("GET"))
+			authorised = true;
+		else {
+
+			taskType = super.getRequest().getData("type", String.class);
+			correctType = "0".equals(taskType) || Arrays.stream(TaskType.values()).map(TaskType::name).anyMatch(name -> name.equals(taskType));
+
+			authorised = correctType;
 		}
+		super.getResponse().setAuthorised(authorised);
 	}
 
 	@Override

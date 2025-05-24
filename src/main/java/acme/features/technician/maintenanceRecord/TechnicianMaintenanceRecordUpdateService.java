@@ -54,8 +54,7 @@ public class TechnicianMaintenanceRecordUpdateService extends AbstractGuiService
 				aircraftId = super.getRequest().getData("aircraft", int.class);
 				aircraft = this.repository.findAircraftById(aircraftId);
 				boolean aircraftExists = this.repository.findAllAircrafts().contains(aircraft);
-				authorised = (aircraftId == 0 || aircraftExists) && correctStatus;
-
+				authorised = (aircraftId == 0 || aircraftExists) && correctStatus && !maintenanceRecord.getPublished();
 			}
 		}
 		super.getResponse().setAuthorised(authorised);
@@ -99,8 +98,6 @@ public class TechnicianMaintenanceRecordUpdateService extends AbstractGuiService
 
 	@Override
 	public void perform(final MaintenanceRecord maintenanceRecord) {
-		assert maintenanceRecord != null;
-
 		this.repository.save(maintenanceRecord);
 	}
 
