@@ -2,7 +2,6 @@
 package acme.entities.flight;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -18,7 +17,6 @@ import acme.client.components.validation.ValidMoney;
 import acme.client.components.validation.ValidString;
 import acme.client.helpers.SpringHelper;
 import acme.entities.airline.Airline;
-import acme.entities.leg.Leg;
 import acme.realms.manager.AirlineManager;
 import lombok.Getter;
 import lombok.Setter;
@@ -63,43 +61,35 @@ public class Flight extends AbstractEntity {
 
 
 	@Transient
-	public Date getScheduledDeparture() { // No need to check min and max values, since it's already done in legs
+	public Date getScheduledDeparture() {
 		Date departure;
-		List<Leg> legs;
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlightOrderedByDeparture(this.getId());
-
-		departure = legs.isEmpty() ? null : legs.get(0).getDeparture();
+		departure = repository.findFlightScheduledDeparture(this.getId());
 
 		return departure;
 	}
 
 	@Transient
 	public Date getScheduledArrival() {
-		Date arrival;
-		List<Leg> legs;
+		Date departure;
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlightOrderedByArrival(this.getId());
+		departure = repository.findFlightScheduledArrival(this.getId());
 
-		arrival = legs.isEmpty() ? null : legs.get(legs.size() - 1).getArrival();
-
-		return arrival;
+		return departure;
 	}
 
 	@Transient
 	public String getOriginCity() {
 		String city;
-		List<Leg> legs;
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlightOrderedByDeparture(this.getId());
 
-		city = legs.isEmpty() ? null : legs.get(0).getDepartureAirport().getCity();
+		city = repository.findFlightOriginCity(this.getId(), repository.findFlightScheduledDeparture(this.getId()));
 
 		return city;
 	}
@@ -107,13 +97,11 @@ public class Flight extends AbstractEntity {
 	@Transient
 	public String getDestinationCity() {
 		String city;
-		List<Leg> legs;
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getLegsByFlightOrderedByArrival(this.getId());
 
-		city = legs.isEmpty() ? null : legs.get(legs.size() - 1).getArrivalAirport().getCity();
+		city = repository.findFlightDestinationCity(this.getId(), repository.findFlightScheduledArrival(this.getId()));
 
 		return city;
 	}
@@ -124,7 +112,7 @@ public class Flight extends AbstractEntity {
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
-		legs = repository.getNumberOfLegs(this.getId());
+		legs = repository.findNumberOfLegs(this.getId());
 
 		return legs > 0 ? legs - 1 : 0; //Si el vuelo no tiene tramos, hay 0 escalas
 	}
