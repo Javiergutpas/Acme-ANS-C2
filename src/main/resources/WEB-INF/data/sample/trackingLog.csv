@@ -28,7 +28,7 @@ trackingLog-20,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,"Lorem ipsu
 trackingLog-21,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,L,false,claim-21
 trackingLog-22,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,Lo,false,claim-22
 trackingLog-23,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor",false,claim-23
-trackingLog-24,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor*",false,claim-24
+trackingLog-24,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor*",false,claim-30
 # publish,"","","","","","",""
 trackingLog-25,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,Por decidir,false,claim-29
-trackingLog-26,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,Por decidir,true,claim-30
+trackingLog-26,2022/08/02 00:00,Va bien la reclamacion,25.00,PENDING,Por decidir,true,claim-24

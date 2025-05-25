@@ -37,7 +37,7 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 
 		claimId = super.getRequest().getData("id", int.class);
 		claim = this.repository.findClaimById(claimId);
-		agentId = claim == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
+		agentId = super.getRequest().getPrincipal().getActiveRealm().getId();
 
 		status = claim != null && !claim.isPublish() && claim.getAssistanceAgent().getId() == agentId;
 		super.getResponse().setAuthorised(status);
@@ -64,17 +64,19 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 	//si tiene algun tracking log publicado no se puede borrar
 	@Override
 	public void validate(final Claim claim) {
-		boolean claimNotPublished;
-		boolean trackingLogNotPublished;
-		Collection<TrackingLog> claimsTrackingLogs;
-
-		claimsTrackingLogs = this.repository.findTrackingLogsByClaimId(claim.getId());
-
-		trackingLogNotPublished = claimsTrackingLogs.stream().noneMatch(t -> t.isPublish());
-		claimNotPublished = !claim.isPublish();
-
-		super.state(claimNotPublished, "publish", "acme.validation.claim.delete-when-published");
-		super.state(trackingLogNotPublished, "*", "acme.validation.claim.delete-trackinglogs-published");
+		/*
+		 * boolean claimNotPublished;
+		 * boolean trackingLogNotPublished;
+		 * Collection<TrackingLog> claimsTrackingLogs;
+		 * 
+		 * claimsTrackingLogs = this.repository.findTrackingLogsByClaimId(claim.getId());
+		 * 
+		 * trackingLogNotPublished = claimsTrackingLogs.stream().noneMatch(t -> t.isPublish());
+		 * claimNotPublished = !claim.isPublish();
+		 * 
+		 * super.state(claimNotPublished, "publish", "acme.validation.claim.delete-when-published");
+		 * super.state(trackingLogNotPublished, "*", "acme.validation.claim.delete-trackinglogs-published");
+		 */
 	}
 
 	@Override

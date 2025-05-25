@@ -111,9 +111,6 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 
 		}
 
-		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
-			super.state(!claim.getRegistrationMoment().after(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
-
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
 
@@ -123,16 +120,16 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 			if (requiresResolutionReason)
 				super.state(hasResolutionReason, "resolution", "assistanceAgent.tracking-log.form.error.resolution-required");
 		}
-
-		// Condicion para un tracking log excepcional tras el ultimo al 100
-		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
-
-			Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
-
-			super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
-
-		}
-
+		/*
+		 * // Condicion para un tracking log excepcional tras el ultimo al 100
+		 * if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
+		 * 
+		 * Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
+		 * 
+		 * super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
+		 * 
+		 * }
+		 */
 	}
 
 	@Override
