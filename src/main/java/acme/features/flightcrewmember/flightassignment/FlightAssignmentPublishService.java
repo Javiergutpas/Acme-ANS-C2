@@ -120,7 +120,7 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 				super.state(count == 0, "*", "acme.validation.flightassignment.duty.copilot.message");
 			}
 
-		if (leg != null && leg.getArrival() != null) {
+		if (leg != null) {
 			OverlappedLegs = this.repository.findFlightAssignmentsByFlightCrewMemberInRange(flightCrewMemberId, leg.getDeparture(), leg.getArrival());
 			legsOverlap = OverlappedLegs.isEmpty();
 			super.state(legsOverlap, "*", "acme.validation.flightassignment.leg.overlap.message");
