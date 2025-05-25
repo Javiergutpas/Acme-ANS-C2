@@ -1,6 +1,7 @@
 
 package acme.features.assistanceagent.trackingLog;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +30,51 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 
 	@Override
 	public void authorise() {
+		/*
+		 * Claim claim;
+		 * int claimId;
+		 * int agentId;
+		 * boolean status;
+		 * 
+		 * claimId = super.getRequest().getData("claimId", int.class);
+		 * claim = this.repository.findClaimById(claimId);
+		 * agentId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		 * status = claim != null && claim.getAssistanceAgent().getId() == agentId;
+		 * 
+		 * super.getResponse().setAuthorised(status);
+		 */
 		Claim claim;
 		int claimId;
-		int agentId;
+		int assistanceAgentId;
 		boolean status;
 
 		claimId = super.getRequest().getData("claimId", int.class);
 		claim = this.repository.findClaimById(claimId);
-		agentId = super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = claim != null && claim.getAssistanceAgent().getId() == agentId;
+		assistanceAgentId = super.getRequest().getPrincipal().getActiveRealm().getId();
 
+		status = claim != null && claim.getAssistanceAgent().getId() == assistanceAgentId;
+
+		if (status) {
+			String method;
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String trackingLogStatus;
+				boolean correctTrackingLogStatus;
+				int version;
+				int id;
+				trackingLogStatus = super.getRequest().getData("status", String.class);
+
+				version = super.getRequest().getData("version", int.class);
+				id = super.getRequest().getData("id", int.class);
+
+				correctTrackingLogStatus = "0".equals(trackingLogStatus) || Arrays.stream(TrackingLogStatus.values()).map(TrackingLogStatus::name).anyMatch(name -> name.equals(trackingLogStatus));
+
+				status = id == 0 && version == 0 && correctTrackingLogStatus;
+			}
+		}
 		super.getResponse().setAuthorised(status);
 	}
 
