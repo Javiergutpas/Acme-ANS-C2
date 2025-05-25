@@ -103,7 +103,7 @@ public class FlightAssignmentPublishService extends AbstractGuiService<FlightCre
 		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		leg = flightAssignment.getFlightAssignmentLeg();
 
-		if (leg != null && leg.getArrival() != null) {
+		if (leg != null) {
 			completedLeg = leg.getArrival().before(MomentHelper.getCurrentMoment());
 			super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
 		}
