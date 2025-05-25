@@ -1,6 +1,7 @@
 
 package acme.features.flightcrewmember.flightassignment;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +28,47 @@ public class FlightAssignmentUpdateService extends AbstractGuiService<FlightCrew
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
+
 		FlightAssignment flightAssignment;
-		boolean status;
 		int flightAssignmentId;
 		int flightCrewMemberId;
+		boolean status;
 
 		flightAssignmentId = super.getRequest().getData("id", int.class);
 		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
-		flightCrewMemberId = flightAssignment == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = flightAssignment != null && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId && !flightAssignment.isPublish();
+		flightCrewMemberId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		status = flightAssignment != null && !flightAssignment.isPublish() && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
+
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String duty;
+				String currentStatus;
+				boolean correctDuty;
+				boolean correctStatus;
+				int legId;
+
+				Leg leg;
+
+				legId = super.getRequest().getData("flightAssignmentLeg", int.class);
+				leg = this.repository.findPublishedLegById(legId);
+
+				duty = super.getRequest().getData("duty", String.class);
+				currentStatus = super.getRequest().getData("currentStatus", String.class);
+
+				correctDuty = "0".equals(duty) || Arrays.stream(Duty.values()).map(Duty::name).anyMatch(name -> name.equals(duty));
+				correctStatus = "0".equals(currentStatus) || Arrays.stream(CurrentStatus.values()).map(CurrentStatus::name).anyMatch(name -> name.equals(currentStatus));
+
+				status = (legId == 0 || leg != null) && correctDuty && correctStatus;
+			}
+		}
 
 		super.getResponse().setAuthorised(status);
-
 	}
 
 	@Override
@@ -54,12 +84,21 @@ public class FlightAssignmentUpdateService extends AbstractGuiService<FlightCrew
 
 	@Override
 	public void bind(final FlightAssignment flightAssignment) {
-		super.bindObject(flightAssignment, "duty", "currentStatus", "remarks", "flightAssignmentLeg", "flightAssignmentCrewMember");
+		super.bindObject(flightAssignment, "duty", "currentStatus", "remarks", "flightAssignmentLeg");
 	}
 
 	@Override
 	public void validate(final FlightAssignment flightAssignment) {
-		;
+		boolean completedLeg;
+
+		Leg leg;
+
+		leg = flightAssignment.getFlightAssignmentLeg();
+
+		if (leg != null) {
+			completedLeg = leg.getArrival().before(MomentHelper.getCurrentMoment());
+			super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
+		}
 	}
 
 	@Override

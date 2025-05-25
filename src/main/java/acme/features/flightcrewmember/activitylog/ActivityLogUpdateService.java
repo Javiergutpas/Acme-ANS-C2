@@ -1,17 +1,13 @@
 
 package acme.features.flightcrewmember.activitylog;
 
-import java.util.Collection;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
-import acme.client.components.views.SelectChoices;
-import acme.client.helpers.PrincipalHelper;
+import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.activitylog.ActivityLog;
-import acme.entities.flightassignment.FlightAssignment;
 import acme.realms.flightcrewmember.FlightCrewMember;
 
 @GuiService
@@ -56,7 +52,7 @@ public class ActivityLogUpdateService extends AbstractGuiService<FlightCrewMembe
 	public void bind(final ActivityLog activityLog) {
 		assert activityLog != null;
 
-		super.bindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "activityLogAssignment");
+		super.bindObject(activityLog, "incidentType", "description", "severityLevel");
 	}
 
 	@Override
@@ -66,27 +62,16 @@ public class ActivityLogUpdateService extends AbstractGuiService<FlightCrewMembe
 
 	@Override
 	public void perform(final ActivityLog activityLog) {
+		activityLog.setRegistrationMoment(MomentHelper.getCurrentMoment());
 		this.repository.save(activityLog);
-	}
-
-	@Override
-	public void onSuccess() {
-		if (super.getRequest().getMethod().equals("POST"))
-			PrincipalHelper.handleUpdate();
 	}
 
 	@Override
 	public void unbind(final ActivityLog activityLog) {
 		Dataset dataset;
 
-		SelectChoices flightAssignmentChoice;
-		Collection<FlightAssignment> flightAssignments;
-
-		flightAssignments = this.repository.findAllFlightAssignments();
-		flightAssignmentChoice = SelectChoices.from(flightAssignments, "id", activityLog.getActivityLogAssignment());
-
 		dataset = super.unbindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel", "publish", "activityLogAssignment");
-		dataset.put("flightAssignmentChoice", flightAssignmentChoice);
+
 		dataset.put("flightAssignmentId", activityLog.getActivityLogAssignment().getId());
 
 		super.getResponse().addData(dataset);

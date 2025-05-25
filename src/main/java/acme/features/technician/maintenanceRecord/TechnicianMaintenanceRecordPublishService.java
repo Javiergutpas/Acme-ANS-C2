@@ -1,6 +1,7 @@
 
 package acme.features.technician.maintenanceRecord;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +27,38 @@ public class TechnicianMaintenanceRecordPublishService extends AbstractGuiServic
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
+		boolean authorised = false;
 		boolean exist;
+		boolean correctStatus;
+		String maintenanceRecordStatus;
 		MaintenanceRecord maintenanceRecord;
 		Technician technician;
 		int id;
+		String method;
+		method = super.getRequest().getMethod();
+		int aircraftId;
+		Aircraft aircraft;
 
 		id = super.getRequest().getData("id", int.class);
 		maintenanceRecord = this.repository.findMaintenanceRecordById(id);
 
 		exist = maintenanceRecord != null;
+		if (method.equals("GET"))
+			authorised = true;
+
 		if (exist) {
 			technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
-			if (technician.equals(maintenanceRecord.getTechnician()))
-				super.getResponse().setAuthorised(true);
+			if (technician.equals(maintenanceRecord.getTechnician())) {
+				maintenanceRecordStatus = super.getRequest().getData("status", String.class);
+				correctStatus = "0".equals(maintenanceRecordStatus) || Arrays.stream(MaintenanceRecordStatus.values()).map(MaintenanceRecordStatus::name).anyMatch(name -> name.equals(maintenanceRecordStatus));
+				aircraftId = super.getRequest().getData("aircraft", int.class);
+				aircraft = this.repository.findAircraftById(aircraftId);
+				boolean aircraftExists = this.repository.findAllAircrafts().contains(aircraft);
+				authorised = (aircraftId == 0 || aircraftExists) && correctStatus;
+
+			}
 		}
+		super.getResponse().setAuthorised(authorised);
 	}
 
 	@Override
@@ -63,8 +82,11 @@ public class TechnicianMaintenanceRecordPublishService extends AbstractGuiServic
 		int id;
 		id = super.getRequest().getData("id", int.class);
 
-		if (!this.getBuffer().getErrors().hasErrors("published") && maintenanceRecord.getPublished() != null)
-			super.state(this.repository.findNotPublishedTaskOfMaintenanceRecord(id) == 0, "*", "acme.validation.technician.maintenance-record.published.message");
+		if (!this.getBuffer().getErrors().hasErrors("nextInspectionDate"))
+			super.state(maintenanceRecord.getNextInspectionDate().compareTo(maintenanceRecord.getMoment()) > 0, "nextInspectionDate", "acme.validation.technician.maintenance-record.nextInspectionDate.message");
+
+		if (!this.getBuffer().getErrors().hasErrors("published"))
+			super.state(this.repository.findNotPublishedTaskOfMaintenanceRecord(id) == 0 && this.repository.countAllRelatedTaskWithMaintenanceRecord(id) != 0, "*", "acme.validation.technician.maintenance-record.published.message");
 	}
 
 	@Override
@@ -84,7 +106,7 @@ public class TechnicianMaintenanceRecordPublishService extends AbstractGuiServic
 		choices = SelectChoices.from(MaintenanceRecordStatus.class, maintenanceRecord.getStatus());
 		aircraft = SelectChoices.from(aircrafts, "id", maintenanceRecord.getAircraft());
 
-		dataset = super.unbindObject(maintenanceRecord, "status", "nextInspectionDate", "estimatedCost", "notes", "aircraft", "published");
+		dataset = super.unbindObject(maintenanceRecord, "moment", "status", "nextInspectionDate", "estimatedCost", "notes", "aircraft", "published");
 
 		dataset.put("status", choices.getSelected().getKey());
 		dataset.put("status", choices);

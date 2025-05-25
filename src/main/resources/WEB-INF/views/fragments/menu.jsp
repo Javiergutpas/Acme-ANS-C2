@@ -41,17 +41,23 @@
 		
 		<acme:menu-option code="master.menu.airline-manager" access="hasRealm('AirlineManager')">
 			<acme:menu-suboption code="master.menu.airline-manager.flights-list" action="/airline-manager/flight/list"/>
+			<acme:menu-separator/>
+			<acme:menu-suboption code="master.menu.manager.dashboard-show" action="/airline-manager/airline-manager-dashboard/show"/>
 		</acme:menu-option>
 		
 		<acme:menu-option code="master.menu.flightcrewmember" access="hasRealm('FlightCrewMember')">
 			<acme:menu-suboption code="master.menu.flightcrewmember.flightassignments.flightAssignments-list-completed" action="/flight-crew-member/flight-assignment/list-completed"/>
 			<acme:menu-suboption code="master.menu.flightcrewmember.flightassignments.flightAssignments-list-planned" action="/flight-crew-member/flight-assignment/list-planned"/>
+			<acme:menu-separator/>
+			<acme:menu-suboption code="master.menu.flightcrewmember.dashboard" action="/flight-crew-member/flight-crew-member-dashboard/show"/>
 		</acme:menu-option>
     
 		<acme:menu-option code="master.menu.technician" access="hasRealm('Technician')">
 			<acme:menu-suboption code="master.menu.technician.maintenanceRecords.maintenanceRecords-list" action="/technician/maintenance-record/list"/>
 			<acme:menu-separator/>
 			<acme:menu-suboption code="master.menu.technician.tasks.tasks-list" action="/technician/task/list"/>		
+			<acme:menu-separator/>
+			<acme:menu-suboption code="master.menu.technician.show-dashboard" action="/technician/technician-dashboard/show"/>
 		</acme:menu-option>
 		
 		<acme:menu-option code="master.menu.assistance-agent" access="hasRealm('AssistanceAgent')">
@@ -86,6 +92,8 @@
 			<acme:menu-suboption code="master.menu.user-account.provider-profile" action="/authenticated/provider/update" access="hasRealm('Provider')"/>
 			<acme:menu-suboption code="master.menu.user-account.become-consumer" action="/authenticated/consumer/create" access="!hasRealm('Consumer')"/>
 			<acme:menu-suboption code="master.menu.user-account.consumer-profile" action="/authenticated/consumer/update" access="hasRealm('Consumer')"/>
+			<acme:menu-suboption code="master.menu.user-account.become-technician" action="/authenticated/technician/create" access="!hasRealm('Technician')"/>	
+			<acme:menu-suboption code="master.menu.user-account.technician-profile" action="/authenticated/technician/update" access="hasRealm('Technician')"/>					
 		</acme:menu-option>
 	</acme:menu-right>
 </acme:menu-bar>

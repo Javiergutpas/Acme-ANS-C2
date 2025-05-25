@@ -1,6 +1,7 @@
 
 package acme.features.flightcrewmember.flightassignment;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,40 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true);
+
+		String method;
+		boolean status;
+
+		method = super.getRequest().getMethod();
+
+		if (method.equals("GET"))
+			status = true;
+		else {
+			String duty;
+			String currentStatus;
+			boolean correctDuty;
+			boolean correctStatus;
+			int legId;
+			int version;
+			int id;
+
+			Leg leg;
+
+			legId = super.getRequest().getData("flightAssignmentLeg", int.class);
+			leg = this.repository.findPublishedLegById(legId);
+
+			version = super.getRequest().getData("version", int.class);
+			id = super.getRequest().getData("id", int.class);
+
+			duty = super.getRequest().getData("duty", String.class);
+			currentStatus = super.getRequest().getData("currentStatus", String.class);
+
+			correctDuty = "0".equals(duty) || Arrays.stream(Duty.values()).map(Duty::name).anyMatch(name -> name.equals(duty));
+			correctStatus = "0".equals(currentStatus) || Arrays.stream(CurrentStatus.values()).map(CurrentStatus::name).anyMatch(name -> name.equals(currentStatus));
+
+			status = (legId == 0 || leg != null) && id == 0 && version == 0 && correctDuty && correctStatus;
+		}
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
@@ -46,7 +80,7 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 	@Override
 	public void bind(final FlightAssignment flightAssignment) {
 
-		super.bindObject(flightAssignment, "duty", "currentStatus", "remarks", "flightAssignmentLeg", "flightAssignmentCrewMember");
+		super.bindObject(flightAssignment, "duty", "currentStatus", "remarks", "flightAssignmentLeg");
 	}
 
 	@Override
@@ -56,7 +90,6 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 
 	@Override
 	public void perform(final FlightAssignment flightAssignment) {
-		assert flightAssignment != null;
 
 		this.repository.save(flightAssignment);
 	}
@@ -76,7 +109,7 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 		dutyChoice = SelectChoices.from(Duty.class, flightAssignment.getDuty());
 		currentStatusChoice = SelectChoices.from(CurrentStatus.class, flightAssignment.getCurrentStatus());
 
-		legs = this.repository.findAllLegs();
+		legs = this.repository.findAllFutureLegs();
 		legChoice = SelectChoices.from(legs, "flightNumber", flightAssignment.getFlightAssignmentLeg());
 
 		flightCrewMembers = this.repository.findAllFlightCrewMembers();

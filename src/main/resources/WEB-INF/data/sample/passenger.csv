@@ -52,5 +52,5 @@ passenger-42,"Diego Customer","diegocustomer@acme.com","ABC12345",2000/01/01 00:
 passenger-43,"Diego Customer","diegocustomer@acme.com","ABC12345",2000/01/01 00:00,"<script>alert(‘Hacked!’);</script>",false,customer-02
 passenger-44,"Diego Customer","diegocustomer@acme.com","ABC12345",2000/01/01 00:00,"'' or 'A' = 'A ",false,customer-02
 # publish - standard variations
-passenger-45,"Diego Customer","diegocustomer@acme.com","ABC12345",2000/01/01 00:00,"No tengo ninguna necesidad especial",true,customer-02
+passenger-45,"Diego Customer","diegocustomer@acme.com","ABC12345",2000/01/01 00:00,"No tengo ninguna necesidad especial",true,customer-01
 passenger-46,"Diego Customer","diegocustomer@acme.com","ABC12345",2000/01/01 00:00,"No tengo ninguna necesidad especial",false,customer-02

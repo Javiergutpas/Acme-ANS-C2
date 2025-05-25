@@ -1,0 +1,11 @@
+technician.technician-dashboard.form.title =Technician Dashboard
+technician.dashboard.form.label.nearestInspectionDue=Nearest Inspection Due
+technician.dashboard.form.label.averageEstimatedCost=Average Estimated Cost
+technician.dashboard.form.label.deviationEstimatedCost=Deviation Estimated Cost
+technician.dashboard.form.label.minEstimatedCost=Minimum Estimated Cost
+technician.dashboard.form.label.maxEstimatedCost=Maximum Estimated Cost
+technician.dashboard.form.label.averageEstimatedDuration = Average Estimated Duration
+technician.dashboard.form.label.deviationEstimatedDuration = Deviation Estimated Duration
+technician.dashboard.form.label.minEstimatedDuration = Minimum Estimated Duration
+technician.dashboard.form.label.maxEstimatedDuration = Maximum Estimated Duration
+technician.dashboard.form.label.topFiveAircrafts=Top Five Aircrafts

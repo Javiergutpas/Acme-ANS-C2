@@ -9,7 +9,6 @@
 	<acme:list-column code ="technician.task.list.label.type" path ="type" width ="20%"/>
 	<acme:list-column code ="technician.task.list.label.priority" path ="priority" width ="20%"/>
 	<acme:list-column code ="technician.involves.list.label.published" path ="published" width ="20%"/>
-	
 	<acme:list-payload path="payload"/>	
 </acme:list>
 

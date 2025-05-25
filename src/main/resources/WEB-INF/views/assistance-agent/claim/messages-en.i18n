@@ -27,3 +27,6 @@ assistance-agent.claim.form.button.delete = Delete
 assistance-agent.claim.form.button.publish = Publish
 assistance-agent.claim.form.button.tracking-log = Tracking Logs
 assistance-agent.claim.form.button.create = Create
+
+assistanceAgent.claim.form.error.registration-before-leg = Can't create a claim before the leg's arrival
+assistanceAgent.claim.form.error.leg-null = You must select a leg

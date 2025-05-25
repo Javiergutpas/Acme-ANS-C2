@@ -45,7 +45,7 @@ public class Technician extends AbstractRole {
 
 	@Mandatory
 	@Automapped
-	private boolean				anualHealthTest;
+	private Boolean				anualHealthTest;
 
 	@Mandatory
 	@ValidNumber(min = 0, max = 120)
