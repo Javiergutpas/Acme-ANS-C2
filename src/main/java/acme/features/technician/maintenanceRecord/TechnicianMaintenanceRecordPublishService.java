@@ -27,38 +27,31 @@ public class TechnicianMaintenanceRecordPublishService extends AbstractGuiServic
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		boolean authorised = false;
-		boolean exist;
-		boolean correctStatus;
-		String maintenanceRecordStatus;
 		MaintenanceRecord maintenanceRecord;
-		Technician technician;
-		int id;
-		String method;
-		method = super.getRequest().getMethod();
-		int aircraftId;
-		Aircraft aircraft;
+		int maintenanceRecordId;
+		int technicianId;
+		boolean status;
+		maintenanceRecordId = super.getRequest().getData("id", int.class);
+		maintenanceRecord = this.repository.findMaintenanceRecordById(maintenanceRecordId);
+		technicianId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		status = maintenanceRecord != null && !maintenanceRecord.getPublished() && maintenanceRecord.getTechnician().getId() == technicianId;
 
-		id = super.getRequest().getData("id", int.class);
-		maintenanceRecord = this.repository.findMaintenanceRecordById(id);
+		if (status) {
+			String method;
 
-		exist = maintenanceRecord != null;
-		if (method.equals("GET"))
-			authorised = true;
-
-		if (exist) {
-			technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
-			if (technician.equals(maintenanceRecord.getTechnician())) {
-				maintenanceRecordStatus = super.getRequest().getData("status", String.class);
-				correctStatus = "0".equals(maintenanceRecordStatus) || Arrays.stream(MaintenanceRecordStatus.values()).map(MaintenanceRecordStatus::name).anyMatch(name -> name.equals(maintenanceRecordStatus));
-				aircraftId = super.getRequest().getData("aircraft", int.class);
-				aircraft = this.repository.findAircraftById(aircraftId);
+			method = super.getRequest().getMethod();
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String maintenanceRecordStatus = super.getRequest().getData("status", String.class);
+				boolean correctStatus = "0".equals(maintenanceRecordStatus) || Arrays.stream(MaintenanceRecordStatus.values()).map(MaintenanceRecordStatus::name).anyMatch(name -> name.equals(maintenanceRecordStatus));
+				int aircraftId = super.getRequest().getData("aircraft", int.class);
+				Aircraft aircraft = this.repository.findAircraftById(aircraftId);
 				boolean aircraftExists = this.repository.findAllAircrafts().contains(aircraft);
-				authorised = (aircraftId == 0 || aircraftExists) && correctStatus;
-
+				status = (aircraftId == 0 || aircraftExists) && correctStatus;
 			}
 		}
-		super.getResponse().setAuthorised(authorised);
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
