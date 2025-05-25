@@ -80,6 +80,7 @@ public class TechnicianTaskDeleteService extends AbstractGuiService<Technician, 
 
 		dataset = super.unbindObject(task, "type", "description", "priority", "estimatedDuration", "published");
 		dataset.put("type", choices.getSelected().getKey());
+		dataset.put("type", choices);
 
 		super.getResponse().addData(dataset);
 	}
