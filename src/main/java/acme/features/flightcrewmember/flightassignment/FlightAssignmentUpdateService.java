@@ -95,7 +95,7 @@ public class FlightAssignmentUpdateService extends AbstractGuiService<FlightCrew
 
 		leg = flightAssignment.getFlightAssignmentLeg();
 
-		if (leg != null && leg.getArrival() != null) {
+		if (leg != null) {
 			completedLeg = leg.getArrival().before(MomentHelper.getCurrentMoment());
 			super.state(!completedLeg, "*", "acme.validation.flightassignment.leg.completed.message");
 		}

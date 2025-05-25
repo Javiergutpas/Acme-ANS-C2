@@ -90,7 +90,6 @@ public class FlightAssignmentCreateService extends AbstractGuiService<FlightCrew
 
 	@Override
 	public void perform(final FlightAssignment flightAssignment) {
-		assert flightAssignment != null;
 
 		this.repository.save(flightAssignment);
 	}
