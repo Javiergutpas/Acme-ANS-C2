@@ -30,6 +30,7 @@ public interface TechnicianDashboardRepository extends AbstractRepository {
 		    FROM MaintenanceRecord m
 		    WHERE m.technician.id = :technicianId
 		    AND m.status = :status
+		    AND m.published = true
 		""")
 	Optional<Integer> countMaintenanceRecordsByStatus(int technicianId, MaintenanceRecordStatus status);
 
@@ -39,44 +40,45 @@ public interface TechnicianDashboardRepository extends AbstractRepository {
 		    FROM Involves mrt
 		    JOIN mrt.maintenanceRecord m
 		    WHERE m.technician.id = :technicianId
+		    AND m.published = true
 		    GROUP BY m.aircraft
 		    ORDER BY COUNT(mrt.task) DESC
 		""")
 	List<Aircraft> findTopFiveAircraftsByTechnicianId(int technicianId);
 
 	// Retrieves upcoming maintenance records ordered by next inspection date for a technician
-	@Query("SELECT m FROM MaintenanceRecord m WHERE m.technician.id = :technicianId AND m.nextInspectionDate >= CURRENT_TIMESTAMP ORDER BY m.nextInspectionDate ASC")
+	@Query("SELECT m FROM MaintenanceRecord m WHERE m.technician.id = :technicianId AND m.nextInspectionDate >= CURRENT_TIMESTAMP AND m.published = true ORDER BY m.nextInspectionDate ASC")
 	List<MaintenanceRecord> findNearestInspectionRecordsByTechnicianId(int technicianId);
 
 	// Computes the average estimated cost of maintenance records for a technician
-	@Query("SELECT AVG(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId")
+	@Query("SELECT AVG(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId AND m.published = true")
 	Double findAverageEstimatedCost(int technicianId);
 
 	// Computes the standard deviation of estimated costs of maintenance records for a technician
-	@Query("SELECT STDDEV(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId")
+	@Query("SELECT STDDEV(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId AND m.published = true")
 	Double findDeviationEstimatedCost(int technicianId);
 
 	// Finds the minimum estimated cost among maintenance records for a technician
-	@Query("SELECT MIN(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId")
+	@Query("SELECT MIN(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId AND m.published = true")
 	Double findMinEstimatedCost(int technicianId);
 
 	// Finds the maximum estimated cost among maintenance records for a technician
-	@Query("SELECT MAX(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId")
+	@Query("SELECT MAX(m.estimatedCost.amount) FROM MaintenanceRecord m WHERE m.technician.id = :technicianId AND m.published = true")
 	Double findMaxEstimatedCost(int technicianId);
 
 	// Computes the average estimated duration of tasks for a technician
-	@Query("SELECT AVG(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId")
+	@Query("SELECT AVG(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId AND t.published = true")
 	Double findAverageEstimatedDuration(int technicianId);
 
 	// Computes the standard deviation of estimated durations of tasks for a technician
-	@Query("SELECT STDDEV(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId")
+	@Query("SELECT STDDEV(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId AND t.published = true")
 	Double findDeviationEstimatedDuration(int technicianId);
 
 	// Finds the minimum estimated duration among tasks for a technician
-	@Query("SELECT MIN(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId")
+	@Query("SELECT MIN(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId AND t.published = true")
 	Double findMinEstimatedDuration(int technicianId);
 
 	// Finds the maximum estimated duration among tasks for a technician
-	@Query("SELECT MAX(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId")
+	@Query("SELECT MAX(t.estimatedDuration) FROM Task t WHERE t.technician.id = :technicianId AND t.published = true")
 	Double findMaxEstimatedDuration(int technicianId);
 }

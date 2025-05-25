@@ -1,6 +1,5 @@
 #validation-es.i18n
 
-acme.validation.flight.publish.message = Un vuelo no puede ser publicado si no tiene al menos un tramo, estando cada tramo publicado
 acme.validation.flight.leg.overlap.message = Hay tramos del vuelo que se solapan
 acme.validation.flight.delete-when-published = No es posible borrar un vuelo publicado
 acme.validation.flight.delete-legs-published = No es posible borrar un vuelo con tramos publicados
@@ -12,12 +11,13 @@ acme.validation.leg.flightNumber.message = El número de vuelo debe estar compue
 acme.validation.leg.past-departure.message = La fecha de salida no puede ser pasada
 acme.validation.leg.past-arrival.message = La fecha de llegada no puede ser pasada
 acme.validation.leg.arrival.message = La fecha de llegada debe ser al menos un minuto posterior a la de salida
-acme.validation.leg.overlapped = El tramo está solapado con algún otro tramo publicado
+acme.validation.leg.overlapped = El tramo está solapado con algún otro tramo publicado perteneciente al mismo vuelo
 acme.validation.leg.used-aircraft = El avión ya está asignado a otro tramo publicado durante el mismo intervalo de tiempo
 acme.validation.leg.inactive-aircraft = No se puede asignar un avión que no está activo
 acme.validation.leg.flight.number.duplicated.message = Número de vuelo duplicado
 acme.validation.leg.flight.number.message = El número de vuelo debe empezar por el IATA de la aerolínea del avión
 acme.validation.leg.airport.sameAirport = Los aeropuertos de salida y llegada deben ser distintos
+acme.validation.leg.airport.sameCities = Ambos aeropuertos no pueden estar en una misma ciudad
 
 acme.validation.activitylog.message = Registro de actividades inválido
 acme.validation.activitylog.registrationmoment.required = El momento de registro no puede ser nulo

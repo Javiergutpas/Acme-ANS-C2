@@ -11,6 +11,7 @@ import acme.entities.aircraft.Aircraft;
 import acme.entities.involves.Involves;
 import acme.entities.maintenanceRecord.MaintenanceRecord;
 import acme.entities.task.Task;
+import acme.realms.technician.Technician;
 
 @Repository
 public interface TechnicianMaintenanceRecordRepository extends AbstractRepository {
@@ -21,11 +22,17 @@ public interface TechnicianMaintenanceRecordRepository extends AbstractRepositor
 	@Query("SELECT m FROM MaintenanceRecord m WHERE m.technician.id = :technicianId ")
 	Collection<MaintenanceRecord> findAllMaintenanceRecordByTechnicianId(final int technicianId);
 
+	@Query("SELECT t FROM Technician t WHERE t.userAccount.id = :id")
+	Technician findTechnicianByUserAccoundId(int id);
+
 	@Query("SELECT m FROM MaintenanceRecord m WHERE m.id = :id")
 	MaintenanceRecord findMaintenanceRecordById(int id);
 
 	@Query("SELECT a FROM Aircraft a")
 	Collection<Aircraft> findAllAircrafts();
+
+	@Query("SELECT a FROM Aircraft a WHERE a.id = :aircraftId")
+	Aircraft findAircraftById(int aircraftId);
 
 	@Query("SELECT i.task FROM Involves i WHERE i.maintenanceRecord.id = :id")
 	Collection<Task> findAllRelatedTaskWithMaintenanceRecord(int id);

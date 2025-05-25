@@ -52,7 +52,7 @@ public class AirlineManagerLegDeleteService extends AbstractGuiService<AirlineMa
 
 	@Override
 	public void bind(final Leg leg) {
-		super.bindObject(leg, "flightNumber", "departure", "arrival");
+		super.bindObject(leg, "flightNumber", "departure", "arrival", "status", "departureAirport", "arrivalAirport", "deployedAircraft");
 	}
 
 	@Override
