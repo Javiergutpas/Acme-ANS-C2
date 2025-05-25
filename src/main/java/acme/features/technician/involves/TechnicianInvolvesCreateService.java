@@ -43,15 +43,17 @@ public class TechnicianInvolvesCreateService extends AbstractGuiService<Technici
 			int id;
 			int version;
 			int taskId;
+			int sameTask;
 			Task task;
 
 			id = super.getRequest().getData("id", int.class);
 			version = super.getRequest().getData("version", int.class);
 
 			taskId = super.getRequest().getData("task", int.class);
+			sameTask = this.repository.countInvolvesByMaintenanceRecordIdAndTask(maintenanceRecordId, taskId);
 			task = this.repository.findTaskById(taskId);
 			boolean taskExists = this.repository.findAllTaskByTechnicianId(technician.getId()).contains(task);
-			authorised = (taskId == 0 || taskExists) && id == 0 && version == 0 && technician != null;
+			authorised = (taskId == 0 || taskExists) && id == 0 && version == 0 && technician != null && sameTask < 1;
 		}
 		super.getResponse().setAuthorised(authorised);
 	}
