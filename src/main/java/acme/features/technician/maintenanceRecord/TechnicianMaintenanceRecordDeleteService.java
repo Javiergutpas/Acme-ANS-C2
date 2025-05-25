@@ -28,20 +28,12 @@ public class TechnicianMaintenanceRecordDeleteService extends AbstractGuiService
 
 	@Override
 	public void authorise() {
-		boolean exist;
-		MaintenanceRecord maintenanceRecord;
-		Technician technician;
-		int id;
+		int technicianId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		int maintenanceRecordId = super.getRequest().getData("id", int.class);
+		MaintenanceRecord maintenanceRecord = this.repository.findMaintenanceRecordById(maintenanceRecordId);
+		boolean status = maintenanceRecord != null && !maintenanceRecord.getPublished() && maintenanceRecord.getTechnician().getId() == technicianId;
 
-		id = super.getRequest().getData("id", int.class);
-		maintenanceRecord = this.repository.findMaintenanceRecordById(id);
-
-		exist = maintenanceRecord != null;
-		if (exist && !maintenanceRecord.getPublished()) {
-			technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
-			if (technician.equals(maintenanceRecord.getTechnician()))
-				super.getResponse().setAuthorised(true);
-		}
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
