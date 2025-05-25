@@ -22,13 +22,18 @@ public class CustomerPassengerPublishService extends AbstractGuiService<Customer
 
 	@Override
 	public void authorise() {
-		boolean status = super.getRequest().getPrincipal().hasRealmOfType(Customer.class);
-		super.getResponse().setAuthorised(status);
-		int customerId = super.getRequest().getPrincipal().getActiveRealm().getId();
-		int passengerId = super.getRequest().getData("id", int.class);
-		Passenger passenger = this.repository.findPassengerById(passengerId);
+		Passenger passenger;
+		int passengerId;
+		int customerId;
+		boolean status;
 
-		super.getResponse().setAuthorised(customerId == passenger.getCustomer().getId());
+		passengerId = super.getRequest().getData("id", int.class);
+		passenger = this.repository.findPassengerById(passengerId);
+		customerId = super.getRequest().getPrincipal().getActiveRealm().getId();
+
+		status = passenger != null && !passenger.isPublish() && passenger.getCustomer().getId() == customerId;
+
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
