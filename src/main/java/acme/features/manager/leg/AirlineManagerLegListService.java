@@ -65,7 +65,7 @@ public class AirlineManagerLegListService extends AbstractGuiService<AirlineMana
 
 		flightId = super.getRequest().getData("flightId", int.class);
 		flight = this.repository.findFlightById(flightId);
-		showCreate = !flight.isPublish() && super.getRequest().getPrincipal().hasRealm(flight.getManager());
+		showCreate = !flight.isPublish();
 
 		super.getResponse().addGlobal("flightId", flightId);
 		super.getResponse().addGlobal("showCreate", showCreate);
