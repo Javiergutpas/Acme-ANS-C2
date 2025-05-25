@@ -1,6 +1,8 @@
 
 package acme.features.technician.task;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
@@ -23,20 +25,23 @@ public class TechnicianTaskPublishService extends AbstractGuiService<Technician,
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		boolean exist;
-		Task task;
-		Technician technician;
-		int id;
+		String method;
+		boolean correctType;
+		boolean authorised = false;
+		String taskType;
 
-		id = super.getRequest().getData("id", int.class);
-		task = this.repository.findTaskById(id);
+		method = super.getRequest().getMethod();
 
-		exist = task != null;
-		if (exist) {
-			technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
-			if (technician.equals(task.getTechnician()))
-				super.getResponse().setAuthorised(true);
+		if (method.equals("GET"))
+			authorised = true;
+		else {
+
+			taskType = super.getRequest().getData("type", String.class);
+			correctType = "0".equals(taskType) || Arrays.stream(TaskType.values()).map(TaskType::name).anyMatch(name -> name.equals(taskType));
+
+			authorised = correctType;
 		}
+		super.getResponse().setAuthorised(authorised);
 	}
 
 	@Override
@@ -57,7 +62,17 @@ public class TechnicianTaskPublishService extends AbstractGuiService<Technician,
 
 	@Override
 	public void validate(final Task task) {
+		if (!this.getBuffer().getErrors().hasErrors("type"))
+			super.state(task.getType() != null, "type", "acme.validation.technician.task.noType.message");
 
+		if (!this.getBuffer().getErrors().hasErrors("description") && task.getDescription() != null)
+			super.state(task.getDescription().length() <= 255, "description", "acme.validation.technician.task.description.message");
+
+		if (!this.getBuffer().getErrors().hasErrors("priority") && task.getPriority() != null)
+			super.state(0 <= task.getPriority() && task.getPriority() <= 10, "priority", "acme.validation.technician.task.priority.message");
+
+		if (!this.getBuffer().getErrors().hasErrors("estimatedDuration") && task.getEstimatedDuration() != null)
+			super.state(0 <= task.getEstimatedDuration() && task.getEstimatedDuration() <= 1000, "estimatedDuration", "acme.validation.technician.task.estimatedDuration.message");
 	}
 
 	@Override

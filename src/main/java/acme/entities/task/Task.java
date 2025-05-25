@@ -17,6 +17,10 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+//@Table(indexes = {
+//	@Index(columnList = "published"),              // 
+//	@Index(columnList = "priority, technician_id")
+//})
 public class Task extends AbstractEntity {
 	// Serialisation version --------------------------------------------------
 
