@@ -32,4 +32,7 @@ public interface TechnicianInvolvesRepository extends AbstractRepository {
 
 	@Query("SELECT t FROM Technician t WHERE t.userAccount.id = :id")
 	Technician findTechnicianByUserAccoundId(int id);
+
+	@Query("SELECT COUNT(i) FROM Involves i WHERE i.maintenanceRecord.id = :maintenanceRecordId AND i.task.id = :taskId")
+	Integer countInvolvesByMaintenanceRecordIdAndTask(int maintenanceRecordId, int taskId);
 }
