@@ -30,19 +30,6 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 
 	@Override
 	public void authorise() {
-		/*
-		 * Claim claim;
-		 * int claimId;
-		 * int agentId;
-		 * boolean status;
-		 * 
-		 * claimId = super.getRequest().getData("claimId", int.class);
-		 * claim = this.repository.findClaimById(claimId);
-		 * agentId = super.getRequest().getPrincipal().getActiveRealm().getId();
-		 * status = claim != null && claim.getAssistanceAgent().getId() == agentId;
-		 * 
-		 * super.getResponse().setAuthorised(status);
-		 */
 		Claim claim;
 		int claimId;
 		int assistanceAgentId;
@@ -110,7 +97,6 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 		int claimId;
 		claimId = super.getRequest().getData("claimId", int.class);
 		claim = this.repository.findClaimById(claimId);
-		//Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
 
 		//Condicion para que el estado del tracking log sea pending si el porcentage no es 100
 		if (!super.getBuffer().getErrors().hasErrors("indicator")) {
@@ -124,20 +110,6 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 			}
 
 		}
-		/*
-		 * //Condicion para que el porcentaje de los tracking logs sea creciente
-		 * if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
-		 * 
-		 * Double maxResolutionPercentage;
-		 * double finalMaxResolutionPercentage;
-		 * 
-		 * // Manejo seguro del valor nulo devuelto por la consulta
-		 * maxResolutionPercentage = this.repository.findMaxResolutionPercentageByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
-		 * finalMaxResolutionPercentage = maxResolutionPercentage != null ? maxResolutionPercentage : 0.0;
-		 * 
-		 * super.state(trackingLog.getResolutionPercentage() >= finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
-		 * }
-		 */
 
 		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
 			super.state(!claim.getRegistrationMoment().after(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
@@ -161,16 +133,8 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 
 		}
 
-		//Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
-		/*
-		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
-		 * 
-		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
-		 */
-
 	}
 
-	//Seguro hace falta el momento actual?
 	@Override
 	public void perform(final TrackingLog trackingLog) {
 
