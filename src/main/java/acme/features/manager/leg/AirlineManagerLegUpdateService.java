@@ -1,6 +1,7 @@
 
 package acme.features.manager.leg;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,40 @@ public class AirlineManagerLegUpdateService extends AbstractGuiService<AirlineMa
 		legId = super.getRequest().getData("id", int.class);
 		leg = this.repository.findLegById(legId);
 		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = leg.getFlight() != null && leg != null && !leg.isPublish() && leg.getFlight().getManager().getId() == managerId;
+		status = leg != null && !leg.isPublish() && leg.getFlight().getManager().getId() == managerId;
+
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String legStatus;
+				boolean correctStatus;
+				int aircraftId;
+				int departureAirportId;
+				int arrivalAirportId;
+
+				Aircraft aircraft;
+				Airport departureAirport;
+				Airport arrivalAirport;
+
+				aircraftId = super.getRequest().getData("deployedAircraft", int.class);
+				departureAirportId = super.getRequest().getData("departureAirport", int.class);
+				arrivalAirportId = super.getRequest().getData("arrivalAirport", int.class);
+
+				aircraft = this.repository.findAircraftById(aircraftId);
+				departureAirport = this.repository.findAirportById(departureAirportId);
+				arrivalAirport = this.repository.findAirportById(arrivalAirportId);
+
+				legStatus = super.getRequest().getData("status", String.class);
+				correctStatus = "0".equals(legStatus) || Arrays.stream(LegStatus.values()).map(LegStatus::name).anyMatch(name -> name.equals(legStatus));
+
+				status = (aircraftId == 0 || aircraft != null) && (departureAirportId == 0 || departureAirport != null) && (arrivalAirportId == 0 || arrivalAirport != null) && correctStatus;
+			}
+		}
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -95,6 +129,7 @@ public class AirlineManagerLegUpdateService extends AbstractGuiService<AirlineMa
 		choicesArrivalAirport = SelectChoices.from(airports, "iataCode", leg.getArrivalAirport());
 
 		dataset = super.unbindObject(leg, "flightNumber", "departure", "arrival", "publish");
+		dataset.put("flightId", leg.getFlight().getId());
 		dataset.put("durationInHours", leg.getDurationInHours());
 		dataset.put("statuses", choicesStatuses);
 		dataset.put("departureAirports", choicesDepartureAirport);

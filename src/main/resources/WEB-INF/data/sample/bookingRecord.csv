@@ -3,8 +3,8 @@ bookingRecord-01,booking-01,passenger-01
 bookingRecord-02,booking-01,passenger-02
 bookingRecord-03,booking-01,passenger-03
 bookingRecord-04,booking-01,passenger-04
-bookingRecord-05,booking-02,passenger-01
-bookingRecord-06,booking-03,passenger-01
+bookingRecord-05,booking-03,passenger-01
+bookingRecord-06,booking-03,passenger-02
 bookingRecord-07,booking-04,passenger-23
 bookingRecord-08,booking-05,passenger-24
 bookingRecord-09,booking-06,passenger-25
@@ -23,5 +23,5 @@ bookingRecord-21,booking-18,passenger-32
 bookingRecord-22,booking-19,passenger-01
 bookingRecord-23,booking-20,passenger-01
 bookingRecord-24,booking-21,passenger-01
-bookingRecord-25,booking-22,passenger-01
+bookingRecord-25,booking-22,passenger-45
 bookingRecord-26,booking-23,passenger-01

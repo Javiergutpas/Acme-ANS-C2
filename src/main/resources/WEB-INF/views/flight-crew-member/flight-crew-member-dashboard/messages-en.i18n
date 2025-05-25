@@ -1,0 +1,13 @@
+
+flight-crew-member.flight-crew-member-dashboard.form.title = Flight Crew Member Dashboard
+
+flight-crew-member.dashboard.form.label.lastFiveDestinations = Last five destinations
+flight-crew-member.dashboard.form.label.legsWithLowSeverityIncidents = Legs with low severity incidents
+flight-crew-member.dashboard.form.label.membersAssignedInLastLeg = Members assigned in last leg
+flight-crew-member.dashboard.form.label.confirmedFlightAssignments = Confirmed Flight Assignments
+flight-crew-member.dashboard.form.label.pendingFlightAssignments = Pending Flight Assignments
+flight-crew-member.dashboard.form.label.cancelledFlightAssignments = Cancelled Flight Assignments
+flight-crew-member.dashboard.form.label.averageFlightAssignmentInLastMonth = Average flight assignment in last month
+flight-crew-member.dashboard.form.label.minimumFlightAssignmentInLastMonth = Minimum flight assignment in last month
+flight-crew-member.dashboard.form.label.maximumFlightAssignmentInLastMonth = Maximum flight assignment in last month
+flight-crew-member.dashboard.form.label.standardDeviationInLastMonth = Standard deviation in last month

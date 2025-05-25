@@ -1,6 +1,7 @@
 
 package acme.features.manager.leg;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,43 @@ public class AirlineManagerLegCreateService extends AbstractGuiService<AirlineMa
 		flight = this.repository.findFlightById(flightId);
 		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId;
+
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String legStatus;
+				boolean correctStatus;
+				int aircraftId;
+				int departureAirportId;
+				int arrivalAirportId;
+				int version;
+				int id;
+
+				Aircraft aircraft;
+				Airport departureAirport;
+				Airport arrivalAirport;
+
+				aircraftId = super.getRequest().getData("deployedAircraft", int.class);
+				departureAirportId = super.getRequest().getData("departureAirport", int.class);
+				arrivalAirportId = super.getRequest().getData("arrivalAirport", int.class);
+				version = super.getRequest().getData("version", int.class);
+				id = super.getRequest().getData("id", int.class);
+
+				aircraft = this.repository.findAircraftById(aircraftId);
+				departureAirport = this.repository.findAirportById(departureAirportId);
+				arrivalAirport = this.repository.findAirportById(arrivalAirportId);
+
+				legStatus = super.getRequest().getData("status", String.class);
+				correctStatus = "0".equals(legStatus) || Arrays.stream(LegStatus.values()).map(LegStatus::name).anyMatch(name -> name.equals(legStatus));
+
+				status = (aircraftId == 0 || aircraft != null) && (departureAirportId == 0 || departureAirport != null) && (arrivalAirportId == 0 || arrivalAirport != null) && id == 0 && version == 0 && correctStatus;
+			}
+		}
 
 		super.getResponse().setAuthorised(status);
 	}

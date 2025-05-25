@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import acme.client.components.validation.AbstractValidator;
 import acme.client.helpers.MomentHelper;
 import acme.client.helpers.StringHelper;
+import acme.entities.aircraft.AircraftStatus;
 import acme.entities.leg.Leg;
 import acme.entities.leg.LegRepository;
 
@@ -56,6 +57,10 @@ public class LegValidator extends AbstractValidator<ValidLeg, Leg> {
 					String iataFromAirline = leg.getDeployedAircraft().getAirline().getIataCode();
 					containsIATA = StringHelper.startsWith(leg.getFlightNumber(), iataFromAirline, false); //El flightNumber introducido debe estar en mayúsculas
 					super.state(context, containsIATA, "flightNumber", "acme.validation.leg.flight.number.message");
+
+					boolean aircraftIsActive;
+					aircraftIsActive = leg.getDeployedAircraft().getStatus() == AircraftStatus.ACTIVE;
+					super.state(context, aircraftIsActive, "deployedAircraft", "acme.validation.leg.inactive-aircraft");
 				}
 
 				boolean uniqueLeg;

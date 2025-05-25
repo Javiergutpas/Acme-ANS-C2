@@ -9,6 +9,7 @@
 	<acme:list-column code="assistance-agent.trackingLog.list.label.lastUpdateMoment" path="lastUpdateMoment" width="20%"/>
 	<acme:list-column code="assistance-agent.trackingLog.list.label.resolutionPercentage" path="resolutionPercentage" width="20%"/>
 	<acme:list-column code="assistance-agent.trackingLog.list.label.status" path="status" width="20%"/>
+	<acme:list-column code="assistance-agent.trackingLog.list.label.publish" path="publish" width="20%"/>
 	<acme:list-payload path="payload"/>
 </acme:list>
 

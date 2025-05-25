@@ -1,0 +1,15 @@
+
+flight-crew-member.flight-crew-member-dashboard.form.title = Panel de control del miembro de la tripulación del vuelo
+
+flight-crew-member.dashboard.form.label.lastFiveDestinations = Últimos cinco destinos
+flight-crew-member.dashboard.form.label.legsWithLowSeverityIncidents = Tramos con incidentes de baja gravedad
+flight-crew-member.dashboard.form.label.legsWithMediumSeverityIncidents = Tramos con incidentes de media gravedad
+flight-crew-member.dashboard.form.label.legsWithHighSeverityIncidents = Tramos con incidentes de alta gravedad
+flight-crew-member.dashboard.form.label.membersAssignedInLastLeg = Miembros asignados en el último tramo
+flight-crew-member.dashboard.form.label.confirmedFlightAssignments = Asignaciones de vuelo confirmadas
+flight-crew-member.dashboard.form.label.pendingFlightAssignments = Asignaciones de vuelo pendientes
+flight-crew-member.dashboard.form.label.cancelledFlightAssignments = Asignaciones de vuelo canceladas
+flight-crew-member.dashboard.form.label.averageFlightAssignmentInLastMonth = Promedio de asignaciones de vuelo en el último mes
+flight-crew-member.dashboard.form.label.minimumFlightAssignmentInLastMonth = Mínimo de asignaciones de vuelo en el último mes
+flight-crew-member.dashboard.form.label.maximumFlightAssignmentInLastMonth = Máximo de asignaciones de vuelo en el último mes
+flight-crew-member.dashboard.form.label.standardDeviationInLastMonth = Desviación típica de asignaciones de vuelo en el último mes

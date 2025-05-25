@@ -33,8 +33,8 @@ public class AirlineManagerFlightDeleteService extends AbstractGuiService<Airlin
 
 		flightId = super.getRequest().getData("id", int.class);
 		flight = this.repository.findFlightById(flightId);
-		managerId = flight == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId && !flight.isPublish();
+		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		status = flight != null && !flight.isPublish() && flight.getManager().getId() == managerId;
 
 		super.getResponse().setAuthorised(status);
 	}
@@ -52,7 +52,7 @@ public class AirlineManagerFlightDeleteService extends AbstractGuiService<Airlin
 
 	@Override
 	public void bind(final Flight flight) {
-		super.bindObject(flight, "tag", "cost", "description", "airline");
+		super.bindObject(flight, "tag", "cost", "requiresSelfTransfer", "description", "airline");
 	}
 
 	@Override

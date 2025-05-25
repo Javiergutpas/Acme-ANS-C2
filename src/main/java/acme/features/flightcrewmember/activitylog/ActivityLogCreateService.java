@@ -4,6 +4,7 @@ package acme.features.flightcrewmember.activitylog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
+import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.activitylog.ActivityLog;
@@ -32,6 +33,22 @@ public class ActivityLogCreateService extends AbstractGuiService<FlightCrewMembe
 
 		status = flightAssignment != null && flightAssignment.getFlightAssignmentCrewMember().getId() == flightCrewMemberId;
 
+		if (status) {
+			String method;
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				int version;
+				int id;
+
+				version = super.getRequest().getData("version", int.class);
+				id = super.getRequest().getData("id", int.class);
+
+				status = id == 0 && version == 0;
+			}
+		}
 		super.getResponse().setAuthorised(status);
 	}
 
@@ -45,6 +62,7 @@ public class ActivityLogCreateService extends AbstractGuiService<FlightCrewMembe
 		flightAssignment = this.repository.findFlightAssignmentById(flightAssignmentId);
 
 		activityLog = new ActivityLog();
+		activityLog.setRegistrationMoment(MomentHelper.getCurrentMoment());
 		activityLog.setActivityLogAssignment(flightAssignment);
 		activityLog.setPublish(false);
 
@@ -53,7 +71,7 @@ public class ActivityLogCreateService extends AbstractGuiService<FlightCrewMembe
 
 	@Override
 	public void bind(final ActivityLog activityLog) {
-		super.bindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel");
+		super.bindObject(activityLog, "incidentType", "description", "severityLevel");
 	}
 
 	@Override

@@ -31,18 +31,15 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 
 		Claim claim;
 		int claimId;
-		//AssistanceAgent assistanceAgent;
 		int agentId;
 
 		boolean status;
 
 		claimId = super.getRequest().getData("id", int.class);
 		claim = this.repository.findClaimById(claimId);
-		//assistanceAgent = claim == null ? null : claim.getAssistanceAgent();
-		agentId = claim == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
+		agentId = super.getRequest().getPrincipal().getActiveRealm().getId();
 
 		status = claim != null && !claim.isPublish() && claim.getAssistanceAgent().getId() == agentId;
-		//status = super.getRequest().getPrincipal().hasRealm(assistanceAgent) && (claim == null || claim.getPublish() == false);
 		super.getResponse().setAuthorised(status);
 
 	}
@@ -60,24 +57,26 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 
 	@Override
 	public void bind(final Claim claim) {
-		super.bindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");
+		super.bindObject(claim, "passengerEmail", "description", "type", "leg");
 	}
 
 	//Si esta publicado no se puede borrar
 	//si tiene algun tracking log publicado no se puede borrar
 	@Override
 	public void validate(final Claim claim) {
-		boolean claimNotPublished;
-		boolean trackingLogNotPublished;
-		Collection<TrackingLog> claimsTrackingLogs;
-
-		claimsTrackingLogs = this.repository.findTrackingLogsByClaimId(claim.getId());
-
-		trackingLogNotPublished = claimsTrackingLogs.stream().noneMatch(t -> t.isPublish());
-		claimNotPublished = !claim.isPublish();
-
-		super.state(claimNotPublished, "publish", "acme.validation.claim.delete-when-published");
-		super.state(trackingLogNotPublished, "*", "acme.validation.claim.delete-trackinglogs-published");
+		/*
+		 * boolean claimNotPublished;
+		 * boolean trackingLogNotPublished;
+		 * Collection<TrackingLog> claimsTrackingLogs;
+		 * 
+		 * claimsTrackingLogs = this.repository.findTrackingLogsByClaimId(claim.getId());
+		 * 
+		 * trackingLogNotPublished = claimsTrackingLogs.stream().noneMatch(t -> t.isPublish());
+		 * claimNotPublished = !claim.isPublish();
+		 * 
+		 * super.state(claimNotPublished, "publish", "acme.validation.claim.delete-when-published");
+		 * super.state(trackingLogNotPublished, "*", "acme.validation.claim.delete-trackinglogs-published");
+		 */
 	}
 
 	@Override
@@ -97,13 +96,8 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 		SelectChoices legsChoices;
 		Dataset dataset;
 
-		//Date actualMoment;
-
-		//actualMoment = MomentHelper.getCurrentMoment();
-
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
-		//legs = this.repository.findAllPublishedLegsBefore(actualMoment);
-		//legs = this.repository.findAllPublishedLegs();
+
 		legs = this.repository.findAllLeg();
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 

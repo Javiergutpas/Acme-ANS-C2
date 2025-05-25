@@ -4,7 +4,7 @@ package acme.features.flightcrewmember.activitylog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
-import acme.client.helpers.PrincipalHelper;
+import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.activitylog.ActivityLog;
@@ -52,7 +52,7 @@ public class ActivityLogUpdateService extends AbstractGuiService<FlightCrewMembe
 	public void bind(final ActivityLog activityLog) {
 		assert activityLog != null;
 
-		super.bindObject(activityLog, "registrationMoment", "incidentType", "description", "severityLevel");
+		super.bindObject(activityLog, "incidentType", "description", "severityLevel");
 	}
 
 	@Override
@@ -62,13 +62,8 @@ public class ActivityLogUpdateService extends AbstractGuiService<FlightCrewMembe
 
 	@Override
 	public void perform(final ActivityLog activityLog) {
+		activityLog.setRegistrationMoment(MomentHelper.getCurrentMoment());
 		this.repository.save(activityLog);
-	}
-
-	@Override
-	public void onSuccess() {
-		if (super.getRequest().getMethod().equals("POST"))
-			PrincipalHelper.handleUpdate();
 	}
 
 	@Override

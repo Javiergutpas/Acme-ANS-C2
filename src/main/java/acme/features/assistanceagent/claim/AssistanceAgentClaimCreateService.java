@@ -1,6 +1,7 @@
 
 package acme.features.assistanceagent.claim;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 
@@ -29,7 +30,34 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true);
+
+		boolean status;
+
+		String method;
+		Leg leg;
+		int legId;
+
+		method = super.getRequest().getMethod();
+
+		if (method.equals("GET"))
+			status = true;
+		else {
+			String claimType;
+			boolean correctClaimType;
+			legId = super.getRequest().getData("leg", int.class);
+			leg = this.repository.findPublishedLegById(legId);
+			claimType = super.getRequest().getData("type", String.class);
+
+			int version;
+			int id;
+
+			version = super.getRequest().getData("version", int.class);
+			id = super.getRequest().getData("id", int.class);
+
+			correctClaimType = "0".equals(claimType) || Arrays.stream(ClaimType.values()).map(ClaimType::name).anyMatch(name -> name.equals(claimType));
+			status = (legId == 0 || leg != null) && correctClaimType && id == 0 && version == 0;
+		}
+		super.getResponse().setAuthorised(status);
 
 	}
 
@@ -44,10 +72,7 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 		claim = new Claim();
 		claim.setRegistrationMoment(registrationMoment);
 
-		//		claim.setPassengerEmail("");
-		//		claim.setDescription("");
 		claim.setAssistanceAgent(agent);
-		//		claim.setType(ClaimType.FLIGHT_ISSUES);
 
 		claim.setPublish(false);
 
@@ -57,28 +82,29 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 	@Override
 	public void bind(final Claim claim) {
-		super.bindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");
+		super.bindObject(claim, "passengerEmail", "description", "type", "leg");
 
 	}
 
 	@Override
 	public void validate(final Claim claim) {
+		/*
+		 * if (claim.getLeg() != null)
+		 * if (!super.getBuffer().getErrors().hasErrors("registrationMoment"))
+		 * super.state(claim.getLeg().getArrival().before(claim.getRegistrationMoment()), "registrationMoment", "assistanceAgent.claim.form.error.registration-before-leg");
+		 * 
+		 * if (!super.getBuffer().getErrors().hasErrors("leg"))
+		 * super.state(claim.getLeg() != null && claim.getLeg().isPublish(), "leg", "assistanceAgent.claim.form.error.leg-null");
+		 */
 		;
 	}
 
 	@Override
 	public void perform(final Claim claim) {
-		Date registrationMoment;
-
-		registrationMoment = MomentHelper.getCurrentMoment();
-		claim.setRegistrationMoment(registrationMoment);
-
-		claim.setPublish(false);
 
 		this.repository.save(claim);
 	}
-	//CUANDO SE ARREGLE EL BUG TEMPORAL DE LAS LEGS SE USARA LA LINEA COMENTADA
-	//AQUI FUNCIONA EL ALLPUBLISED LEGS PERO EN LOS OTROS NO
+
 	@Override
 	public void unbind(final Claim claim) {
 
@@ -88,13 +114,11 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 		Collection<Leg> legs;
 
-		//Date actualMoment;
-		//
+		Date now = MomentHelper.getCurrentMoment();
 
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
-		//legs = this.repository.findAllPublishedLegsBefore(actualMoment);
-		//legs = this.repository.findAllLeg();
-		legs = this.repository.findAllPublishedLegs();
+		legs = this.repository.findAllPublishedLegsBefore(now);
+
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
 		dataset = super.unbindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");

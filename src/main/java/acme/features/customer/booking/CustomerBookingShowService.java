@@ -29,14 +29,12 @@ public class CustomerBookingShowService extends AbstractGuiService<Customer, Boo
 
 	@Override
 	public void authorise() {
-		boolean status = super.getRequest().getPrincipal().hasRealmOfType(Customer.class);
-		super.getResponse().setAuthorised(status);
-
 		int customerId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		int bookingId = super.getRequest().getData("id", int.class);
 		Booking booking = this.repository.findBookingById(bookingId);
 
-		super.getResponse().setAuthorised(customerId == booking.getCustomer().getId());
+		boolean status = booking != null && booking.getCustomer().getId() == customerId;
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
@@ -52,14 +50,13 @@ public class CustomerBookingShowService extends AbstractGuiService<Customer, Boo
 	public void unbind(final Booking booking) {
 		Dataset dataset;
 		SelectChoices typeTravelClasses = SelectChoices.from(TypeTravelClass.class, booking.getTravelClass());
-		Collection<Flight> publishFlights = this.repository.findAllPublishFlights();
-		Collection<Flight> publishFutureFlights = publishFlights.stream().filter(f -> MomentHelper.isBefore(booking.getPurchaseMoment(), f.getScheduledDeparture())).toList();
-		SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "id", booking.getFlight());
-
+		Collection<Flight> publishFutureFlights = this.repository.findAllPublishFutureFlights(MomentHelper.getCurrentMoment());
 		Collection<Passenger> passengersOnBooking = this.repository.findAllPassengersByBookingId(booking.getId());
 
 		dataset = super.unbindObject(booking, "locatorCode", "purchaseMoment", "travelClass", "price", "lastNibble", "publish", "id");
 		dataset.put("travelClasses", typeTravelClasses);
+
+		SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "flightLabel", booking.getFlight());
 		dataset.put("flights", flightChoices);
 
 		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());
