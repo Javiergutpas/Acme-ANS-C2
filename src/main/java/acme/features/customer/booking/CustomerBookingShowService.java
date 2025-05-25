@@ -29,14 +29,12 @@ public class CustomerBookingShowService extends AbstractGuiService<Customer, Boo
 
 	@Override
 	public void authorise() {
-		boolean status = super.getRequest().getPrincipal().hasRealmOfType(Customer.class);
-		super.getResponse().setAuthorised(status);
-
 		int customerId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		int bookingId = super.getRequest().getData("id", int.class);
 		Booking booking = this.repository.findBookingById(bookingId);
 
-		super.getResponse().setAuthorised(customerId == booking.getCustomer().getId());
+		boolean status = booking != null && booking.getCustomer().getId() == customerId;
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
@@ -58,10 +56,8 @@ public class CustomerBookingShowService extends AbstractGuiService<Customer, Boo
 		dataset = super.unbindObject(booking, "locatorCode", "purchaseMoment", "travelClass", "price", "lastNibble", "publish", "id");
 		dataset.put("travelClasses", typeTravelClasses);
 
-		if (!publishFutureFlights.isEmpty()) {
-			SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "flightLabel", booking.getFlight());
-			dataset.put("flights", flightChoices);
-		}
+		SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "flightLabel", booking.getFlight());
+		dataset.put("flights", flightChoices);
 
 		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());
 		super.getResponse().addData(dataset);
