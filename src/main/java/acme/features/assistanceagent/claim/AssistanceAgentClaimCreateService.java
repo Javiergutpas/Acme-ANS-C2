@@ -102,8 +102,7 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 		this.repository.save(claim);
 	}
-	//CUANDO SE ARREGLE EL BUG TEMPORAL DE LAS LEGS SE USARA LA LINEA COMENTADA
-	//AQUI FUNCIONA EL ALLPUBLISED LEGS PERO EN LOS OTROS NO
+
 	@Override
 	public void unbind(final Claim claim) {
 
@@ -117,8 +116,7 @@ public class AssistanceAgentClaimCreateService extends AbstractGuiService<Assist
 
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
 		legs = this.repository.findAllPublishedLegsBefore(now);
-		//legs = this.repository.findAllLeg();
-		//legs = this.repository.findAllPublishedLegs();
+
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
 		dataset = super.unbindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg");

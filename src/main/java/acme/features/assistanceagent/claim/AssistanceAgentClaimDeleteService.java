@@ -31,18 +31,15 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 
 		Claim claim;
 		int claimId;
-		//AssistanceAgent assistanceAgent;
 		int agentId;
 
 		boolean status;
 
 		claimId = super.getRequest().getData("id", int.class);
 		claim = this.repository.findClaimById(claimId);
-		//assistanceAgent = claim == null ? null : claim.getAssistanceAgent();
 		agentId = claim == null ? null : super.getRequest().getPrincipal().getActiveRealm().getId();
 
 		status = claim != null && !claim.isPublish() && claim.getAssistanceAgent().getId() == agentId;
-		//status = super.getRequest().getPrincipal().hasRealm(assistanceAgent) && (claim == null || claim.getPublish() == false);
 		super.getResponse().setAuthorised(status);
 
 	}
@@ -97,13 +94,8 @@ public class AssistanceAgentClaimDeleteService extends AbstractGuiService<Assist
 		SelectChoices legsChoices;
 		Dataset dataset;
 
-		//Date actualMoment;
-
-		//actualMoment = MomentHelper.getCurrentMoment();
-
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
-		//legs = this.repository.findAllPublishedLegsBefore(actualMoment);
-		//legs = this.repository.findAllPublishedLegs();
+
 		legs = this.repository.findAllLeg();
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
