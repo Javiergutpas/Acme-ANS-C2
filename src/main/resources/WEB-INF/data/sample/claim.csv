@@ -33,9 +33,9 @@ claim-25,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent
 claim-26,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,FLIGHT_ISSUES,false,agent-01,leg-27
 claim-27,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,SECURITY_INCIDENT,false,agent-01,leg-28
 claim-28,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,OTHER_ISSUES,false,agent-01,leg-26
-# indicator - standard variations
-claim-29,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-27
-claim-30,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-28
+# agent- standard variations
+claim-29,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-02,leg-27
+claim-30,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-02,leg-28
 # publish - standard variations
 claim-31,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,false,agent-01,leg-26
 claim-32,2022/07/02 00:00,joel@acme.com,Viaje ruidoso,LUGGAGE_ISSUES,true,agent-01,leg-27
