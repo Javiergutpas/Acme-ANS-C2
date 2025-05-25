@@ -89,13 +89,14 @@ public class AssistanceAgentClaimPublishService extends AbstractGuiService<Assis
 	//los tracking logs aqui no afectan?
 	@Override
 	public void validate(final Claim claim) {
-
-		if (claim.getLeg() != null)
-			if (!super.getBuffer().getErrors().hasErrors("registrationMoment"))
-				super.state(claim.getLeg().getArrival().before(claim.getRegistrationMoment()), "registrationMoment", "assistanceAgent.claim.form.error.registration-before-leg");
-
-		if (!super.getBuffer().getErrors().hasErrors("leg"))
-			super.state(claim.getLeg() != null && claim.getLeg().isPublish(), "leg", "assistanceAgent.claim.form.error.leg-null");
+		/*
+		 * if (claim.getLeg() != null)
+		 * if (!super.getBuffer().getErrors().hasErrors("registrationMoment"))
+		 * super.state(claim.getLeg().getArrival().before(claim.getRegistrationMoment()), "registrationMoment", "assistanceAgent.claim.form.error.registration-before-leg");
+		 * 
+		 * if (!super.getBuffer().getErrors().hasErrors("leg"))
+		 * super.state(claim.getLeg() != null && claim.getLeg().isPublish(), "leg", "assistanceAgent.claim.form.error.leg-null");
+		 */
 	}
 
 	@Override
@@ -118,8 +119,7 @@ public class AssistanceAgentClaimPublishService extends AbstractGuiService<Assis
 
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
 		legs = this.repository.findAllPublishedLegsBefore(actualMoment);
-		//legs = this.repository.findAllPublishedLegs();
-		//legs = this.repository.findAllLeg();
+
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
 		dataset = super.unbindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "leg", "publish");

@@ -1,6 +1,7 @@
 
 package acme.features.manager.leg;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import acme.client.helpers.MomentHelper;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.aircraft.Aircraft;
-import acme.entities.aircraft.AircraftStatus;
 import acme.entities.airport.Airport;
 import acme.entities.leg.Leg;
 import acme.entities.leg.LegStatus;
@@ -39,6 +39,39 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		managerId = super.getRequest().getPrincipal().getActiveRealm().getId();
 		status = leg != null && !leg.isPublish() && leg.getFlight().getManager().getId() == managerId;
 
+		if (status) {
+			String method;
+
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String legStatus;
+				boolean correctStatus;
+				int aircraftId;
+				int departureAirportId;
+				int arrivalAirportId;
+
+				Aircraft aircraft;
+				Airport departureAirport;
+				Airport arrivalAirport;
+
+				aircraftId = super.getRequest().getData("deployedAircraft", int.class);
+				departureAirportId = super.getRequest().getData("departureAirport", int.class);
+				arrivalAirportId = super.getRequest().getData("arrivalAirport", int.class);
+
+				aircraft = this.repository.findAircraftById(aircraftId);
+				departureAirport = this.repository.findAirportById(departureAirportId);
+				arrivalAirport = this.repository.findAirportById(arrivalAirportId);
+
+				legStatus = super.getRequest().getData("status", String.class);
+				correctStatus = "0".equals(legStatus) || Arrays.stream(LegStatus.values()).map(LegStatus::name).anyMatch(name -> name.equals(legStatus));
+
+				status = (aircraftId == 0 || aircraft != null) && (departureAirportId == 0 || departureAirport != null) && (arrivalAirportId == 0 || arrivalAirport != null) && correctStatus;
+			}
+		}
+
 		super.getResponse().setAuthorised(status);
 	}
 
@@ -55,16 +88,19 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 
 	@Override
 	public void bind(final Leg leg) {
-		super.bindObject(leg, "flightNumber", "departure", "arrival", "status", "departureAirport", "arrivalAirport", "deployedAircraft", "durationInHours");
+		super.bindObject(leg, "flightNumber", "departure", "arrival", "status", "departureAirport", "arrivalAirport", "deployedAircraft");
 	}
 
 	@Override
 	public void validate(final Leg leg) {
 		int flightId;
-		boolean notOverlapping;//No solopada con el resto de legs
-		boolean aircraftNotUsed; //Avión no usado en otro leg concurrentemente
+		boolean notOverlapping;//No solopada con el resto de legs publicadas del vuelo
+		boolean aircraftNotUsed; //Avión no usado en otra leg publicada concurrentemente
 		boolean legIsFuture;
-		boolean aircraftIsActive;
+
+		// La validacion de que no haya overlap y que no se usa el aircraft al mismo tiempo se hacen
+		// con otras legs publicas ya que no puede haber inconsistencias entre ellas. Entre las no publicadas
+		// sí que se puede permitir
 
 		if (leg.getDeparture() != null) {
 			legIsFuture = MomentHelper.isPresentOrFuture(leg.getDeparture());
@@ -75,21 +111,20 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		}
 
 		flightId = leg.getFlight().getId();
-		notOverlapping = this.repository.findNumberOfOverlappedLegs(leg.getDeparture(), leg.getArrival(), flightId) == 0;
+		notOverlapping = this.repository.findNumberOfPublishedOverlappedLegs(leg.getDeparture(), leg.getArrival(), flightId) == 0;
 
 		super.state(notOverlapping, "departure", "acme.validation.leg.overlapped");
 		super.state(notOverlapping, "arrival", "acme.validation.leg.overlapped");
 
-		Integer aircraftId;
-		aircraftId = leg.getDeployedAircraft() != null ? leg.getDeployedAircraft().getId() : null;
-		Integer numberOfLegsDeployingAircraft = this.repository.findNumberOfLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), LegStatus.CANCELLED, aircraftId);
-		aircraftNotUsed = leg.getStatus() == LegStatus.CANCELLED || numberOfLegsDeployingAircraft == 0; //Si el leg se ha cancelado no importa que se asigne un aircraft usado
-
-		super.state(aircraftNotUsed, "deployedAircraft", "acme.validation.leg.used-aircraft");
-
 		if (leg.getDeployedAircraft() != null) {
-			aircraftIsActive = leg.getDeployedAircraft().getStatus() == AircraftStatus.ACTIVE;
-			super.state(aircraftIsActive, "deployedAircraft", "acme.validation.leg.inactive-aircraft");
+			Integer aircraftId;
+			Integer numberOfLegsDeployingAircraft;
+
+			aircraftId = leg.getDeployedAircraft() != null ? leg.getDeployedAircraft().getId() : null;
+			numberOfLegsDeployingAircraft = this.repository.findNumberOfPublishedLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), aircraftId);
+			aircraftNotUsed = numberOfLegsDeployingAircraft == 0;
+
+			super.state(aircraftNotUsed, "deployedAircraft", "acme.validation.leg.used-aircraft");
 		}
 	}
 
@@ -119,6 +154,7 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 		choicesArrivalAirport = SelectChoices.from(airports, "iataCode", leg.getArrivalAirport());
 
 		dataset = super.unbindObject(leg, "flightNumber", "departure", "arrival", "publish");
+		dataset.put("flightId", leg.getFlight().getId());
 		dataset.put("durationInHours", leg.getDurationInHours());
 		dataset.put("statuses", choicesStatuses);
 		dataset.put("departureAirports", choicesDepartureAirport);

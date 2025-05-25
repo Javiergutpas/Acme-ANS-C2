@@ -25,6 +25,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+//@Table(indexes = {
+//	@Index(columnList = "published"),
+//	@Index(columnList = "status,technician_id"),//
+//	@Index(columnList = "technician_id,moment"),//
+//	@Index(columnList = "technician_id,estimatedCost_amount"),//
+//	@Index(columnList = "technician_id,estimatedCost_currency"),//
+//	@Index(columnList = "technician_id,nextInspectionDate")
+//})
 public class MaintenanceRecord extends AbstractEntity {
 	// Serialisation version --------------------------------------------------
 

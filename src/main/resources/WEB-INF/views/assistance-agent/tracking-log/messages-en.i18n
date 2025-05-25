@@ -40,3 +40,4 @@ assistanceAgent.tracking-log.form.error.message.completed = You can't create mor
 assistanceAgent.tracking-log.form.error.date-not-valid = Date can't be before the claim's registration moment
 assistanceAgent.tracking-log.form.error.last-log-moment-update-not-valid = Date can't be before the last tracking log
 assistanceAgent.tracking-log.form.error.less-than-max-published = The resolution percentage must be greater than or equal to that of the logs already published
+assistanceAgent.tracking-log.form.error.different-status = The status must match that of the last published tracking log at 100

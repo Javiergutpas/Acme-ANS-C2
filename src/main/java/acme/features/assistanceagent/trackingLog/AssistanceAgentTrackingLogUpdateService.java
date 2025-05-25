@@ -67,7 +67,7 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 		//	Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
 
 		Claim claim = trackingLog.getClaim();
-		int claimId = claim.getId();
+		//int claimId = claim.getId();
 		//Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
 
 		//Condicion para que el estado del tracking log sea pending si el porcentage no es 100
@@ -96,7 +96,6 @@ public class AssistanceAgentTrackingLogUpdateService extends AbstractGuiService<
 
 	@Override
 	public void perform(final TrackingLog trackingLog) {
-		assert trackingLog != null;
 
 		this.repository.save(trackingLog);
 	}

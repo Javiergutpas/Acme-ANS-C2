@@ -30,7 +30,16 @@ public interface AirlineManagerFlightRepository extends AbstractRepository {
 	@Query("select a from Airline a")
 	Collection<Airline> findAllAirlines();
 
+	@Query("select a from Airline a where a.id = :airlineId")
+	Airline findAirlineById(int airlineId);
+
 	@Query("select l from Leg l where l.flight.id = :flightId")
 	Collection<Leg> findAllLegsByFlightId(int flightId);
+
+	@Query("select COUNT(l) from Leg l where l.flight.id = :flightId")
+	Integer findNumberOfLegsByFlightId(int flightId);
+
+	@Query("select COUNT(l) from Leg l where l.flight.id = :flightId and l.publish = true")
+	Integer findNumberOfPublishedLegsByFlightId(int flightId);
 
 }

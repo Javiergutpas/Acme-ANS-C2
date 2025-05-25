@@ -1,6 +1,7 @@
 
 package acme.features.assistanceagent.trackingLog;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +32,36 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 	public void authorise() {
 		Claim claim;
 		int claimId;
-		int agentId;
+		int assistanceAgentId;
 		boolean status;
 
 		claimId = super.getRequest().getData("claimId", int.class);
 		claim = this.repository.findClaimById(claimId);
-		agentId = super.getRequest().getPrincipal().getActiveRealm().getId();
-		status = claim != null && claim.getAssistanceAgent().getId() == agentId;
+		assistanceAgentId = super.getRequest().getPrincipal().getActiveRealm().getId();
 
+		status = claim != null && claim.getAssistanceAgent().getId() == assistanceAgentId;
+
+		if (status) {
+			String method;
+			method = super.getRequest().getMethod();
+
+			if (method.equals("GET"))
+				status = true;
+			else {
+				String trackingLogStatus;
+				boolean correctTrackingLogStatus;
+				int version;
+				int id;
+				trackingLogStatus = super.getRequest().getData("status", String.class);
+
+				version = super.getRequest().getData("version", int.class);
+				id = super.getRequest().getData("id", int.class);
+
+				correctTrackingLogStatus = "0".equals(trackingLogStatus) || Arrays.stream(TrackingLogStatus.values()).map(TrackingLogStatus::name).anyMatch(name -> name.equals(trackingLogStatus));
+
+				status = id == 0 && version == 0 && correctTrackingLogStatus;
+			}
+		}
 		super.getResponse().setAuthorised(status);
 	}
 
@@ -74,7 +97,6 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 		int claimId;
 		claimId = super.getRequest().getData("claimId", int.class);
 		claim = this.repository.findClaimById(claimId);
-		//Collection<TrackingLog> claimTrackingLogs = this.repository.findAllTrackingLogsByClaimId(claimId);
 
 		//Condicion para que el estado del tracking log sea pending si el porcentage no es 100
 		if (!super.getBuffer().getErrors().hasErrors("indicator")) {
@@ -88,23 +110,6 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 			}
 
 		}
-		/*
-		 * //Condicion para que el porcentaje de los tracking logs sea creciente
-		 * if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
-		 * 
-		 * Double maxResolutionPercentage;
-		 * double finalMaxResolutionPercentage;
-		 * 
-		 * // Manejo seguro del valor nulo devuelto por la consulta
-		 * maxResolutionPercentage = this.repository.findMaxResolutionPercentageByClaimId(trackingLog.getId(), trackingLog.getClaim().getId());
-		 * finalMaxResolutionPercentage = maxResolutionPercentage != null ? maxResolutionPercentage : 0.0;
-		 * 
-		 * super.state(trackingLog.getResolutionPercentage() >= finalMaxResolutionPercentage, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-resolution-percentage");
-		 * }
-		 */
-
-		if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
-			super.state(!claim.getRegistrationMoment().after(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
 
 		// Condicion que si indicator es ACCEPTED o REJECTED, resolution no sea nulo o vacío
 		if (!super.getBuffer().getErrors().hasErrors("resolution")) {
@@ -115,26 +120,18 @@ public class AssistanceAgentTrackingLogCreateService extends AbstractGuiService<
 			if (requiresResolutionReason)
 				super.state(hasResolutionReason, "resolution", "assistanceAgent.tracking-log.form.error.resolution-required");
 		}
-
-		// Condicion para un tracking log excepcional tras el ultimo al 100
-		if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
-
-			Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
-
-			super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
-
-		}
-
-		//Condicion para que el lastMomentUpodate sea posterior al momento de creacion de la claim
 		/*
-		 * if (!super.getBuffer().getErrors().hasErrors("lastUpdateMoment"))
+		 * // Condicion para un tracking log excepcional tras el ultimo al 100
+		 * if (!super.getBuffer().getErrors().hasErrors("resolutionPercentage")) {
 		 * 
-		 * super.state(claim.getRegistrationMoment().before(trackingLog.getLastUpdateMoment()), "lastUpdateMoment", "assistanceAgent.tracking-log.form.error.date-not-valid");
+		 * Long countLogsWith100 = this.repository.countTrackingLogsForExceptionalCase(claimId);
+		 * 
+		 * super.state(countLogsWith100 < 2, "*", "assistanceAgent.tracking-log.form.error.message.completed");
+		 * 
+		 * }
 		 */
-
 	}
 
-	//Seguro hace falta el momento actual?
 	@Override
 	public void perform(final TrackingLog trackingLog) {
 

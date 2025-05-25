@@ -24,7 +24,27 @@ public class AirlineManagerFlightCreateService extends AbstractGuiService<Airlin
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		super.getResponse().setAuthorised(true);
+		String method;
+		boolean status;
+
+		method = super.getRequest().getMethod();
+
+		if (method.equals("GET"))
+			status = true;
+		else {
+			int id;
+			int version;
+			int airlineId;
+			Airline airline;
+
+			id = super.getRequest().getData("id", int.class);
+			version = super.getRequest().getData("version", int.class);
+			airlineId = super.getRequest().getData("airline", int.class);
+			airline = this.repository.findAirlineById(airlineId);
+
+			status = (airlineId == 0 || airline != null) && id == 0 && version == 0;
+		}
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
@@ -41,7 +61,7 @@ public class AirlineManagerFlightCreateService extends AbstractGuiService<Airlin
 
 	@Override
 	public void bind(final Flight flight) {
-		super.bindObject(flight, "tag", "cost", "description", "airline");
+		super.bindObject(flight, "tag", "requiresSelfTransfer", "cost", "description", "airline");
 	}
 
 	@Override

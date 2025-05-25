@@ -1,6 +1,8 @@
 
 package acme.features.assistanceagent.trackingLog;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
@@ -94,6 +96,7 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 
 		}
 
+		//condicion para que el porcentaje de los publicados sea creciente
 		if (!super.getBuffer().getErrors().hasErrors("*") && trackingLog.getResolutionPercentage() != null) {
 
 			Double maxPublishedPercentage = this.repository.findMaxPublishedResolutionPercentageByClaimId(claimId);
@@ -103,10 +106,39 @@ public class AssistanceAgentTrackingLogPublishService extends AbstractGuiService
 
 			super.state(trackingLog.getResolutionPercentage() >= max, "resolutionPercentage", "assistanceAgent.tracking-log.form.error.less-than-max-published");
 		}
+		/*
+		 * //Condicion para que el tracking log esxtra tenga el mismo estado
+		 * if (!super.getBuffer().getErrors().hasErrors("status"))
+		 * // Solo aplica la validación si el porcentaje es 100
+		 * if (Double.valueOf(100.0).equals(trackingLog.getResolutionPercentage())) {
+		 * 
+		 * List<TrackingLog> publishedLogs = this.repository.findPublishedTrackingLogsByClaimId(claimId);
+		 * TrackingLog trackingLogPublished = publishedLogs.isEmpty() ? null : publishedLogs.get(0);
+		 * 
+		 * if (trackingLogPublished != null) {
+		 * boolean sameStatus = trackingLogPublished.getStatus().equals(trackingLog.getStatus());
+		 * super.state(sameStatus, "status", "assistanceAgent.tracking-log.form.error.different-status");
+		 * }
+		 * }
+		 */
+		//Condicion para que el tracking log esxtra tenga el mismo estado
+		if (!super.getBuffer().getErrors().hasErrors("status"))
+			if (Double.valueOf(100.0).equals(trackingLog.getResolutionPercentage())) {
 
+				List<TrackingLog> publishedLogsAt100 = this.repository.findPublishedLogsAt100ByClaimId(claimId);
+
+				TrackingLog firstPublished = publishedLogsAt100.isEmpty() ? null : publishedLogsAt100.get(0);
+
+				if (firstPublished != null) {
+					boolean sameStatus = firstPublished.getStatus().equals(trackingLog.getStatus());
+					super.state(sameStatus, "status", "assistanceAgent.tracking-log.form.error.different-status");
+				}
+			}
+
+		//condicion para publicar solo si el claim sesta publicado
 		boolean status;
 
-		status = claim != null && claim.isPublish(); //solo se publican si el claim esta publicado? 
+		status = claim != null && claim.isPublish();
 
 		super.state(status, "*", "acme.validation.trackingLog.unpublished.message");
 

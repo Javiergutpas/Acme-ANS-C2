@@ -76,14 +76,13 @@ public class AssistanceAgentClaimShowService extends AbstractGuiService<Assistan
 		indicator = claim.getIndicator();
 		typesChoices = SelectChoices.from(ClaimType.class, claim.getType());
 		legs = this.repository.findAllPublishedLegsBefore(actualMoment);
-		//legs = this.repository.findAllPublishedLegs();
-		//legs = this.repository.findAllLeg();
+
 		legsChoices = SelectChoices.from(legs, "flightNumber", claim.getLeg());
 
 		dataset = super.unbindObject(claim, "registrationMoment", "passengerEmail", "description", "type", "publish");
 		dataset.put("types", typesChoices);
 		dataset.put("leg", legsChoices.getSelected().getKey());
-		//dataset.put("leg", legsChoices);
+
 		dataset.put("legs", legsChoices);
 		dataset.put("indicator", indicator);
 

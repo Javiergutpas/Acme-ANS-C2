@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import acme.client.repositories.AbstractRepository;
 import acme.entities.involves.Involves;
 import acme.entities.task.Task;
+import acme.realms.technician.Technician;
 
 @Repository
 public interface TechnicianTaskRepository extends AbstractRepository {
@@ -25,4 +26,6 @@ public interface TechnicianTaskRepository extends AbstractRepository {
 	@Query("SELECT i FROM Involves i WHERE i.task.id = :id")
 	Collection<Involves> findInvolvesByTaskId(int id);
 
+	@Query("SELECT t FROM Technician t WHERE t.userAccount.id = :id")
+	Technician findTechnicianByUserAccoundId(int id);
 }

@@ -1,6 +1,5 @@
 #validation-en.i18n
 
-acme.validation.flight.publish.message = Flight can only be published if it has one leg or more. All of them must be published as well
 acme.validation.flight.leg.overlap.message = Legs overlapping
 acme.validation.flight.delete-when-published = Can't delete a published flight
 acme.validation.flight.delete-legs-published = Can't delete a flight with published legs
@@ -12,8 +11,8 @@ acme.validation.leg.flightNumber.message = Flight number must be composed of an 
 acme.validation.leg.past-departure.message = Departure date can't be in the past
 acme.validation.leg.past-arrival.message = Arrival date can't be in the past
 acme.validation.leg.arrival.message = Arrival date must be at least one minute after departure date
-acme.validation.leg.overlapped = Leg is overlapping with another published leg
-acme.validation.leg.used-aircraft = Aircraft is already assigned to another not cancelled leg in the same time interval
+acme.validation.leg.overlapped = Leg is overlapping with another published leg of the same flight
+acme.validation.leg.used-aircraft = Aircraft is already assigned to another published leg in the same interval of time
 acme.validation.leg.inactive-aircraft = Aircraft must be active
 acme.validation.leg.flight.number.duplicated.message = Flight number duplicated
 acme.validation.leg.flight.number.message = Flight number must start with the IATA code of the aircraft's airline
