@@ -39,11 +39,15 @@ public class CustomerBookingRecordCreateService extends AbstractGuiService<Custo
 		else {
 			int id;
 			int version;
+			int samePassenger;
+			int passengerId;
 
 			id = super.getRequest().getData("id", int.class);
 			version = super.getRequest().getData("version", int.class);
+			passengerId = super.getRequest().getData("passenger", int.class);
+			samePassenger = this.repository.countBookingRecordByBookingIdAndPassenger(bookingId, passengerId);
 
-			status = id == 0 && version == 0;
+			status = id == 0 && version == 0 && samePassenger < 1;
 		}
 		super.getResponse().setAuthorised(status);
 	}
