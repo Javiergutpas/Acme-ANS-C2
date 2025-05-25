@@ -27,33 +27,36 @@ public class TechnicianInvolvesCreateService extends AbstractGuiService<Technici
 	// AbstractGuiService interface -------------------------------------------
 	@Override
 	public void authorise() {
-		String method = super.getRequest().getMethod();
-		boolean authorised = false;
+
+		boolean authorised;
 		Principal principal = super.getRequest().getPrincipal();
 		int userAccountId = principal.getAccountId();
 
 		int maintenanceRecordId = super.getRequest().getData("maintenanceRecordId", int.class);
 		MaintenanceRecord maintenanceRecord = this.repository.findMaintenanceRecordById(maintenanceRecordId);
 		Technician technician = this.repository.findTechnicianByUserAccoundId(userAccountId);
+		authorised = technician.getId() == maintenanceRecord.getTechnician().getId() && maintenanceRecord.getPublished() == false;
+		if (authorised) {
+			String method = super.getRequest().getMethod();
 
-		if (method.equals("GET"))
-			authorised = technician.getId() == maintenanceRecord.getTechnician().getId() && maintenanceRecord.getPublished() == false;
+			if (method.equals("GET"))
+				authorised = true;
+			else {
+				int id;
+				int version;
+				int taskId;
+				int sameTask;
+				Task task;
 
-		else {
-			int id;
-			int version;
-			int taskId;
-			int sameTask;
-			Task task;
+				id = super.getRequest().getData("id", int.class);
+				version = super.getRequest().getData("version", int.class);
 
-			id = super.getRequest().getData("id", int.class);
-			version = super.getRequest().getData("version", int.class);
-
-			taskId = super.getRequest().getData("task", int.class);
-			sameTask = this.repository.countInvolvesByMaintenanceRecordIdAndTask(maintenanceRecordId, taskId);
-			task = this.repository.findTaskById(taskId);
-			boolean taskExists = this.repository.findAllTaskByTechnicianId(technician.getId()).contains(task);
-			authorised = (taskId == 0 || taskExists) && id == 0 && version == 0 && technician != null && sameTask < 1;
+				taskId = super.getRequest().getData("task", int.class);
+				sameTask = this.repository.countInvolvesByMaintenanceRecordIdAndTask(maintenanceRecordId, taskId);
+				task = this.repository.findTaskById(taskId);
+				boolean taskExists = this.repository.findAllTaskByTechnicianId(technician.getId()).contains(task);
+				authorised = (taskId == 0 || taskExists) && id == 0 && version == 0 && technician != null && sameTask < 1;
+			}
 		}
 		super.getResponse().setAuthorised(authorised);
 	}
