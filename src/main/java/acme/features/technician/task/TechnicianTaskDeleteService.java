@@ -35,7 +35,7 @@ public class TechnicianTaskDeleteService extends AbstractGuiService<Technician, 
 		task = this.repository.findTaskById(id);
 
 		exist = task != null;
-		if (exist) {
+		if (exist && !task.getPublished()) {
 			technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
 			if (technician.equals(task.getTechnician()))
 				super.getResponse().setAuthorised(true);
