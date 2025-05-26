@@ -47,7 +47,7 @@ public class CustomerBookingCreateService extends AbstractGuiService<Customer, B
 			id = super.getRequest().getData("id", int.class);
 			version = super.getRequest().getData("version", int.class);
 			flightId = super.getRequest().getData("flight", int.class);
-			flight = this.repository.findFlightById(flightId);
+			flight = this.repository.findPublishedFlightById(flightId);
 
 			travelClass = super.getRequest().getData("travelClass", String.class);
 			correctTravelClass = "0".equals(travelClass) || Arrays.stream(TypeTravelClass.values()).map(TypeTravelClass::name).anyMatch(name -> name.equals(travelClass));
