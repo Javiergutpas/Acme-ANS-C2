@@ -7,11 +7,11 @@ task-03,INSPECTION,MANTENIMIENTO AVION,2,22,FALSE,technician-01
 task-04,REPAIR,MANTENIMIENTO AVION,2,22,FALSE,technician-01
 task-05,SYSTEM_CHECK,MANTENIMIENTO AVION,2,22,FALSE,technician-01
 # description - standard variations
-task-06,MAINTENANCE,M,2,22,FALSE,technician-01
+task-06,MAINTENANCE,L,2,22,FALSE,technician-01
 task-07,MAINTENANCE,Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor*,2,22,FALSE,technician-01
 task-08,MAINTENANCE,Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do: eiusmod tempor incididunt ut labore et dolore magna aliqua! Ut enim ad minim veniam? Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor,2,22,FALSE,technician-01
 task-09,MAINTENANCE,โลเร็ม อิปซัม,2,22,FALSE,technician-01
-task-10,MAINTENANCE,при,2,22,FALSE,technician-01
+task-10,MAINTENANCE,Lo,2,22,FALSE,technician-01
 task-11,MAINTENANCE,洛伦·伊普森,2,22,FALSE,technician-01
 task-12,MAINTENANCE,<marquee>Hacked</marquee>,2,22,FALSE,technician-01
 task-13,MAINTENANCE,<script>alert(‘Hacked!’);</script>,2,22,FALSE,technician-01
@@ -29,4 +29,3 @@ task-21,MAINTENANCE,MANTENIMIENTO AVION,2,1000,FALSE,technician-01
 task-23,MAINTENANCE,MANTENIMIENTO AVION,2,22,TRUE,technician-01
 # technician - standard variations
 task-24,MAINTENANCE,MANTENIMIENTO AVION,2,22,FALSE,technician-02
-
