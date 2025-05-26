@@ -2,6 +2,7 @@
 package acme.entities.flight;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -85,11 +86,14 @@ public class Flight extends AbstractEntity {
 	@Transient
 	public String getOriginCity() {
 		String city;
+		List<String> cities;
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
 
-		city = repository.findFlightOriginCity(this.getId(), repository.findFlightScheduledDeparture(this.getId()));
+		cities = repository.findFlightOriginCity(this.getId(), repository.findFlightScheduledDeparture(this.getId()));
+
+		city = cities.isEmpty() ? null : cities.get(0);
 
 		return city;
 	}
@@ -97,11 +101,14 @@ public class Flight extends AbstractEntity {
 	@Transient
 	public String getDestinationCity() {
 		String city;
+		List<String> cities;
 		FlightRepository repository;
 
 		repository = SpringHelper.getBean(FlightRepository.class);
 
-		city = repository.findFlightDestinationCity(this.getId(), repository.findFlightScheduledArrival(this.getId()));
+		cities = repository.findFlightDestinationCity(this.getId(), repository.findFlightScheduledArrival(this.getId()));
+
+		city = cities.isEmpty() ? null : cities.get(0);
 
 		return city;
 	}

@@ -41,9 +41,9 @@ public interface AirlineManagerLegRepository extends AbstractRepository {
 	@Query("select ap from Airport ap where ap.id = :airportId")
 	Airport findAirportById(int airportId);
 
-	@Query("select count(l) from Leg l where l.publish = true and l.flight.id = :flightId and ((l.departure >= :departure and l.departure <= :arrival) or (l.arrival >= :departure and l.arrival <= :arrival))")
+	@Query("select count(l) from Leg l where l.publish = true and l.flight.id = :flightId and not (l.arrival < :departure or l.departure > :arrival)")
 	Integer findNumberOfPublishedOverlappedLegs(Date departure, Date arrival, int flightId);
 
-	@Query("select count(l.deployedAircraft) from Leg l where l.deployedAircraft.id = :aircraftId and l.publish = true and ((l.departure >= :departure and l.departure <= :arrival) or (l.arrival >= :departure and l.arrival <= :arrival))")
+	@Query("select count(l) from Leg l where l.deployedAircraft.id = :aircraftId and l.publish = true and not (l.arrival < :departure or l.departure > :arrival)")
 	Integer findNumberOfPublishedLegsDeployingSameAircraft(Date departure, Date arrival, Integer aircraftId);
 }
