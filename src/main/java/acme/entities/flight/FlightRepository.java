@@ -2,6 +2,7 @@
 package acme.entities.flight;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,10 +21,10 @@ public interface FlightRepository extends AbstractRepository {
 	@Query("select max(l.arrival) from Leg l where l.flight.id = :flightId")
 	Date findFlightScheduledArrival(int flightId);
 
-	@Query("select l.departureAirport.city from Leg l where l.flight.id = :flightId and l.departure = :departure")
-	String findFlightOriginCity(int flightId, Date departure);
+	@Query("select l.departureAirport.city from Leg l where l.flight.id = :flightId order by l.departure asc")
+	List<String> findOriginOfLegsByFlightOrderedByDeparture(int flightId);
 
-	@Query("select l.arrivalAirport.city from Leg l where l.flight.id = :flightId and l.arrival = :arrival")
-	String findFlightDestinationCity(int flightId, Date arrival);
+	@Query("select l.arrivalAirport.city from Leg l where l.flight.id = :flightId order by l.arrival asc")
+	List<String> findDestinationOfLegsByFlightOrderedByArrival(int flightId);
 
 }
