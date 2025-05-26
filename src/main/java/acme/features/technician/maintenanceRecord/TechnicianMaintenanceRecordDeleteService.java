@@ -23,24 +23,17 @@ public class TechnicianMaintenanceRecordDeleteService extends AbstractGuiService
 	@Autowired
 	private TechnicianMaintenanceRecordRepository repository;
 
-
 	// AbstractGuiService interface -------------------------------------------
+
+
 	@Override
 	public void authorise() {
-		boolean exist;
-		MaintenanceRecord maintenanceRecord;
-		Technician technician;
-		int id;
+		int technicianId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		int maintenanceRecordId = super.getRequest().getData("id", int.class);
+		MaintenanceRecord maintenanceRecord = this.repository.findMaintenanceRecordById(maintenanceRecordId);
+		boolean status = maintenanceRecord != null && !maintenanceRecord.getPublished() && maintenanceRecord.getTechnician().getId() == technicianId;
 
-		id = super.getRequest().getData("id", int.class);
-		maintenanceRecord = this.repository.findMaintenanceRecordById(id);
-
-		exist = maintenanceRecord != null;
-		if (exist) {
-			technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
-			if (technician.equals(maintenanceRecord.getTechnician()))
-				super.getResponse().setAuthorised(true);
-		}
+		super.getResponse().setAuthorised(status);
 	}
 
 	@Override
@@ -56,12 +49,19 @@ public class TechnicianMaintenanceRecordDeleteService extends AbstractGuiService
 
 	@Override
 	public void bind(final MaintenanceRecord maintenanceRecord) {
-		super.bindObject(maintenanceRecord, "status", "nextInspectionDate", "estimatedCost", "notes", "aircraft");
+		int aircraftId;
+		Aircraft aircraft;
+
+		aircraftId = super.getRequest().getData("aircraft", int.class);
+		aircraft = this.repository.findAircraftById(aircraftId);
+
+		super.bindObject(maintenanceRecord, "moment", "status", "nextInspectionDate", "estimatedCost", "notes");
+		maintenanceRecord.setAircraft(aircraft);
 	}
 
 	@Override
 	public void validate(final MaintenanceRecord maintenanceRecord) {
-
+		;
 	}
 
 	@Override
@@ -83,10 +83,11 @@ public class TechnicianMaintenanceRecordDeleteService extends AbstractGuiService
 		choices = SelectChoices.from(MaintenanceRecordStatus.class, maintenanceRecord.getStatus());
 		aircraft = SelectChoices.from(aircrafts, "id", maintenanceRecord.getAircraft());
 
-		dataset = super.unbindObject(maintenanceRecord, "status", "nextInspectionDate", "estimatedCost", "notes", "aircraft", "published");
-
+		dataset = super.unbindObject(maintenanceRecord, "moment", "status", "nextInspectionDate", "estimatedCost", "notes", "aircraft", "published");
 		dataset.put("status", choices.getSelected().getKey());
+		dataset.put("status", choices);
 		dataset.put("aircraft", aircraft.getSelected().getKey());
+		dataset.put("aircraft", aircraft);
 
 		super.getResponse().addData(dataset);
 	}
