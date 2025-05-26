@@ -6,7 +6,6 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
-import acme.client.components.principals.Principal;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
 import acme.entities.task.Task;
@@ -25,16 +24,7 @@ public class TechnicianTaskListService extends AbstractGuiService<Technician, Ta
 
 	@Override
 	public void authorise() {
-		boolean authorised = false;
-		Principal principal = super.getRequest().getPrincipal();
-		int userAccountId = principal.getAccountId();
-
-		Technician technician = this.repository.findTechnicianByUserAccoundId(userAccountId);
-
-		if (technician != null)
-			authorised = true;
-
-		super.getResponse().setAuthorised(authorised);
+		super.getResponse().setAuthorised(true);
 	}
 
 	@Override

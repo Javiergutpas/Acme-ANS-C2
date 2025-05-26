@@ -44,7 +44,6 @@ public class TechnicianMaintenanceRecordCreateService extends AbstractGuiService
 
 		if (method.equals("GET"))
 			authorised = true;
-
 		else {
 			int id;
 			int version;

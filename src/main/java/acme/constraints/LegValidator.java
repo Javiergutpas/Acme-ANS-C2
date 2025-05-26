@@ -58,6 +58,7 @@ public class LegValidator extends AbstractValidator<ValidLeg, Leg> {
 					containsIATA = StringHelper.startsWith(leg.getFlightNumber(), iataFromAirline, false); //El flightNumber introducido debe estar en mayúsculas
 					super.state(context, containsIATA, "flightNumber", "acme.validation.leg.flight.number.message");
 
+					// No es lo ideal comprobarlo aquí, pero en la practica siempre se realizará la validacion, ya que el campo flightNumber vacío se recogería como un string vacío
 					boolean aircraftIsActive;
 					aircraftIsActive = leg.getDeployedAircraft().getStatus() == AircraftStatus.ACTIVE;
 					super.state(context, aircraftIsActive, "deployedAircraft", "acme.validation.leg.inactive-aircraft");
