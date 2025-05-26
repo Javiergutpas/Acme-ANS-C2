@@ -27,27 +27,43 @@ public class CustomerBookingRecordCreateService extends AbstractGuiService<Custo
 
 	@Override
 	public void authorise() {
-		String method;
-		boolean status;
+		Booking booking;
+		int bookingId;
+		int customerId;
+		boolean status = false;
 
-		method = super.getRequest().getMethod();
-		int bookingId = super.getRequest().getData("bookingId", int.class);
-		Booking booking = this.repository.findBookingById(bookingId);
+		bookingId = super.getRequest().getData("bookingId", int.class);
+		booking = this.repository.findBookingById(bookingId);
+		customerId = super.getRequest().getPrincipal().getActiveRealm().getId();
+		if (booking != null) {
 
-		if (method.equals("GET"))
-			status = super.getRequest().getPrincipal().hasRealm(booking.getCustomer()) && !booking.isPublish();
-		else {
-			int id;
-			int version;
-			int samePassenger;
-			int passengerId;
+			status = !booking.isPublish() && booking.getCustomer().getId() == customerId;
 
-			id = super.getRequest().getData("id", int.class);
-			version = super.getRequest().getData("version", int.class);
-			passengerId = super.getRequest().getData("passenger", int.class);
-			samePassenger = this.repository.countBookingRecordByBookingIdAndPassenger(bookingId, passengerId);
+			if (status) {
+				String method;
 
-			status = id == 0 && version == 0 && samePassenger < 1;
+				method = super.getRequest().getMethod();
+
+				if (method.equals("GET"))
+					status = true;
+				else {
+					int id;
+					int version;
+					int samePassenger;
+					int passengerId;
+					Passenger passenger;
+
+					id = super.getRequest().getData("id", int.class);
+					version = super.getRequest().getData("version", int.class);
+
+					passengerId = super.getRequest().getData("passenger", int.class);
+					samePassenger = this.repository.countBookingRecordByBookingIdAndPassenger(bookingId, passengerId);
+					passenger = this.repository.findPassengerById(passengerId);
+					boolean passengerExists = this.repository.findAllPassengersByCustomer(customerId).contains(passenger);
+
+					status = (passengerId == 0 || passengerExists) && id == 0 && version == 0 && samePassenger < 1;
+				}
+			}
 		}
 		super.getResponse().setAuthorised(status);
 	}

@@ -46,4 +46,7 @@ public interface CustomerBookingRepository extends AbstractRepository {
 	@Query("select f from Flight f where f.id = :flightId")
 	Flight findFlightById(int flightId);
 
+	@Query("select f from Flight f where f.id = :flightId and f.publish = true")
+	Flight findPublishedFlightById(int flightId);
+
 }
