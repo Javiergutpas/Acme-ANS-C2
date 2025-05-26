@@ -50,21 +50,21 @@ public class LegValidator extends AbstractValidator<ValidLeg, Leg> {
 				super.state(context, arrivalIsAfterDeparture, "arrival", "acme.validation.leg.arrival.message");
 			}
 
-			if (leg.getFlightNumber() != null) {
+			if (leg.getDeployedAircraft() != null) {
 
-				if (leg.getDeployedAircraft() != null) {
+				if (leg.getFlightNumber() != null) {
 					boolean containsIATA;
 					String iataFromAirline = leg.getDeployedAircraft().getAirline().getIataCode();
 					containsIATA = StringHelper.startsWith(leg.getFlightNumber(), iataFromAirline, false); //El flightNumber introducido debe estar en mayúsculas
 					super.state(context, containsIATA, "flightNumber", "acme.validation.leg.flight.number.message");
-
-					// No es lo ideal comprobarlo aquí, pero en la practica siempre se realizará la validacion, ya que el campo flightNumber vacío se recogería como un string vacío
-					// Con los datos de populación de la base de datos tampoco habrá problemas, ya que jamás se podrá crear un leg con flightNumber nulo, dará error
-					boolean aircraftIsActive;
-					aircraftIsActive = leg.getDeployedAircraft().getStatus() == AircraftStatus.ACTIVE;
-					super.state(context, aircraftIsActive, "deployedAircraft", "acme.validation.leg.inactive-aircraft");
 				}
 
+				boolean aircraftIsActive;
+				aircraftIsActive = leg.getDeployedAircraft().getStatus() == AircraftStatus.ACTIVE;
+				super.state(context, aircraftIsActive, "deployedAircraft", "acme.validation.leg.inactive-aircraft");
+			}
+
+			if (leg.getFlightNumber() != null) {
 				boolean uniqueLeg;
 				Leg existingLeg;
 
