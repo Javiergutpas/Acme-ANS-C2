@@ -6,7 +6,6 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
-import acme.client.components.principals.Principal;
 import acme.client.components.views.SelectChoices;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
@@ -29,11 +28,6 @@ public class TechnicianTaskCreateService extends AbstractGuiService<Technician, 
 		String method;
 		boolean correctType;
 		boolean authorised = false;
-		Principal principal = super.getRequest().getPrincipal();
-
-		int userAccountId = principal.getAccountId();
-		Technician technician = this.repository.findTechnicianByUserAccoundId(userAccountId);
-
 		String taskType;
 
 		method = super.getRequest().getMethod();
@@ -50,7 +44,7 @@ public class TechnicianTaskCreateService extends AbstractGuiService<Technician, 
 			id = super.getRequest().getData("id", int.class);
 			version = super.getRequest().getData("version", int.class);
 
-			authorised = technician != null && id == 0 && version == 0 && correctType;
+			authorised = id == 0 && version == 0 && correctType;
 		}
 		super.getResponse().setAuthorised(authorised);
 	}
