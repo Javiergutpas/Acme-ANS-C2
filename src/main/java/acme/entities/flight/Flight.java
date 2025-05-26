@@ -91,7 +91,7 @@ public class Flight extends AbstractEntity {
 
 		repository = SpringHelper.getBean(FlightRepository.class);
 
-		cities = repository.findOriginOfLegsByFlightOrderedByDeparture(this.getId());
+		cities = repository.findFlightOriginCity(this.getId(), repository.findFlightScheduledDeparture(this.getId()));
 
 		city = cities.isEmpty() ? null : cities.get(0);
 
@@ -106,7 +106,7 @@ public class Flight extends AbstractEntity {
 
 		repository = SpringHelper.getBean(FlightRepository.class);
 
-		cities = repository.findDestinationOfLegsByFlightOrderedByArrival(this.getId());
+		cities = repository.findFlightDestinationCity(this.getId(), repository.findFlightScheduledArrival(this.getId()));
 
 		city = cities.isEmpty() ? null : cities.get(0);
 
