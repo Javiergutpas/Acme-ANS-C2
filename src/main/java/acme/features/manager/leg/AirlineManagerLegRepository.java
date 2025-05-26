@@ -41,6 +41,8 @@ public interface AirlineManagerLegRepository extends AbstractRepository {
 	@Query("select ap from Airport ap where ap.id = :airportId")
 	Airport findAirportById(int airportId);
 
+	// Si bien not no es una funcion comot tal, si no un operador, los indices no ayudarán en gran medida a optimizar
+	// Aun así, se definirán indices para ambas queries
 	@Query("select count(l) from Leg l where l.publish = true and l.flight.id = :flightId and not (l.arrival < :departure or l.departure > :arrival)")
 	Integer findNumberOfPublishedOverlappedLegs(Date departure, Date arrival, int flightId);
 

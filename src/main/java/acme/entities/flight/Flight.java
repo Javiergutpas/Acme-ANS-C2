@@ -25,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Flight extends AbstractEntity {
+public class Flight extends AbstractEntity {//No hay que definir indices para esta entidad, ya que el framework lo hace automaticamente para los atributos de navegacion
 
 	// Serialisation version --------------------------------------------
 
