@@ -120,7 +120,7 @@ public class AirlineManagerLegPublishService extends AbstractGuiService<AirlineM
 			Integer aircraftId;
 			Integer numberOfLegsDeployingAircraft;
 
-			aircraftId = leg.getDeployedAircraft() != null ? leg.getDeployedAircraft().getId() : null;
+			aircraftId = leg.getDeployedAircraft().getId();
 			numberOfLegsDeployingAircraft = this.repository.findNumberOfPublishedLegsDeployingSameAircraft(leg.getDeparture(), leg.getArrival(), aircraftId);
 			aircraftNotUsed = numberOfLegsDeployingAircraft == 0;
 
