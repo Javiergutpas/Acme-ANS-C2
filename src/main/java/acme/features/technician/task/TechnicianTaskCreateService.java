@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import acme.client.components.models.Dataset;
+import acme.client.components.principals.Principal;
 import acme.client.components.views.SelectChoices;
 import acme.client.services.AbstractGuiService;
 import acme.client.services.GuiService;
@@ -28,6 +29,11 @@ public class TechnicianTaskCreateService extends AbstractGuiService<Technician, 
 		String method;
 		boolean correctType;
 		boolean authorised = false;
+		Principal principal = super.getRequest().getPrincipal();
+
+		int userAccountId = principal.getAccountId();
+		Technician technician = this.repository.findTechnicianByUserAccoundId(userAccountId);
+
 		String taskType;
 
 		method = super.getRequest().getMethod();
@@ -37,16 +43,14 @@ public class TechnicianTaskCreateService extends AbstractGuiService<Technician, 
 		else {
 			int id;
 			int version;
-			Task task;
 
 			taskType = super.getRequest().getData("type", String.class);
 			correctType = "0".equals(taskType) || Arrays.stream(TaskType.values()).map(TaskType::name).anyMatch(name -> name.equals(taskType));
 
 			id = super.getRequest().getData("id", int.class);
 			version = super.getRequest().getData("version", int.class);
-			task = this.repository.findTaskById(id);
 
-			authorised = (id == 0 || task != null) && id == 0 && version == 0 && correctType;
+			authorised = technician != null && id == 0 && version == 0 && correctType;
 		}
 		super.getResponse().setAuthorised(authorised);
 	}
@@ -70,17 +74,7 @@ public class TechnicianTaskCreateService extends AbstractGuiService<Technician, 
 
 	@Override
 	public void validate(final Task task) {
-		if (!this.getBuffer().getErrors().hasErrors("type"))
-			super.state(task.getType() != null, "type", "acme.validation.technician.task.noType.message");
 
-		if (!this.getBuffer().getErrors().hasErrors("description") && task.getDescription() != null)
-			super.state(task.getDescription().length() <= 255, "description", "acme.validation.technician.task.description.message");
-
-		if (!this.getBuffer().getErrors().hasErrors("priority") && task.getPriority() != null)
-			super.state(0 <= task.getPriority() && task.getPriority() <= 10, "priority", "acme.validation.technician.task.priority.message");
-
-		if (!this.getBuffer().getErrors().hasErrors("estimatedDuration") && task.getEstimatedDuration() != null)
-			super.state(0 <= task.getEstimatedDuration() && task.getEstimatedDuration() <= 1000, "estimatedDuration", "acme.validation.technician.task.estimatedDuration.message");
 	}
 
 	@Override
