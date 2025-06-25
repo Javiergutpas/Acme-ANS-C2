@@ -26,29 +26,28 @@ public class TechnicianTaskPublishService extends AbstractGuiService<Technician,
 	@Override
 	public void authorise() {
 		String method;
-		boolean correctType;
-		boolean authorised = false;
+		boolean status = false;
 		String taskType;
 
 		int id = super.getRequest().getData("id", int.class);
 		Task task = this.repository.findTaskById(id);
 		Technician technician = (Technician) super.getRequest().getPrincipal().getActiveRealm();
 
-		if (task != null) {
+		status = task != null && !task.getPublished() && task.getTechnician().equals(technician);
+
+		if (status) {
 			method = super.getRequest().getMethod();
 
 			if (method.equals("GET"))
-				authorised = task.getTechnician().equals(technician) && !task.getPublished();
+				status = true;
 			else {
-
 				taskType = super.getRequest().getData("type", String.class);
-				correctType = "0".equals(taskType) || Arrays.stream(TaskType.values()).map(TaskType::name).anyMatch(name -> name.equals(taskType));
-
-				authorised = correctType;
+				status = "0".equals(taskType) || Arrays.stream(TaskType.values()).map(TaskType::name).anyMatch(name -> name.equals(taskType));
 			}
 		}
-		super.getResponse().setAuthorised(authorised);
+		super.getResponse().setAuthorised(status);
 	}
+
 	@Override
 	public void load() {
 		Task task;

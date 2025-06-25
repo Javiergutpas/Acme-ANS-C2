@@ -76,7 +76,7 @@ public class TechnicianMaintenanceRecordPublishService extends AbstractGuiServic
 		id = super.getRequest().getData("id", int.class);
 
 		if (!this.getBuffer().getErrors().hasErrors("nextInspectionDate"))
-			super.state(maintenanceRecord.getNextInspectionDate().compareTo(maintenanceRecord.getMoment()) > 0, "nextInspectionDate", "acme.validation.technician.maintenance-record.nextInspectionDate.message");
+			super.state(maintenanceRecord.getNextInspectionDate().compareTo(maintenanceRecord.getMoment()) >= 0, "nextInspectionDate", "acme.validation.technician.maintenance-record.nextInspectionDate.message");
 
 		if (!this.getBuffer().getErrors().hasErrors("published"))
 			super.state(this.repository.findNotPublishedTaskOfMaintenanceRecord(id) == 0 && this.repository.countAllRelatedTaskWithMaintenanceRecord(id) != 0, "*", "acme.validation.technician.maintenance-record.published.message");
@@ -97,7 +97,7 @@ public class TechnicianMaintenanceRecordPublishService extends AbstractGuiServic
 		Dataset dataset;
 		aircrafts = this.repository.findAllAircrafts();
 		choices = SelectChoices.from(MaintenanceRecordStatus.class, maintenanceRecord.getStatus());
-		aircraft = SelectChoices.from(aircrafts, "id", maintenanceRecord.getAircraft());
+		aircraft = SelectChoices.from(aircrafts, "registrationNumber", maintenanceRecord.getAircraft());
 
 		dataset = super.unbindObject(maintenanceRecord, "moment", "status", "nextInspectionDate", "estimatedCost", "notes", "aircraft", "published");
 

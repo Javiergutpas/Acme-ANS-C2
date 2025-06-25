@@ -104,7 +104,7 @@ public class TechnicianInvolvesCreateService extends AbstractGuiService<Technici
 
 		Collection<Task> tasks = this.repository.findAllTaskByTechnicianId(technicianId).stream().filter(t -> !taskOnMaintenanceRecord.contains(t)).toList();
 
-		task = SelectChoices.from(tasks, "id", involves.getTask());
+		task = SelectChoices.from(tasks, "description", involves.getTask());
 
 		dataset = super.unbindObject(involves, "maintenanceRecord", "task");
 

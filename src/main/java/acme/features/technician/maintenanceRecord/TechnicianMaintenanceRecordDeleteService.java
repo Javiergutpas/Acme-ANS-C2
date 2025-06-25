@@ -81,7 +81,7 @@ public class TechnicianMaintenanceRecordDeleteService extends AbstractGuiService
 		Dataset dataset;
 		aircrafts = this.repository.findAllAircrafts();
 		choices = SelectChoices.from(MaintenanceRecordStatus.class, maintenanceRecord.getStatus());
-		aircraft = SelectChoices.from(aircrafts, "id", maintenanceRecord.getAircraft());
+		aircraft = SelectChoices.from(aircrafts, "registrationNumber", maintenanceRecord.getAircraft());
 
 		dataset = super.unbindObject(maintenanceRecord, "moment", "status", "nextInspectionDate", "estimatedCost", "notes", "aircraft", "published");
 		dataset.put("status", choices.getSelected().getKey());
