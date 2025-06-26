@@ -16,6 +16,7 @@ import acme.client.components.validation.Optional;
 import acme.client.components.validation.ValidEmail;
 import acme.client.components.validation.ValidMoment;
 import acme.client.components.validation.ValidString;
+import acme.constraints.ValidPassenger;
 import acme.constraints.ValidPassportNumber;
 import acme.realms.customer.Customer;
 import lombok.Getter;
@@ -24,6 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@ValidPassenger
 public class Passenger extends AbstractEntity {
 	// Serialisation version --------------------------------------------
 

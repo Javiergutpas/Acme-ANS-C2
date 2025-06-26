@@ -64,6 +64,8 @@ acme.validation.booking.publish-no-passengers = No puede publicar esta reserva d
 acme.validation.booking.publish-passengers-not-published = No puede publicar esta reserva debido a que hay pasajeros no publicados asociados 
 acme.validation.booking.delete-no-passenger = Debes elegir un pasajero
 
+acme.validation.passenger.passportNumber.duplicated.message = Número de pasaporte duplicado para este cliente.
+
 acme.validation.iata.code.message = Código IATA inválido
 
 acme.validation.identifier.message = Identificador incorrecto
