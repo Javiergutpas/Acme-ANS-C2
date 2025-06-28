@@ -25,7 +25,7 @@ public interface CustomerBookingRepository extends AbstractRepository {
 	@Query("select f from Flight f where f.publish = true")
 	Collection<Flight> findAllPublishFlights();
 
-	@Query("select distinct(l.flight) from Leg l where l.flight.publish = true and l.departure >= :departure")
+	@Query("select distinct(l.flight) from Leg l where l.flight.publish = true and l.departure >= :departure and l.departure = (select min(l2.departure) from Leg l2 where l2.flight.id = l.flight.id)")
 	Collection<Flight> findAllPublishFutureFlights(Date departure);
 
 	@Query("select f from Flight f")
