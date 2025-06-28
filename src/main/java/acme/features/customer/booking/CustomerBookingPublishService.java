@@ -75,20 +75,23 @@ public class CustomerBookingPublishService extends AbstractGuiService<Customer, 
 
 	@Override
 	public void bind(final Booking booking) {
-		super.bindObject(booking, "flight", "locatorCode", "travelClass", "lastNibble"); //quito price 
+		super.bindObject(booking, "flight", "locatorCode", "travelClass", "lastNibble");
 	}
 
 	@Override
 	public void validate(final Booking booking) {
 		boolean atLeastOnePassenger;
 		boolean allPassengerPublished;
+		boolean emptyLastNibble;
 		Collection<Passenger> bookingPassengers;
 		bookingPassengers = this.repository.findAllPassengersByBookingId(booking.getId());
 		atLeastOnePassenger = !bookingPassengers.isEmpty();
 		allPassengerPublished = bookingPassengers.stream().allMatch(b -> b.isPublish());
+		emptyLastNibble = !booking.getLastNibble().isEmpty();
 
 		super.state(atLeastOnePassenger, "*", "acme.validation.booking.publish-no-passengers");
 		super.state(allPassengerPublished, "*", "acme.validation.booking.publish-passengers-not-published");
+		super.state(emptyLastNibble, "*", "acme.validation.booking.empty-last-nibble");
 	}
 
 	@Override
@@ -104,7 +107,7 @@ public class CustomerBookingPublishService extends AbstractGuiService<Customer, 
 		SelectChoices typeTravelClasses;
 		typeTravelClasses = SelectChoices.from(TypeTravelClass.class, booking.getTravelClass());
 		Collection<Flight> publishFutureFlights = this.repository.findAllPublishFutureFlights(MomentHelper.getCurrentMoment());
-		Collection<Passenger> passengersOnBooking = this.repository.findAllPassengersByBookingId(booking.getId());//añadido
+		Collection<Passenger> passengersOnBooking = this.repository.findAllPassengersByBookingId(booking.getId());
 
 		dataset = super.unbindObject(booking, "flight", "locatorCode", "purchaseMoment", "travelClass", "price", "lastNibble", "publish", "id");
 		dataset.put("travelClasses", typeTravelClasses);
@@ -112,7 +115,7 @@ public class CustomerBookingPublishService extends AbstractGuiService<Customer, 
 		SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "flightLabel", booking.getFlight());
 		dataset.put("flights", flightChoices);
 
-		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());//añadido
+		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());
 		super.getResponse().addData(dataset);
 	}
 
