@@ -38,6 +38,7 @@ public class CustomerPassengerListService extends AbstractGuiService<Customer, P
 		passengers = this.repository.findAllPassengersByCustomerId(customerId);
 
 		super.getBuffer().addData(passengers);
+		super.getResponse().addGlobal("showCreate", true);
 	}
 
 	@Override
@@ -45,7 +46,6 @@ public class CustomerPassengerListService extends AbstractGuiService<Customer, P
 		Dataset dataset;
 		dataset = super.unbindObject(passenger, "fullName", "passportNumber", "dateOfBirth", "publish");
 
-		super.getResponse().addGlobal("showCreate", true);
 		super.getResponse().addData(dataset);
 	}
 
