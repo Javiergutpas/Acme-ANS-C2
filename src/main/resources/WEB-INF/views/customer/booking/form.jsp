@@ -15,23 +15,25 @@
 				<acme:submit code="customer.booking.list.button.update" action="/customer/booking/update"/>
 				<acme:submit code="customer.booking.form.button.publish" action="/customer/booking/publish"/>
 				<acme:submit code="customer.booking.form.button.delete" action="/customer/booking/delete"/>
+				
 				<jstl:if test="${_command != 'create'}">
- 				<acme:button code="customer.booking.form.add.passenger" action="/customer/booking-record/create?bookingId=${id}"/>
+ 					<acme:button code="customer.booking.form.add.passenger" action="/customer/booking-record/create?bookingId=${id}"/>
+ 					<jstl:if test="${showDelete}">
+ 						<acme:button code="customer.booking.form.delete.passenger" action="/customer/booking-record/delete?bookingId=${id}"/>
+ 					</jstl:if>
  				
- 				
- 				<jstl:if test="${showDelete}">
- 					<acme:button code="customer.booking.form.delete.passenger" action="/customer/booking-record/delete?bookingId=${id}"/>
  				</jstl:if>
- 				
- 				
- 				<acme:button code="customer.booking.form.show.passengers" action="/customer/passenger/bookingRecord-list?bookingId=${id}"/>
- 			</jstl:if>
 		</jstl:when>
 		
      	<jstl:when test="${acme:anyOf(_command,'create') }">
 			<acme:submit code="customer.booking.list.button.create" action="/customer/booking/create"/>
 		</jstl:when>
+		
 			
     </jstl:choose>
+    
+    <jstl:if test="${_command != 'create'}">
+    	<acme:button code="customer.booking.form.show.passengers" action="/customer/passenger/bookingRecord-list?bookingId=${id}"/>
+    </jstl:if>
     
 </acme:form>

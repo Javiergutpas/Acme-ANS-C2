@@ -10,7 +10,8 @@
    <acme:list-column code="customer.passenger.list.label.publish" path="publish" />
    <acme:list-payload path="payload"/>	
 </acme:list>
- 
-<jstl:if test="${showCreate}">
-	<acme:button code="customer.passenger.list.button.create" action="/customer/passenger/create"/>
+
+
+<jstl:if test="${showCreate == true}">
+    <acme:button code="customer.passenger.list.button.create" action="/customer/passenger/create"/>
 </jstl:if>
