@@ -19,9 +19,9 @@ import acme.client.components.mappings.Automapped;
 import acme.client.components.validation.Mandatory;
 import acme.client.components.validation.Optional;
 import acme.client.components.validation.ValidMoment;
+import acme.client.components.validation.ValidString;
 import acme.client.helpers.SpringHelper;
 import acme.constraints.ValidBooking;
-import acme.constraints.ValidLastNibble;
 import acme.constraints.ValidLocatorCode;
 import acme.entities.flight.Flight;
 import acme.realms.customer.Customer;
@@ -58,7 +58,7 @@ public class Booking extends AbstractEntity {
 	private TypeTravelClass		travelClass;
 
 	@Optional
-	@ValidLastNibble
+	@ValidString(pattern = "^\\d{4}$")
 	@Automapped
 	private String				lastNibble;
 
