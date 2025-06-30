@@ -50,7 +50,7 @@ public class AdministratorAircraftShowService extends AbstractGuiService<Adminis
 		Dataset dataset;
 
 		airlines = this.repository.findAllAirlines();
-		choicesAirlines = SelectChoices.from(airlines, "iataCode", aircraft.getAirline());
+		choicesAirlines = SelectChoices.from(airlines, "name", aircraft.getAirline());
 
 		choiceStatuses = SelectChoices.from(AircraftStatus.class, aircraft.getStatus());
 
