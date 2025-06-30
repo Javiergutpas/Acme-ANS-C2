@@ -33,7 +33,7 @@ public class CustomerBookingRecordListService extends AbstractGuiService<Custome
 			int bookingId = super.getRequest().getData("bookingId", int.class);
 			Booking booking = this.repository.findBookingById(bookingId);
 
-			super.getResponse().setAuthorised(customerId == booking.getCustomer().getId());
+			super.getResponse().setAuthorised(booking != null && customerId == booking.getCustomer().getId());
 		}
 
 	}
