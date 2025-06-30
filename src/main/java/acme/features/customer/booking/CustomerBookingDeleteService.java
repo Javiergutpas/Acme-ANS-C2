@@ -71,7 +71,7 @@ public class CustomerBookingDeleteService extends AbstractGuiService<Customer, B
 		SelectChoices typeTravelClasses;
 		typeTravelClasses = SelectChoices.from(TypeTravelClass.class, booking.getTravelClass());
 		Collection<Flight> publishFutureFlights = this.repository.findAllPublishFutureFlights(MomentHelper.getCurrentMoment());
-		Collection<Passenger> passengersOnBooking = this.repository.findAllPassengersByBookingId(booking.getId());//añadido
+		Collection<Passenger> passengersOnBooking = this.repository.findAllPassengersByBookingId(booking.getId());
 
 		dataset = super.unbindObject(booking, "flight", "locatorCode", "purchaseMoment", "travelClass", "price", "lastNibble", "publish", "id");
 		dataset.put("travelClasses", typeTravelClasses);
@@ -79,7 +79,7 @@ public class CustomerBookingDeleteService extends AbstractGuiService<Customer, B
 		SelectChoices flightChoices = SelectChoices.from(publishFutureFlights, "flightLabel", booking.getFlight());
 		dataset.put("flights", flightChoices);
 
-		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());//añadido
+		super.getResponse().addGlobal("showDelete", !passengersOnBooking.isEmpty());
 		super.getResponse().addData(dataset);
 	}
 
