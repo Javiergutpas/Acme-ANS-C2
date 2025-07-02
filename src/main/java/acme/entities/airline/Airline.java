@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
@@ -19,7 +21,6 @@ import acme.client.components.validation.ValidString;
 import acme.client.components.validation.ValidUrl;
 import acme.constraints.ValidAirline;
 import acme.constraints.ValidIataCode;
-import acme.constraints.ValidPhoneNumber;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @ValidAirline
+@Table(indexes = {
+	@Index(columnList = "iataCode")
+})
 public class Airline extends AbstractEntity {
 
 	// Serialisation version --------------------------------------------------
@@ -66,8 +70,8 @@ public class Airline extends AbstractEntity {
 	private String				email;
 
 	@Optional
-	@ValidPhoneNumber
 	@Automapped
+	@ValidString(pattern = "^\\+?\\d{6,15}$")
 	private String				phoneNumber;
 
 	// Derived attributes -----------------------------------------------------
