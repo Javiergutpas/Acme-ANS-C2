@@ -71,7 +71,7 @@ public class Airline extends AbstractEntity {
 
 	@Optional
 	@Automapped
-	@ValidString(pattern = "^\\+?\\d{6,15}$")
+	@ValidString(pattern = "^\\+?\\d{6,15}$", message = "{acme.validation.phone.number.message}")
 	private String				phoneNumber;
 
 	// Derived attributes -----------------------------------------------------

@@ -58,7 +58,7 @@ public class Booking extends AbstractEntity {
 	private TypeTravelClass		travelClass;
 
 	@Optional
-	@ValidString(pattern = "^\\d{4}$")
+	@ValidString(pattern = "^\\d{4}$", message = "{acme.validation.booking.last.nibble.message}")
 	@Automapped
 	private String				lastNibble;
 
