@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>984</x>
+      <y>160</y>
+      <w>96</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Flight
+bg=green
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>272</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+Customer
+bg=pink
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>408</x>
+      <y>408</y>
+      <w>480</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Booking {ValidBooking}
+--
++ locatorCode: String {Mandatory,ValidLocatorCode,Column(unique=true)}
++ purchaseMoment: Date {Mandatory, ValidMoment(past=true),Temporal(TIMESTAMP)}
++ travelClass: TypeTravelClass {Mandatory, Valid, Automapped}
++ lastNibble: String {Optional, 	ValidString(pattern = "^\\d{4}$"), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+--
+getPrice(): Money
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>936</x>
+      <y>656</y>
+      <w>464</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Passenger
+--
++ fullName: String {Mandatory, ValidString(min=1, max=255), Automapped}
++ email: String {Mandatory, ValidEmail, Automapped}
++ passportNumber: String {Mandatory, ValidPassportNumber, Automapped}
++ dateOfBirth: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ specialNeeds: String {Optional,ValidString(min=0,max=50)}
++ publish: boolean {Mandatory, Valid, Automapped}
+
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>304</y>
+      <w>88</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Bought by ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>704</x>
+      <y>688</y>
+      <w>248</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Refers to &gt;
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>290.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>880</x>
+      <y>192</y>
+      <w>248</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>
+Associated to ^
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>190.0;10.0;190.0;360.0;10.0;360.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>608</x>
+      <y>680</y>
+      <w>104</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+BookingRecord
+
+
+
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>528</y>
+      <w>88</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>Belongs to ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>16</x>
+      <y>160</y>
+      <w>144</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+TypeTravelClass
+--
++ ECONOMY
++ BUSINESS
+bg=LIGHT_GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>16</x>
+      <y>0</y>
+      <w>496</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+Customer {ValidCustomer}
+--
++ identifier: String {Mandatory, ValidIdentifier, Column(unique=true)}
++ phoneNumber: String {Mandatory,ValidPhoneNumber, Automapped}
++ physicalAddress: String {Mandatory, ValidString(min=1,max=255), Automapped}
++ city: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ country: String {Mandatory,ValidString(min=1,max=50), Automapped}
++ earnedPoints: Integer {Optional,ValidNumber(min=0,max=500000,fraction=0), Automapped}
+
+
+bg=pink</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>8</x>
+      <y>624</y>
+      <w>304</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidLocatorCode
+--
++ Locator code must match pattern = "^[A-Z0-9]{6,8}$"
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>8</x>
+      <y>328</y>
+      <w>256</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidCustomer
+--
++ The 2-3 first letters of identifier must
+correspond to the initials of the customer's name
+
++ Identifier must be unique
+bg=RED
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>8</x>
+      <y>448</y>
+      <w>192</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidBooking
+--
++ Locator code must be unique
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>8</x>
+      <y>536</y>
+      <w>304</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidPassportNumber
+--
++ Passport number must match pattern = "^[A-Z0-9]{6,9}$"
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>8</x>
+      <y>712</y>
+      <w>272</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidPhoneNumber
+--
++ phoneNumber must match pattern "^\\+?\\d{6,15}$"
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>8</x>
+      <y>800</y>
+      <w>288</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidIdentifier
+--
++ identifier must match pattern "^[A-Z]{2,3}\\d{6}$"
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>368</x>
+      <y>232</y>
+      <w>816</w>
+      <h>616</h>
+    </coordinates>
+    <panel_attributes>Created by ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>360.0;50.0;360.0;10.0;10.0;10.0;10.0;750.0;1000.0;750.0;1000.0;690.0</additional_attributes>
+  </element>
+</diagram>

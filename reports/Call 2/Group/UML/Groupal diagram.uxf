@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <help_text/>
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>56</x>
+      <y>960</y>
+      <w>496</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+TrackingLog
+--
++ lastUpdateMoment: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ step: String {Mandatory, ValidString(min = 1, max = 50), Automapped}
++ resolutionPercentage: Double {Mandatory, ValidNumber(min = 0, max = 100), Automapped}
++ status: TrackingLogStatus {Mandatory, Valid, Automapped}
++ resolutionDetails: String {Mandatory, ValidString(min = 1, max = 255), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>656</x>
+      <y>896</y>
+      <w>552</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Service
+--
++ name: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ pictureUrl: String {Mandatory, ValidUrl, Automapped}
++ averageDwellTime: double {Mandatory, ValidNumber(min=1,max=100,integer=3,fraction=2), Automapped}
++ promoCode: String {Optional, ValidPromotionCode, Column(unique=true)}
++ discountAmount: Money {Optional, ValidMoney(min=0.00,max=1000000.00), Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>704</x>
+      <y>496</y>
+      <w>464</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Airline
+--
++ name: String {Mandatory, ValidString(max=50), Automapped}
++ iataCode: String {Mandatory, ValidString(pattern="^[A-Z]{3}$"), Column(unique=true)}
++ website: String {Mandatory, ValidUrl, Automapped}
++ type: AirlineType {Mandatory, Valid, Automapped}
++ foundationMoment: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ email: String {Optional, ValidEmail, Automapped}
++ contactPhone: String {Optional, ValidString(pattern="^\+?\d{6,15}$"), Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1160</x>
+      <y>560</y>
+      <w>176</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt; Owned by
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;200.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1704</x>
+      <y>280</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+FlightCrewMember
+bg=pink
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1816</x>
+      <y>288</y>
+      <w>368</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>belongs to ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;440.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2080</x>
+      <y>952</y>
+      <w>72</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>
+Part of v
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>10.0;150.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1728</x>
+      <y>872</y>
+      <w>176</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>
+&lt; departs from
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;200.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1728</x>
+      <y>920</y>
+      <w>176</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>
+&lt; arrives at
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;200.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1640</x>
+      <y>1144</y>
+      <w>104</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+AirlineManager
+bg=pink
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1736</x>
+      <y>1144</y>
+      <w>176</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>
+managed by
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;200.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1784</x>
+      <y>560</y>
+      <w>328</w>
+      <h>296</h>
+    </coordinates>
+    <panel_attributes>&lt; deploys
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;380.0;20.0;380.0;350.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2456</x>
+      <y>96</y>
+      <w>88</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>belongs to v
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;190.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2376</x>
+      <y>352</y>
+      <w>192</w>
+      <h>536</h>
+    </coordinates>
+    <panel_attributes>&lt; associated with
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;640.0;110.0;640.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>328</x>
+      <y>48</y>
+      <w>1448</w>
+      <h>464</h>
+    </coordinates>
+    <panel_attributes>works for v
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>760.0;560.0;760.0;490.0;10.0;490.0;10.0;20.0;1790.0;20.0;1790.0;290.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>352</x>
+      <y>552</y>
+      <w>368</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>works in &gt;
+lt=&lt;-x
+m1=1
+m2=1
+
+</panel_attributes>
+    <additional_attributes>440.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>296</x>
+      <y>584</y>
+      <w>104</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>Registered by ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>296</x>
+      <y>848</y>
+      <w>64</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>About ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>240</x>
+      <y>544</y>
+      <w>120</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+AssistanceAgent
+bg=pink
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>848</y>
+      <w>1400</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>About &gt;
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>1720.0;140.0;1720.0;190.0;1260.0;190.0;1260.0;310.0;10.0;310.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>728</y>
+      <w>624</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Claim
+--
++ registrationMoment: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ passengerEmail: String {Mandatory, ValidEmail, Automapped}
++ description: String {Mandatory, ValidString(min = 1max = 255), Automapped}
++ type: ClaimType {Mandatory,Valid, Automapped}
++ accepted: boolean {Mandatory, Valid, Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1688</x>
+      <y>952</y>
+      <w>384</w>
+      <h>208</h>
+    </coordinates>
+    <panel_attributes>
+&lt; Managed by
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>10.0;240.0;10.0;120.0;450.0;120.0;450.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2168</x>
+      <y>248</y>
+      <w>584</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+FlightAssignment
+--
++ duty: Duty {Mandatory, Valid, Automapped}
++ moment: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ currentStatus: CurrentStatus {Mandatory, Valid, Automapped}
++ remarks: String {Optional, ValidString(min=0,max=255), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2240</x>
+      <y>0</y>
+      <w>472</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+ActivityLog{ValidActivityLog}
+--
++ registrationMoment: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ incidentType: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ description: String {Mandatory, ValidString(min=1,max=255), Automapped}
++ severityLevel: Integer {Mandatory, ValidNumber(min=0,max=10), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+
+bg=green
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1272</x>
+      <y>832</y>
+      <w>464</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Airport
+--
++ name: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ iataCode: String {Mandatory, ValidIataCode, Column(unique=true)}
++ operationalScope: OperationalScope {Mandatory, Valid, Automapped}
++ city: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ country: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ website: String {Optional, ValidUrl, Automapped}
++ email: String {Optional, ValidEmail, Automapped}
++ phoneNumber: String {Optional, ValidPhoneNumber, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>704</x>
+      <y>704</y>
+      <w>472</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Review
+--
++ name: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ postedMoment: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ subject: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ text: String {Mandatory, ValidString(min=1,max=255), Automapped}
++ score: double {Optional, ValidNumber(min=0,max=10,integer=2,fraction=2), Automapped}
++ recommended: Boolean {Optional, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1320</x>
+      <y>512</y>
+      <w>472</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Aircraft
+--
++ model: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ registrationNumber: String {Mandatory, ValidString(max=1,max=50), Column(unique=true)}
++ capacity: Integer {Mandatory, ValidNumber(min=1,max=255,integer=3), Automapped}
++ cargoWeight: Integer {Mandatory, ValidNumber(min=2000,max=50000), Automapped}
++ status: AircraftStatus {Mandatory, Valid, Automapped}
++ details: String {Optional, ValidString(min=0,max=255), Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1888</x>
+      <y>840</y>
+      <w>496</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Leg {ValidLeg}
+--
++ flightNumber: String {Mandatory, ValidFlightNumber, Column(unique=true)}
++ departure: Date {Mandatory, ValidMoment, Temporal(TIMESTAMP)}
++ arrival: Date {Mandatory, ValidMoment, Temporal(TIMESTAMP)}
++ status: LegStatus {Mandatory, Valid, Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+--
++ getDurationInHours(): Double
+bg=green
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>360</x>
+      <y>248</y>
+      <w>456</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Task
+--
++ type: TaskType {Mandatory, Automapped}
++ description: String {Mandatory, ValidString(max=255), Automapped}
++ priority: Integer {Mandatory, ValidNumber(min=0, max=10), Automapped}
++ estimatedDuration: Integer {Mandatory, ValidNumber(min=0, max=1000), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>952</x>
+      <y>280</y>
+      <w>128</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Involves
+
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>576</x>
+      <y>128</y>
+      <w>864</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>Registered by &gt;
+lt=x-&gt;
+m1=*
+m2=1
+
+</panel_attributes>
+    <additional_attributes>10.0;150.0;10.0;20.0;1060.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1424</x>
+      <y>120</y>
+      <w>104</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+Technician
+bg=pink
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1248</x>
+      <y>248</y>
+      <w>416</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+MaintenanceRecord
+--
++ moment: Date {Mandatory, ValidMoment, Temporal(TIMESTAMP)}
++ status: MaintenanceRecordStatus {Mandatory, Valid, Automapped}
++ nextInspectionDate: Date {Mandatory, ValidMoment, Temporal(TIMESTAMP)}
++ estimatedCost: Money {Mandatory, ValidMoney, Automapped}
++ notes: String {Optional, ValidString(max = 255), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1456</x>
+      <y>352</y>
+      <w>88</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>Records of v
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>10.0;200.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>808</x>
+      <y>296</y>
+      <w>160</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt; Involved in
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;180.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1072</x>
+      <y>296</y>
+      <w>192</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Involves &gt;
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>220.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1456</x>
+      <y>152</y>
+      <w>104</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>Registered by ^
+lt=x-&gt;
+m1=*
+m2=1
+
+</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1680</x>
+      <y>1320</y>
+      <w>120</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+Customer
+bg=pink
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1488</x>
+      <y>1464</y>
+      <w>480</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Booking {ValidBooking}
+--
++ locatorCode: String {Mandatory,ValidLocatorCode,Column(unique=true)}
++ purchaseMoment: Date {Mandatory, ValidMoment(past=true),Temporal(TIMESTAMP)}
++ travelClass: TypeTravelClass {Mandatory, Valid, Automapped}
++ lastNibble: String {Optional, 	ValidString(pattern = "^\\d{4}$"), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+--
+getPrice(): Money
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2016</x>
+      <y>1704</y>
+      <w>464</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Passenger
+--
++ fullName: String {Mandatory, ValidString(min=1, max=255), Automapped}
++ email: String {Mandatory, ValidEmail, Automapped}
++ passportNumber: String {Mandatory, ValidPassportNumber, Automapped}
++ dateOfBirth: Date {Mandatory, ValidMoment(past=true), Temporal(TIMESTAMP)}
++ specialNeeds: String {Optional,ValidString(min=0,max=50)}
++ publish: boolean {Mandatory, Valid, Automapped}
+
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1728</x>
+      <y>1352</y>
+      <w>88</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>Bought by ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1784</x>
+      <y>1736</y>
+      <w>248</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>Refers to &gt;
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>290.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1960</x>
+      <y>1248</y>
+      <w>248</w>
+      <h>304</h>
+    </coordinates>
+    <panel_attributes>
+Associated to ^
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>190.0;10.0;190.0;350.0;10.0;350.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1688</x>
+      <y>1728</y>
+      <w>104</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+BookingRecord
+
+
+
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1728</x>
+      <y>1576</y>
+      <w>88</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>Belongs to ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1448</x>
+      <y>1280</y>
+      <w>816</w>
+      <h>616</h>
+    </coordinates>
+    <panel_attributes>Created by ^
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>360.0;50.0;360.0;10.0;10.0;10.0;10.0;750.0;1000.0;750.0;1000.0;690.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1896</x>
+      <y>1072</y>
+      <w>424</w>
+      <h>184</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Flight
+--
++ tag: String {Mandatory, ValidString(min=1,max=50), Automapped}
++ selfTransfer: boolean {Mandatory, Automapped}
++ cost: Money {Mandatory, ValidMoney, Automapped}
++ description: String {Optional, ValidString, Automapped}
++ publish: boolean {Mandatory, Automapped}
+--
++ getScheduledDeparture(): Date
++ getScheduledArrival(): Date
++ getOrigin(): String
++ getDestination(): String
++ getNumberOfLayovers(): Integer
++ getFlightLabel(): String
+
+bg=green
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1160</x>
+      <y>600</y>
+      <w>752</w>
+      <h>640</h>
+    </coordinates>
+    <panel_attributes>
+ made by ^
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0;110.0;770.0;920.0;770.0</additional_attributes>
+  </element>
+</diagram>

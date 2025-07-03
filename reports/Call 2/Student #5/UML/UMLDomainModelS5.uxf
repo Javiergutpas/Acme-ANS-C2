@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>6</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>438</x>
+      <y>432</y>
+      <w>108</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+MaintenanceRecordStatus
+--
++ PENDING
++ IN_PROGRESS
++ COMPLETED
+bg=LIGHT_GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>438</x>
+      <y>522</y>
+      <w>108</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enum&gt;&gt;
+TaskType
+--
++ MAINTENANCE
++ INSPECTION
++ REPAIR
++ SYSTEM_CHECK
+bg=LIGHT_GRAY</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>54</y>
+      <w>390</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+Technician{ValidTechnician}
+--
++ licenseNumber: String {Mandatory, ValidIdentifier, Column(unique=true)}
++ phoneNumber: String {Mandatory, ValidPhoneNumber, Automapped}
++ specialisation: String {Mandatory, ValidString(min=0,max=50), Automapped}
++ anualHealthTest: boolean {Mandatory, Automapped}
++ experienceYears: Integer {Optional, ValidNumber(min=0,max=120), Automapped}
++ certifications: String {Optional, ValidString(max=255), Automapped}
+bg=pink
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>684</x>
+      <y>186</y>
+      <w>78</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Role&gt;&gt;
+Technician
+bg=pink
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>714</x>
+      <y>210</y>
+      <w>78</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>Registered by ^
+lt=x-&gt;
+m1=*
+m2=1
+
+</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>282</y>
+      <w>342</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Task
+--
++ type: TaskType {Mandatory, Automapped}
++ description: String {Mandatory, ValidString(max=255), Automapped}
++ priority: Integer {Mandatory, ValidNumber(min=0, max=10), Automapped}
++ estimatedDuration: Integer {Mandatory, ValidNumber(min=0, max=1000), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>336</x>
+      <y>318</y>
+      <w>84</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>&lt; Involved in
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>10.0;20.0;120.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>408</x>
+      <y>294</y>
+      <w>96</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Involves
+--
+
+
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>498</x>
+      <y>318</y>
+      <w>84</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>Involves &gt;
+lt=&lt;-x
+m1=1
+m2=*
+
+</panel_attributes>
+    <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>570</x>
+      <y>282</y>
+      <w>312</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+MaintenanceRecord
+--
++ moment: Date {Mandatory, ValidMoment, Temporal(TIMESTAMP)}
++ status: MaintenanceRecordStatus {Mandatory, Valid, Automapped}
++ nextInspectionDate: Date {Mandatory, ValidMoment, Temporal(TIMESTAMP)}
++ estimatedCost: Money {Mandatory, ValidMoney, Automapped}
++ notes: String {Optional, ValidString(max = 255), Automapped}
++ publish: boolean {Mandatory, Valid, Automapped}
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>714</x>
+      <y>366</y>
+      <w>66</w>
+      <h>78</h>
+    </coordinates>
+    <panel_attributes>Records of v
+lt=&lt;-x
+m1=1
+m2=  *
+
+</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>678</x>
+      <y>432</y>
+      <w>90</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Entity&gt;&gt;
+Aircraft
+
+bg=green
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>384</y>
+      <w>174</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidTechnician
+--
++ licenseNumber 2-3 first letters must
+correspond to the flight crew member initials
++ licenseNumber must be unique
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>384</y>
+      <w>204</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidPhoneNumber
+--
++ phoneNumber must match pattern "^\\+?\\d{6,15}$"
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>462</y>
+      <w>312</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Constraint&gt;&gt;
+ValidIdentifier
+--
++ licenseNumber must match pattern "^[A-Z]{2,3}\\d{6}$"
+bg=RED</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>150</x>
+      <y>192</y>
+      <w>546</w>
+      <h>102</h>
+    </coordinates>
+    <panel_attributes>Registered by &gt;
+lt=x-&gt;
+m1=*
+m2=1
+
+</panel_attributes>
+    <additional_attributes>10.0;150.0;10.0;20.0;890.0;20.0</additional_attributes>
+  </element>
+</diagram>
